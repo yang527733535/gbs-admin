@@ -74,11 +74,7 @@
     "react-router-dom": "^5.2.0",
     "redux": "^4.0.5"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
+  
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "npm run eslint",

@@ -66,7 +66,6 @@ site-2.0/package-lock.json
 .docz/
 icon/react-icon/
 icon/react-icon-cjs/
-dist/
 
 # typescript cache
 .rpt2_cache/
