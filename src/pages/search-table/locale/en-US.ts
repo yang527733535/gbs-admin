@@ -1,5 +1,6 @@
 export default {
   'menu.list.searchTable': 'Search Table',
+  'menu.list.user': 'Users Management',
   'searchTable.addPolicy': 'add Policy',
   'searchTable.placeholder.name': 'Please enter policy name / ID',
   'searchTable.columns.name': 'Policy name / policy ID',

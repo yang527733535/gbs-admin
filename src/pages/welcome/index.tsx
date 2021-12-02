@@ -1,6 +1,8 @@
 import { Alert, Card, Link, Typography, Tag, Image } from '@arco-design/web-react';
 import { IconDoubleRight } from '@arco-design/web-react/icon';
 import React from 'react';
+// import { Button as AntdButton } from 'antd';
+// import ProTable from '@ant-design/pro-table';
 import { useSelector } from 'react-redux';
 import { ReducerState } from '../../redux';
 import useLocale from '../../utils/useLocale';
@@ -11,16 +13,9 @@ import styles from './style/index.module.less';
 export default function Welcome() {
   const locale = useLocale();
   const userInfo = useSelector((state: ReducerState) => state.global.userInfo) || {};
+  console.log('userInfo: ', userInfo);
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <Typography.Title heading={5} style={{ marginTop: 0 }}>
-          {locale['welcome.title.welcome']}
-        </Typography.Title>
-        <Typography.Text type="secondary">
-          {userInfo.name}, {userInfo.email}
-        </Typography.Text>
-      </div>
       <div className={styles.content}>
         <Alert type="success" content={locale['welcome.invite']} />
         <Card style={{ marginTop: 20 }} bordered={false} title={locale['welcome.usage']}>

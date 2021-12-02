@@ -29,7 +29,6 @@ export default function(state = initialState, action) {
   switch (action.type) {
     case UPDATE_LIST: {
       const { data } = action.payload;
-
       return {
         ...state,
         data,

@@ -1,5 +1,4 @@
-# Arco Design Pro
-
+# GBS Admin
 ## 快速开始
 
 ```

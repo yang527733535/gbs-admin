@@ -10,7 +10,6 @@ export default (props: FooterProps = {}) => {
   const { className, ...restProps } = props;
   return (
     <Footer className={cs(styles.footer, className)} {...restProps}>
-      Arco Design Pro
-    </Footer>
+      GBS Admin    </Footer>
   );
 };

@@ -1,10 +1,10 @@
-import { Form, Input, Checkbox, Link, Button, Space } from '@arco-design/web-react';
+import { Form, Input, Checkbox, Link, Button, Space, Message } from '@arco-design/web-react';
 import { FormInstance } from '@arco-design/web-react/es/Form';
 import { IconLock, IconUser } from '@arco-design/web-react/icon';
 import React, { useEffect, useRef, useState } from 'react';
-import axios from 'axios';
 import styles from './style/index.module.less';
 import history from '../../history';
+import { loginApi } from '../../api/user.js';
 
 export default function LoginForm() {
   const formRef = useRef<FormInstance>();
@@ -27,22 +27,20 @@ export default function LoginForm() {
     });
   }
 
-  function login(params) {
+  async function login(params) {
     setErrorMessage('');
     setLoading(true);
-    axios
-      .post('/api/user/login', params)
-      .then((res) => {
-        const { status, msg } = res.data;
-        if (status === 'ok') {
-          afterLoginSuccess(params);
-        } else {
-          setErrorMessage(msg || '登录出错，请刷新重试');
-        }
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+
+    const res = await loginApi(params);
+    if (res.code === 200) {
+      Message.info('登录成功!');
+      let token = 'Bearer ' + res.data.access_token;
+      localStorage.setItem('userInfo', JSON.stringify(res.data));
+      localStorage.setItem('token', token);
+      afterLoginSuccess(params);
+    } else {
+      setErrorMessage('登录出错，请刷新重试');
+    }
   }
 
   function onSubmitClick() {
@@ -68,10 +66,10 @@ export default function LoginForm() {
       <div className={styles['login-form-sub-title']}>登录 Arco Design Pro</div>
       <div className={styles['login-form-error-msg']}>{errorMessage}</div>
       <Form className={styles['login-form']} layout="vertical" ref={formRef}>
-        <Form.Item field="userName" rules={[{ required: true, message: '用户名不能为空' }]}>
+        <Form.Item field="user_account" rules={[{ required: true, message: '用户名不能为空' }]}>
           <Input prefix={<IconUser />} placeholder="用户名：admin" onPressEnter={onSubmitClick} />
         </Form.Item>
-        <Form.Item field="password" rules={[{ required: true, message: '密码不能为空' }]}>
+        <Form.Item field="user_password" rules={[{ required: true, message: '密码不能为空' }]}>
           <Input.Password
             prefix={<IconLock />}
             placeholder="密码：admin"

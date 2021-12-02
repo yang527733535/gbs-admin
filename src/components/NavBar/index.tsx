@@ -43,8 +43,7 @@ function Navbar() {
         <Space size={8}>
           <Logo />
           <Typography.Title style={{ margin: 0, fontSize: 18 }} heading={5}>
-            Arco Design Pro
-          </Typography.Title>
+            GBS Admin          </Typography.Title>
         </Space>
       </div>
       <ul className={styles.right}>

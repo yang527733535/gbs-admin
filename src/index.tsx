@@ -6,7 +6,6 @@ import zhCN from '@arco-design/web-react/es/locale/zh-CN';
 import enUS from '@arco-design/web-react/es/locale/en-US';
 import ReactDOM from 'react-dom';
 import { Router, Switch, Route } from 'react-router-dom';
-import axios from 'axios';
 import rootReducer from './redux';
 import history from './history';
 import PageLayout from './layout/page-layout';
@@ -21,7 +20,6 @@ const store = createStore(rootReducer);
 
 function Index() {
   const localeName = localStorage.getItem('arco-lang') || 'zh-CN';
-
   if (!localStorage.getItem('arco-lang')) {
     localStorage.setItem('arco-lang', localeName);
   }
@@ -44,14 +42,14 @@ function Index() {
     }
   }
 
-  function fetchUserInfo() {
-    axios.get('/api/user/userInfo').then((res) => {
-      store.dispatch({
-        type: 'update-userInfo',
-        payload: { userInfo: res.data },
-      });
-    });
-  }
+  // function fetchUserInfo() {
+  //   axios.get('/api/user/userInfo').then((res) => {
+  //     store.dispatch({
+  //       type: 'update-userInfo',
+  //       payload: { userInfo: res.data },
+  //     });
+  //   });
+  // }
 
   useEffect(() => {
     fetchLocale();
@@ -59,7 +57,7 @@ function Index() {
 
   useEffect(() => {
     if (checkLogin()) {
-      fetchUserInfo();
+      // Message.info('宝,我进来啦!');
     } else {
       history.push('/user/login');
     }

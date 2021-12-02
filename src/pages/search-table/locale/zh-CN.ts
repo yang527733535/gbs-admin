@@ -1,5 +1,6 @@
 export default {
   'menu.list.searchTable': '查询表格',
+  'menu.list.user': '用户管理',
   'searchTable.addPolicy': '添加转码策略',
   'searchTable.placeholder.name': '请输入策略名/ID',
   'searchTable.columns.name': '策略名/策略ID',
