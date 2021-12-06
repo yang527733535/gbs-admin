@@ -14,3 +14,16 @@ export function userList(data) {
   });
 }
 
+export function resLogout() {
+  return Service({
+    url: '/system/user/logout',
+    // data: data,
+  });
+}
+
+export function registerApi(data) {
+  return Service({
+    url: '/system/user/register',
+    data: data,
+  });
+}

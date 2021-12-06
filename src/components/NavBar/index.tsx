@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Tooltip,
   Button,
@@ -15,7 +15,7 @@ import { ReducerState } from '../../redux';
 import useLocale from '../../utils/useLocale';
 import Logo from '../../assets/logo.svg';
 import history from '../../history';
-
+import { resLogout } from '../../api/user.js';
 import MessageBox from '../MessageBox';
 
 import styles from './style/index.module.less';
@@ -23,12 +23,26 @@ import styles from './style/index.module.less';
 function Navbar() {
   const locale = useLocale();
   const theme = useSelector((state: ReducerState) => state.global.theme);
-  const userInfo = useSelector((state: ReducerState) => state.global.userInfo);
+  // const userInfo = useSelector((state: ReducerState) => state.global.userInfo);
   const dispatch = useDispatch();
+  const [userInfo, setuserInfo] = useState(null);
 
-  function logout() {
+  useEffect(() => {
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    console.log('userInfo: ', userInfo);
+    if (userInfo) {
+      setuserInfo(userInfo);
+    }
+  }, []);
+
+  async function logout() {
     localStorage.setItem('userStatus', 'logout');
-    history.push('/user/login');
+    const data = await resLogout();
+    console.log('data: ', data);
+    if (data.code === 200) {
+      localStorage.clear();
+      history.push('/user/login');
+    }
   }
 
   function onMenuItemClick(key) {
@@ -43,7 +57,8 @@ function Navbar() {
         <Space size={8}>
           <Logo />
           <Typography.Title style={{ margin: 0, fontSize: 18 }} heading={5}>
-            GBS Admin          </Typography.Title>
+            GBS Admin{' '}
+          </Typography.Title>
         </Space>
       </div>
       <ul className={styles.right}>
@@ -96,7 +111,10 @@ function Navbar() {
         {userInfo && (
           <li>
             <Avatar size={24} style={{ marginRight: 8 }}>
-              <img alt="avatar" src={userInfo.avatar} />
+              <img
+                alt="avatar"
+                src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fblog%2F202103%2F05%2F20210305151654_c9262.jpeg&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1641181441&t=baf1378f1b1e975ed337c5447725fd69"
+              />
             </Avatar>
             <Dropdown
               trigger="click"
@@ -106,7 +124,7 @@ function Navbar() {
                 </Menu>
               }
             >
-              <Typography.Text className={styles.username}>{userInfo.name}</Typography.Text>
+              <Typography.Text className={styles.username}>{userInfo.user_name}</Typography.Text>
             </Dropdown>
           </li>
         )}

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Message } from '@arco-design/web-react';
 
-const ConfigBaseURL = 'http://117.50.173.128:10080/'; //默认路径，这里也可以使用env来判断环境
+const ConfigBaseURL = 'http://117.50.173.128:8080/'; //默认路径，这里也可以使用env来判断环境
 
 //使用create方法创建axios实例
 export const Service = axios.create({
@@ -16,10 +16,10 @@ export const Service = axios.create({
 Service.interceptors.request.use((config) => {
   // console.log(window.localStorage.getItem(token));
   // consolee
-  // if (localStorage.getItem(token)) {
-  //   config.headers['Authorization'] = localStorage.getItem(token);
-  // }
-  config.headers['Authorization'] = 'Bearer f1781f8d67837d083763b64483b67462'
+  if (localStorage.getItem('token')) {
+    config.headers['Authorization'] = localStorage.getItem('token');
+  }
+  // config.headers['Authorization'] = 'Bearer f1781f8d67837d083763b64483b67462';
   return config;
 });
 // 添加响应拦截器

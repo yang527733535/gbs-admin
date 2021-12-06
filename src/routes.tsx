@@ -56,7 +56,7 @@ export const routes = [
   // },
   {
     name: 'menu.list.user',
-    key: 'list/searchTable',
+    key: 'user/userManagement',
     componentPath: 'search-table',
   },
 ];
