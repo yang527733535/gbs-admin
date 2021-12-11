@@ -154,10 +154,10 @@ function SearchTable() {
         onCancel={() => {
           setvisitModal(false);
         }}
-        style={{ width: 800 }}
+        style={{ width: 600 }}
         visible={visitModal}
       >
-        <AddForm></AddForm>
+        <AddForm name="XIXI"></AddForm>
       </Modal>
       <Breadcrumb style={{ marginBottom: 20 }}>
         <Breadcrumb.Item>{locale['menu.list']}</Breadcrumb.Item>

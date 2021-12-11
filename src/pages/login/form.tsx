@@ -62,8 +62,8 @@ export default function LoginForm() {
 
   return (
     <div className={styles['login-form-wrapper']}>
-      <div className={styles['login-form-title']}>登录 Arco Design Pro</div>
-      <div className={styles['login-form-sub-title']}>登录 Arco Design Pro</div>
+      <div className={styles['login-form-title']}>登录 梦墨剧本杀</div>
+      <div className={styles['login-form-sub-title']}>登录 梦墨剧本杀</div>
       <div className={styles['login-form-error-msg']}>{errorMessage}</div>
       <Form className={styles['login-form']} layout="vertical" ref={formRef}>
         <Form.Item field="user_account" rules={[{ required: true, message: '用户名不能为空' }]}>

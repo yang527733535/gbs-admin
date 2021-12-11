@@ -65,9 +65,9 @@ function Navbar() {
         <li>
           <MessageBox />
         </li>
-        <li>
+        {/* <li>
           <a>{locale['navbar.docs']}</a>
-        </li>
+        </li> */}
         <li>
           <Select
             options={[

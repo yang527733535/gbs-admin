@@ -14,7 +14,7 @@ export default () => {
     <div className={styles.container}>
       <div className={styles.logo}>
         <Logo />
-        <div className={styles['logo-text']}>Arco Design Pro</div>
+        <div className={styles['logo-text']}>梦墨剧本杀</div>
       </div>
       <div className={styles.banner}>
         <div className={styles['banner-inner']}>

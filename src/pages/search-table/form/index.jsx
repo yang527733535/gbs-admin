@@ -1,11 +1,12 @@
 import React from 'react';
 import { Form, Input, Button, Checkbox } from '@arco-design/web-react';
 import { registerApi } from '../../../api/user';
+import PropTypes from 'prop-types';
+
 const FormItem = Form.Item;
-
-export default function Index() {
+function Index(props) {
+  console.log('props: ', props);
   const [form] = Form.useForm();
-
   return (
     <div>
       <Form
@@ -14,17 +15,16 @@ export default function Index() {
           Message.success('success');
         }}
         form={form}
-        style={{ width: 600 }}
       >
-        <FormItem label="Username">
-          <Input placeholder="please enter your username..." />
+        <FormItem label="用户名">
+          <Input placeholder="请输入你的用户名称..." />
         </FormItem>
-        <FormItem label="Post">
-          <Input placeholder="please enter your post..." />
+        <FormItem label="密码">
+          <Input placeholder="请输入你的密码..." />
         </FormItem>
-        <FormItem wrapperCol={{ offset: 5 }}>
+        {/* <FormItem wrapperCol={{ offset: 5 }}>
           <Checkbox>I have read the manual</Checkbox>
-        </FormItem>
+        </FormItem> */}
         <FormItem
           wrapperCol={{
             offset: 5,
@@ -36,3 +36,8 @@ export default function Index() {
     </div>
   );
 }
+
+Index.propTypes = {
+  name: PropTypes.string.isRequired,
+};
+export default Index;
