@@ -83,6 +83,8 @@ function SearchTable() {
     fetchData();
   }, []);
 
+  useEffect(() => {}, []);
+
   function fetchData(current = 1, pageSize = 10, params = {}) {
     // const data = dispatch({ type: UPDATE_LOADING, payload: { loading: true } });
     const data = userList({

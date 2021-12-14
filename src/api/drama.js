@@ -68,3 +68,10 @@ export function updateShop(data) {
   });
 }
 // addDrama
+
+export function regionsList() {
+  return Service({
+    url: '/system/basic/regions',
+    method: 'GET',
+  });
+}

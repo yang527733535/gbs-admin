@@ -18,7 +18,7 @@ import {
   DatePicker,
   Modal,
 } from '@arco-design/web-react';
-import { addDrama, addShop, updateShop } from '../../../api/drama.js';
+import { addDrama, addShop, updateShop, regionsList } from '../../../api/drama.js';
 
 const FormItem = Form.Item;
 
@@ -40,6 +40,7 @@ const noLabelLayout = {
 function Shop({ closeModalAndReqTable, clickItem }) {
   const formRef = useRef();
   const [size, setSize] = useState('default');
+  const [cascaderOptionsArr, setcascaderOptionsArr] = useState([]);
   console.log(clickItem);
   useEffect(() => {
     formRef.current.setFieldsValue(clickItem);
@@ -48,7 +49,68 @@ function Shop({ closeModalAndReqTable, clickItem }) {
   const onValuesChange = (changeValue, values) => {
     console.log('onValuesChange: ', changeValue, values);
   };
-
+  useEffect(() => {
+    // formRef.current.setFieldsValue(clickItem);
+    const regionsData = regionsList();
+    regionsData.then((res) => {
+      console.log('res: ', res);
+      const { data } = res;
+      const mapTree = (org) => {
+        const haveChildren = Array.isArray(org.region_children) && org.region_children.length > 0;
+        return {
+          key: String(org.region_id),
+          value: String(org.region_id),
+          label: org.region_name,
+          children: haveChildren ? org.region_children.map((i) => mapTree(i)) : [],
+        };
+      };
+      let arr = [];
+      arr = data.map((org) => mapTree(org));
+      console.log(arr);
+      setcascaderOptionsArr(arr);
+    });
+  }, []);
+  // regionsList
+  const cascaderOptions = [
+    {
+      value: 'beijing',
+      label: 'Beijing',
+      children: [
+        {
+          value: 'beijingshi',
+          label: 'Beijing',
+          children: [
+            {
+              value: 'chaoyang',
+              label: 'Chaoyang',
+              children: [
+                {
+                  value: 'datunli',
+                  label: 'Datunli',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      value: 'shanghai',
+      label: 'Shanghai',
+      children: [
+        {
+          value: 'shanghaishi',
+          label: 'Shanghai',
+          children: [
+            {
+              value: 'huangpu',
+              label: 'Huangpu',
+            },
+          ],
+        },
+      ],
+    },
+  ];
   return (
     <div style={{ maxWidth: 650 }}>
       <Form
@@ -72,7 +134,15 @@ function Shop({ closeModalAndReqTable, clickItem }) {
         >
           <Input placeholder="请填写店铺名称..." />
         </FormItem>
-        <FormItem
+        <FormItem field="Province" label="店铺地区">
+          <Cascader
+            showSearch
+            placeholder="please select"
+            allowClear
+            options={cascaderOptionsArr}
+          />
+        </FormItem>
+        {/* <FormItem
           label="省份"
           field="position_state"
           rules={[{ required: false, message: '请填写省份' }]}
@@ -92,7 +162,7 @@ function Shop({ closeModalAndReqTable, clickItem }) {
           rules={[{ required: false, message: '请填写县区' }]}
         >
           <Input placeholder="请填写县区..." />
-        </FormItem>
+        </FormItem> */}
         <FormItem
           label="门店类型"
           field="store_type"
@@ -150,6 +220,7 @@ function Shop({ closeModalAndReqTable, clickItem }) {
                   await formRef.current.validate();
                   // Message.info('校验通过，提交成功！');
                   if (clickItem === null) {
+                    console.log(formRef.current.getFields());
                     var data = await addShop(formRef.current.getFields());
                   } else {
                     const param = formRef.current.getFields();

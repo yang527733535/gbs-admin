@@ -57,7 +57,7 @@ function Navbar() {
         <Space size={8}>
           <Logo />
           <Typography.Title style={{ margin: 0, fontSize: 18 }} heading={5}>
-            GBS Admin{' '}
+            梦墨Admin{' '}
           </Typography.Title>
         </Space>
       </div>

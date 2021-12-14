@@ -10,6 +10,6 @@ export default (props: FooterProps = {}) => {
   const { className, ...restProps } = props;
   return (
     <Footer className={cs(styles.footer, className)} {...restProps}>
-      GBS Admin    </Footer>
+      梦墨Admin    </Footer>
   );
 };
