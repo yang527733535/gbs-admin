@@ -110,7 +110,6 @@ function Demo() {
               const { onProgress, onError, onSuccess, file } = option;
               console.log('file: ', file);
               const xhr = new XMLHttpRequest();
-
               if (xhr.upload) {
                 xhr.upload.onprogress = function(event) {
                   let percent;
@@ -129,7 +128,6 @@ function Demo() {
                 }
                 onSuccess(xhr.responseText, xhr);
               };
-
               const formData = new FormData();
               formData.append('up_file', file);
               formData.append('module', 'drama');

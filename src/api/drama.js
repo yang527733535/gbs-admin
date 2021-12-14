@@ -31,6 +31,15 @@ export function shopList(data) {
   });
 }
 
+// 菜单列表
+export function menuList(data) {
+  return Service({
+    url: '/system/menu/list',
+    data: data,
+    method: 'post',
+  });
+}
+
 export function resLogout() {
   return Service({
     url: '/system/user/logout',

@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconUser, IconGift } from '@arco-design/web-react/icon';
+import { IconUserAdd, IconOrderedList, IconStorage, IconStar } from '@arco-design/web-react/icon';
 export const defaultRoute = 'user/shop'; // const userInfo = JSON.parse(localStorage.getItem('userInfo'));
 // const { user_menu } = userInfo;
 // console.log('user_menu: ', user_menu);
@@ -10,26 +10,26 @@ export const defaultRoute = 'user/shop'; // const userInfo = JSON.parse(localSto
 export const routes = [
   {
     name: '剧本管理',
-    icon: <IconGift />,
+    icon: <IconStorage />,
     key: 'user/drama',
     componentPath: 'drama-table',
   },
   {
     name: '门店管理',
-    icon: <IconGift />,
+    icon: <IconStar />,
     key: 'user/shop',
     componentPath: 'shop-table',
   },
-  // {
-  //   name: '门店管理2',
-  //   icon: <IconGift />,
-  //   key: 'user/shop2',
-  //   componentPath: 'shop-table2',
-  // },
+  {
+    name: '菜单管理',
+    icon: <IconOrderedList />,
+    key: 'user/muen',
+    componentPath: 'muen-table',
+  },
   {
     name: 'menu.list.user',
     key: 'user/userManagement',
-    icon: <IconUser />,
+    icon: <IconUserAdd />,
     // <IconUser />
     componentPath: 'user-table',
   },
