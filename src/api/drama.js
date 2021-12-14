@@ -1,5 +1,13 @@
 import { Service } from '../service/request';
 
+// 数据字典
+export function labelsApi(data) {
+  return Service({
+    url: '/system/dict/labels',
+    method: 'POST',
+  });
+}
+
 export function loginApi(data) {
   return Service({
     url: '/system/user/login',

@@ -31,6 +31,6 @@ export const routes = [
     key: 'user/userManagement',
     icon: <IconUser />,
     // <IconUser />
-    componentPath: 'search-table',
+    componentPath: 'user-table',
   },
 ];

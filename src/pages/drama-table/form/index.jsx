@@ -104,7 +104,39 @@ function Demo() {
             listType="picture-card"
             multiple
             name="files"
-            action="/"
+            // action="http://120.24.188.169:8000/system/upload/image"
+            customRequest={(option) => {
+              console.log(option);
+              const { onProgress, onError, onSuccess, file } = option;
+              console.log('file: ', file);
+              const xhr = new XMLHttpRequest();
+
+              if (xhr.upload) {
+                xhr.upload.onprogress = function(event) {
+                  let percent;
+                  if (event.total > 0) {
+                    percent = (event.loaded / event.total) * 100;
+                  }
+                  onProgress(parseInt(percent, 10), event);
+                };
+              }
+              xhr.onerror = function error(e) {
+                onError(e);
+              };
+              xhr.onload = function onload() {
+                if (xhr.status < 200 || xhr.status >= 300) {
+                  return onError(xhr.responseText);
+                }
+                onSuccess(xhr.responseText, xhr);
+              };
+
+              const formData = new FormData();
+              formData.append('up_file', file);
+              formData.append('module', 'drama');
+              xhr.open('post', 'http://120.24.188.169:8000/system/upload/image', true);
+              xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
+              xhr.send(formData);
+            }}
             onPreview={(file) => {
               Modal.info({
                 title: 'Preview',
