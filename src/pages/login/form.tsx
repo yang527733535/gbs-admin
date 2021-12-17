@@ -40,6 +40,7 @@ export default function LoginForm() {
       afterLoginSuccess(params);
     } else {
       setErrorMessage('登录出错，请刷新重试');
+      setLoading(false);
     }
   }
 

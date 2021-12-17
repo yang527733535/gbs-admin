@@ -7,104 +7,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    .left {
+        background: #73DE80;
+        /* 绿色 */
+        opacity: 0.5;
+        border: 3px solid #F31264;
+        width: 200px;
+        height: 200px;
+        float: left;
+    }
+
+    .right {
+        /* 粉色 */
+        background: #EF5BE2;
+        opacity: 0.5;
+        border: 3px solid #F31264;
+        width: 400px;
+        min-height: 100px;
+    }
+
+    .box {
+        background: #888;
+        height: 100%;
+        margin-left: 50px;
+    }
+
+    .BFC {
+        overflow: hidden;
+    }
+
+    .little {
+        background: #fff;
+        width: 50px;
+        height: 50px;
+        margin: 10px;
+        float: left;
+    }
+</style>
 
 <body>
+    <div class='box BFC'>
+        <div class='left'> </div>
+        <div class='right BFC'>
+            <div class='little'></div>
+            <div class='little'></div>
+            <div class='little'></div>
+        </div>
+    </div>
 
 </body>
-
-
 <script>
+    var data = [];
 
-</script>
-<script>
-    //obj ：{method:"get",url:"",data:{}};
-    function httpRequest(obj, successfun, errFun) {
-        var xmlHttp = null;
-        //创建 XMLHttpRequest 对象，老版本的 Internet Explorer （IE5 和 IE6）使用 ActiveX 对象：xmlhttp=new ActiveXObject("Microsoft.XMLHTTP")
-        if (window.XMLHttpRequest) {
-            //code for all new browsers
-            xmlHttp = new XMLHttpRequest;
-        } else if (window.ActiveXObject) {
-            //code for IE5 and IE6
-            xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-        //判断是否支持请求
-        if (xmlHttp == null) {
-            alert("浏览器不支持xmlHttp");
-            return;
-        }
-        //请求方式， 转换为大写
-        var httpMethod = (obj.method || "Get").toUpperCase();
-        //数据类型
-        var httpDataType = obj.dataType || 'json';
-        //url
-        var httpUrl = obj.url || '';
-        //异步请求
-        var async = true;
-        //post请求时参数处理
-        if (httpMethod == "POST") {
-            //请求体中的参数 post请求参数格式为：param1=test&param2=test2
-            var data = obj.data || {};
-            var requestData = '';
-            for (var key in data) {
-                requestData = requestData + key + "=" + data[key] + "&";
+    for (let i = 0; i < 3; i++) {
+        data[i] = (function (i) {
+            return function () {
+                console.log(i);
             }
-            if (requestData == '') {
-                requestData = '';
-            } else {
-                requestData = requestData.subString(0, requestData.length - 1);
-            }
-            console.log(requestData);
-        }
-        //onreadystatechange 是一个事件句柄。它的值 (state_Change) 是一个函数的名称，当 XMLHttpRequest 对象的状态发生改变时，会触发此函数。状态从 0 (uninitialized) 到 4 (complete) 进行变化。仅在状态为 4 时，我们才执行代码
-        xmlHttp.onreadystatechange = function () {
-            //complete
-            if (xmlHttp.readyState == 4) {
-                if (xmlHttp.status == 200) {
-                    //请求成功执行的回调函数
-                    successfun(xmlHttp.responseText);
-                } else {
-                    //请求失败的回调函数
-                    errFun;
-                }
-            }
-        }
-        //请求接口
-        if (httpMethod == 'GET') {
-            xmlHttp.open("GET", httpUrl, async);
-            xmlHttp.send(null);
-        } else if (httpMethod == "POST") {
-            xmlHttp.open("POST", httpUrl, async);
-            xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            xmlHttp.send(requestData);
-        }
-    }
-</script>
-<script>
-    // Example POST method implementation:
-    async function postData(url = '', data = {}) {
-        // Default options are marked with *
-        const response = await fetch(url, {
-            method: 'POST', // *GET, POST, PUT, DELETE, etc.
-            mode: 'cors', // no-cors, *cors, same-origin
-            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-            credentials: 'same-origin', // include, *same-origin, omit
-            headers: {
-                'Content-Type': 'application/json'
-                // 'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            redirect: 'follow', // manual, *follow, error
-            referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-            body: JSON.stringify(data) // body data type must match "Content-Type" header
-        });
-        return response.json(); // parses JSON response into native JavaScript objects
+        })(i);
     }
 
-    postData('http://117.50.173.128:10080/system/user/login', { answer: 42 })
-        .then(data => {
-            console.log(data); // JSON data parsed by `data.json()` call
-        });
-
+    data[0]();
+    data[1]();
+    data[2]();
 </script>
 
 </html>

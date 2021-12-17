@@ -61,6 +61,14 @@ export function addShop(data) {
   });
 }
 
+// 添加组局
+export function addGame(data) {
+  return Service({
+    url: '/v1/game/added',
+    data: data,
+  });
+}
+
 export function updateShop(data) {
   return Service({
     url: '/v1/store/edit',

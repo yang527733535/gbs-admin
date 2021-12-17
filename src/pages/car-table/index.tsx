@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Button, Input, Breadcrumb, Card, Space, Modal } from '@arco-design/web-react';
 import { useSelector, useDispatch } from 'react-redux';
-import { menuList, labelsApi } from '../../api/drama.js';
+import { shopList, labelsApi } from '../../api/drama.js';
 import {
   UPDATE_FORM_PARAMS,
   UPDATE_LIST,
@@ -16,30 +16,30 @@ import AddForm from './form/index.jsx';
 function SearchTable({}) {
   const locale = useLocale();
   const [visitModal, setvisitModal] = useState(false);
-  const [menu_code, setmenu_code] = useState('');
-  const [menu_status, setmenu_status] = useState('');
-  const [menu_name, setmenu_name] = useState('');
-  const [menu_path, setmenu_path] = useState('');
-
+  const [store_name, setstore_name] = useState('');
+  const [store_type, setstore_type] = useState('');
+  const [store_status, setstore_status] = useState('');
+  const [store_level, setstore_level] = useState('');
+  const [position_city, setposition_city] = useState('');
   const [clickItem, setclickItem] = useState(null);
   const columns = [
     {
-      title: '菜单名称',
-      dataIndex: 'menu_name',
-    },
-    {
-      title: '菜单编码',
-      dataIndex: 'menu_code',
-    },
-    {
-      title: '菜单路径',
-      dataIndex: 'menu_path',
-    },
-    {
-      title: '菜单ID',
-      dataIndex: 'menu_id',
+      title: '店铺名称',
+      dataIndex: 'store_name',
     },
 
+    {
+      title: '店铺地址',
+      dataIndex: 'position_address',
+    },
+    {
+      title: locale['searchTable.columns.createdTime'],
+      dataIndex: 'created_time',
+    },
+    {
+      title: '更新时间',
+      dataIndex: 'updated_time',
+    },
     {
       title: locale['searchTable.columns.operations'],
       render: (col, data) => (
@@ -71,13 +71,14 @@ function SearchTable({}) {
 
   function fetchData(current = 1, pageSize = 10, params = {}) {
     // const data = dispatch({ type: UPDATE_LOADING, payload: { loading: true } });
-    const data = menuList({
+    const data = shopList({
       page: current,
       page_size: pageSize,
-      menu_code,
-      menu_status,
-      menu_name,
-      menu_path,
+      store_name,
+      store_type,
+      store_status,
+      store_level,
+      position_city,
     });
     data.then((res) => {
       const { data, paginator } = res;
@@ -96,6 +97,22 @@ function SearchTable({}) {
       dispatch({ type: UPDATE_LOADING, payload: { loading: false } });
       dispatch({ type: UPDATE_FORM_PARAMS, payload: { params } });
     });
+    // data.then((res) => {
+    //   console.log('res: ', res);
+    // });
+
+    // dispatch({ type: UPDATE_LOADING, payload: { loading: false } });
+    // dispatch({ type: UPDATE_FORM_PARAMS, payload: { params } });
+    // axios
+    //   .get(`/api/policy`, {
+    //     params: {
+    //       page: current,
+    //       pageSize,
+    //       ...params,
+    //     },
+    //   })
+    //   .then((res) => {
+    //   });
   }
 
   function onChangeTable(pagination) {
@@ -103,10 +120,22 @@ function SearchTable({}) {
     fetchData(current, pageSize, formParams);
   }
 
+  // function onSearch(keyword) {
+  //   fetchData(1, pagination.pageSize, { keyword });
+  // }
+
+  // function onDateChange(date) {
+  //   const [start, end] = date;
+  //   fetchData(1, pagination.pageSize, {
+  //     createdTimeStart: start,
+  //     createdTimeEnd: end,
+  //   });
+  // }
+
   return (
     <div className={styles.container}>
       <Modal
-        title={clickItem === null ? '添加菜单' : '修改菜单'}
+        title={clickItem === null ? '添加组局' : '修改组局'}
         footer={null}
         onCancel={() => {
           setvisitModal(false);
@@ -138,49 +167,57 @@ function SearchTable({}) {
               type="primary"
               // style={{ marginRight: 20 }}
             >
-              添加菜单
+              添加组局
             </Button>
             <div>
               <Space style={{ marginLeft: 20 }} wrap={true}>
                 <Input
-                  value={menu_code}
+                  value={store_name}
                   onChange={(e) => {
-                    setmenu_code(e);
+                    setstore_name(e);
                   }}
-                  placeholder="请输入菜单编码"
+                  placeholder="请输入店铺名称"
                   style={{ width: 200 }}
                 ></Input>
                 <Input
-                  value={menu_status}
+                  value={store_type}
                   onChange={(e) => {
-                    setmenu_status(e);
+                    setstore_type(e);
                   }}
-                  placeholder="请选择菜单状态"
+                  placeholder="请选择门店类型"
                   style={{ width: 200 }}
                 ></Input>
                 <Input
-                  value={menu_name}
+                  value={store_status}
                   onChange={(e) => {
-                    setmenu_name(e);
+                    setstore_status(e);
                   }}
-                  placeholder="请输入菜单名称"
+                  placeholder="请选择门店状态"
                   style={{ width: 200 }}
                 ></Input>
                 <Input
                   onChange={(e) => {
-                    setmenu_path(e);
+                    setstore_level(e);
                   }}
-                  placeholder="菜单路径"
-                  value={menu_path}
+                  placeholder="门店等级"
+                  value={store_level}
                   style={{ width: 200 }}
                 ></Input>
-
+                <Input
+                  onChange={(e) => {
+                    setposition_city(e);
+                  }}
+                  value={position_city}
+                  placeholder="所在城市"
+                  style={{ width: 200 }}
+                ></Input>
                 <Button
                   onClick={() => {
-                    setmenu_code('');
-                    setmenu_status('');
-                    setmenu_name('');
-                    setmenu_path('');
+                    setstore_name('');
+                    setstore_type('');
+                    setstore_status('');
+                    setstore_level('');
+                    setposition_city('');
                   }}
                 >
                   重置
@@ -200,7 +237,7 @@ function SearchTable({}) {
       </div>
       <Card bordered={false}>
         <Table
-          rowKey="menu_id"
+          rowKey="user_account"
           loading={loading}
           onChange={onChangeTable}
           pagination={pagination}

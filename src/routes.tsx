@@ -1,6 +1,6 @@
 import React from 'react';
 import { IconUserAdd, IconOrderedList, IconCopy, IconStar } from '@arco-design/web-react/icon';
-export const defaultRoute = 'user/shop'; // const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+export const defaultRoute = ''; // const userInfo = JSON.parse(localStorage.getItem('userInfo'));
 // const { user_menu } = userInfo;
 // console.log('user_menu: ', user_menu);
 // console.log(test(user_menu));
@@ -19,6 +19,12 @@ export const routes = [
     icon: <IconStar />,
     key: 'user/shop',
     componentPath: 'shop-table',
+  },
+  {
+    name: '游戏组局',
+    icon: <IconStar />,
+    key: 'user/car',
+    componentPath: 'car-table',
   },
   {
     name: '菜单管理',
