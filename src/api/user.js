@@ -6,6 +6,12 @@ export function loginApi(data) {
     data: data,
   });
 }
+export function reqUserInfo() {
+  return Service({
+    url: '/system/user/login',
+    method: 'GET',
+  });
+}
 
 export function userList(data) {
   return Service({

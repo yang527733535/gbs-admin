@@ -15,10 +15,11 @@ import { ReducerState } from '../redux';
 import getUrlParams from '../utils/getUrlParams';
 import lazyload from '../utils/lazyload';
 import styles from './style/layout.module.less';
-
+// import { reqUserInfo } from '../api/user.js';
 let routes = [];
 const userInfo = JSON.parse(localStorage.getItem('userInfo'));
 console.log('userInfo: ', userInfo);
+
 if (userInfo) {
   const { user_menu = [] } = userInfo;
   user_menu?.map((item) => {
@@ -30,6 +31,14 @@ if (userInfo) {
     componentPath: 'welcome',
   });
   routes = user_menu;
+} else {
+  // 去请求
+  // const data = reqUserInfo();
+  // data.then((res) => {
+  //   console.log('res: ', res);
+  //   const { user_menu } = res.code;
+  //   routes = user_menu;
+  // });
 }
 
 const MenuItem = Menu.Item;
@@ -41,7 +50,7 @@ const Content = Layout.Content;
 function getFlattenRoutes() {
   const res = [];
   function travel(_routes) {
-    _routes.forEach((route) => {
+    _routes?.forEach((route) => {
       if (route.componentPath) {
         route.component = lazyload(() => import(`../pages/${route.componentPath}`));
         res.push(route);

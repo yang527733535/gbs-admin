@@ -57,7 +57,7 @@ function Navbar() {
         <Space size={8}>
           <Logo />
           <Typography.Title style={{ margin: 0, fontSize: 18 }} heading={5}>
-             梦墨Admin v1.0.0{' '}
+             梦墨Admin
           </Typography.Title>
         </Space>
       </div>
