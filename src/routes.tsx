@@ -1,5 +1,5 @@
 // import React from 'react';
-export const defaultRoute = '';
+export const defaultRoute = 'welcome';
 
 // const userInfo = JSON.parse(localStorage.getItem('userInfo'));
 // const { user_menu = [] } = userInfo;

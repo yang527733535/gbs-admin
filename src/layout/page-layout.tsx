@@ -25,6 +25,10 @@ if (userInfo) {
     delete item.icon;
     return item;
   });
+  user_menu.push({
+    key: 'welcome',
+    componentPath: 'welcome',
+  });
   routes = user_menu;
 }
 

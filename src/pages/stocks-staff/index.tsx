@@ -21,7 +21,6 @@ import AddForm from './form/index.jsx';
 import useLocale from '../../utils/useLocale';
 import { ReducerState } from '../../redux';
 import styles from './style/index.module.less';
-
 function SearchTable() {
   const locale = useLocale();
   const [visitModal, setvisitModal] = useState(false);
