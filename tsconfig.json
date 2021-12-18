@@ -15,6 +15,6 @@
     "types": ["node", "jest"],
     "resolveJsonModule": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/pages/user-table/form/index.jsx"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/pages/stocks-staff2/form/index.jsx"],
   "exclude": ["node_modules"]
 }

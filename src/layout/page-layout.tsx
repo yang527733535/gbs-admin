@@ -15,8 +15,8 @@ import { ReducerState } from '../redux';
 import getUrlParams from '../utils/getUrlParams';
 import lazyload from '../utils/lazyload';
 import styles from './style/layout.module.less';
-let routes = [];
 
+let routes = [];
 const userInfo = JSON.parse(localStorage.getItem('userInfo'));
 console.log('userInfo: ', userInfo);
 if (userInfo) {

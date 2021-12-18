@@ -1,0 +1,6 @@
+{
+  "name": "menu.exception.404",
+  "key": "exception/404",
+  "componentPath": "exception404",
+  "parents": ["exception"]
+}

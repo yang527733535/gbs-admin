@@ -7,4 +7,4 @@
 //   timeout: '200-600',
 //   mock: false,
 // });
-import '../pages/user-table/mock';
+import '../pages/stocks-staff/mock';

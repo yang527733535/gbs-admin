@@ -1,0 +1,26 @@
+{
+  "name": "@arco-design/pro-pages-exception404",
+  "version": "1.0.0",
+  "description": "没有找到资源",
+  "main": "src/index.tsx",
+  "scripts": {
+    "generate": "arco generate --from-current-package",
+    "sync": "arco sync --from-current-package"
+  },
+  "arcoMeta": {
+    "type": "react-page",
+    "title": "exception404",
+    "category": [
+      "arco-design-pro"
+    ]
+  },
+  "peerDependencies": {
+    "@arco-design/web-react": "2.0.0"
+  },
+  "files": [
+    "src",
+    "pageMeta.json",
+    "arcoMeta.json"
+  ],
+  "license": "MIT"
+}
