@@ -116,7 +116,7 @@ function Shop({ closeModalAndReqTable }) {
         </FormItem>
         <FormItem
           label="父级Id"
-          field="parent_ids"
+          field="parent_id"
           rules={[{ required: false, message: '请填写父级Id' }]}
         >
           <InputNumber placeholder="请填写父级Id..." />

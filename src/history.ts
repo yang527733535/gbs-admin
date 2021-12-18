@@ -8,9 +8,9 @@
  * history.listen(func) // listen for changes to the current location
  *
  */
-import { createBrowserHistory } from 'history';
+import { createHashHistory } from 'history';
 
-const HISTORY = createBrowserHistory({
+const HISTORY = createHashHistory({
   basename: '/',
 });
 
