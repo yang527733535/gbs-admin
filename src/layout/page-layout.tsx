@@ -25,15 +25,8 @@ if (userInfo) {
     delete item.icon;
     return item;
   });
-  routes = user_menu
+  routes = user_menu;
 }
-// const { user_menu = [] } = userInfo;
-// user_menu?.map((item) => {
-//   // item.icon = <IconStar />;
-//   delete item.icon
-//   return item;
-// });
-// let routes = user_menu || [];
 
 const MenuItem = Menu.Item;
 const SubMenu = Menu.SubMenu;

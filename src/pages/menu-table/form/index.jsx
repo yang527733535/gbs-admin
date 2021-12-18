@@ -40,7 +40,7 @@ const noLabelLayout = {
 function Shop({ closeModalAndReqTable }) {
   const formRef = useRef();
   const [size, setSize] = useState('default');
-
+  const [statusLabel, setstatusLabel] = useState([]);
   useEffect(() => {
     // formRef.current.setFieldsValue({ rate: 5 });
   }, []);
@@ -48,9 +48,17 @@ function Shop({ closeModalAndReqTable }) {
   const onValuesChange = (changeValue, values) => {
     console.log('onValuesChange: ', changeValue, values);
   };
-  
-  // con
 
+  useEffect(() => {
+    const dicts = JSON.parse(localStorage.getItem('dicts'));
+    dicts.forEach((element) => {
+      console.log('element: ', element);
+      if (element.dict_code === 'is_enable') {
+        setstatusLabel(element.dict_label);
+      }
+    });
+  }, []);
+  console.log(statusLabel);
   return (
     <div style={{ maxWidth: 650 }}>
       <Form
@@ -79,7 +87,11 @@ function Shop({ closeModalAndReqTable }) {
           field="menu_status"
           rules={[{ required: true, message: '请填写菜单状态' }]}
         >
-          <Input placeholder="请填写菜单状态..." />
+          <Select placeholder="请选择菜单状态">
+            {statusLabel.map(({ label_value, label_zh }) => {
+              return <Select.Option value={label_value}>{label_zh}</Select.Option>;
+            })}
+          </Select>
         </FormItem>
         <FormItem
           label="菜单路径"
