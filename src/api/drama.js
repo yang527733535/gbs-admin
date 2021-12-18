@@ -5,6 +5,23 @@ export function labelsApi(data) {
   return Service({
     url: '/system/dict/labels',
     method: 'POST',
+    data,
+  });
+}
+export function reqReadDict(data) {
+  return Service({
+    url: '/system/dict/read',
+    method: 'POST',
+    data,
+  });
+}
+
+// reqReadDict
+
+export function dictcategoryApi(data) {
+  return Service({
+    url: '/system/dict/category',
+    method: 'GET',
   });
 }
 
@@ -68,6 +85,15 @@ export function addMenu(data) {
     data: data,
   });
 }
+
+// 添加字典
+export function addLabel(data) {
+  return Service({
+    url: '/system/dict/add-label',
+    data: data,
+  });
+}
+
 
 // 添加组局
 export function addGame(data) {
