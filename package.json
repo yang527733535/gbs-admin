@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "梦墨剧本杀",
   "scripts": {
+    "addfeat": "git add .&& git commit -m '💥 feat(模块):新增功能' && git push origin",
     "prepublishOnly": "npm run build",
     "dev": "arco-scripts dev:site --port 8000",
     "build": "arco-scripts build:site",
@@ -74,7 +75,6 @@
     "react-router-dom": "^5.2.0",
     "redux": "^4.0.5"
   },
-  
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "npm run eslint",

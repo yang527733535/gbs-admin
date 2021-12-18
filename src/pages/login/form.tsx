@@ -5,6 +5,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import styles from './style/index.module.less';
 import history from '../../history';
 import { loginApi } from '../../api/user.js';
+import { labelsApi } from '../../api/drama.js';
 
 export default function LoginForm() {
   const formRef = useRef<FormInstance>();
@@ -19,6 +20,7 @@ export default function LoginForm() {
     } else {
       localStorage.removeItem('loginParams');
     }
+
     // 记录登录状态
     localStorage.setItem('userStatus', 'login');
     // 跳转首页
@@ -32,11 +34,14 @@ export default function LoginForm() {
     setLoading(true);
 
     const res = await loginApi(params);
+    console.log('res: ', res);
     if (res.code === 200) {
       Message.info('登录成功!');
       let token = 'Bearer ' + res.data.access_token;
       localStorage.setItem('userInfo', JSON.stringify(res.data));
       localStorage.setItem('token', token);
+      const labels = await labelsApi();
+      localStorage.setItem('dicts', JSON.stringify(labels.data));
       afterLoginSuccess(params);
     } else {
       setErrorMessage('登录出错，请刷新重试');

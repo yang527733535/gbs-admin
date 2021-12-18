@@ -61,6 +61,14 @@ export function addShop(data) {
   });
 }
 
+// 添加菜单
+export function addMenu(data) {
+  return Service({
+    url: '/system/menu/add',
+    data: data,
+  });
+}
+
 // 添加组局
 export function addGame(data) {
   return Service({

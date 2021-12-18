@@ -7,7 +7,7 @@ import qs from 'query-string';
 import Navbar from '../components/NavBar';
 import Footer from '../components/Footer';
 import LoadingBar from '../components/LoadingBar';
-import { routes, defaultRoute } from '../routes';
+import { defaultRoute } from '../routes';
 import { isArray } from '../utils/is';
 import history from '../history';
 import useLocale from '../utils/useLocale';
@@ -15,6 +15,15 @@ import { ReducerState } from '../redux';
 import getUrlParams from '../utils/getUrlParams';
 import lazyload from '../utils/lazyload';
 import styles from './style/layout.module.less';
+
+const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+const { user_menu = [] } = userInfo;
+user_menu?.map((item) => {
+  // item.icon = <IconStar />;
+  delete item.icon
+  return item;
+});
+let routes = user_menu;
 
 const MenuItem = Menu.Item;
 const SubMenu = Menu.SubMenu;
