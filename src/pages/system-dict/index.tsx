@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Table, Menu, Button, Breadcrumb, Card, Modal } from '@arco-design/web-react';
+import { Table, Menu, Button, Breadcrumb, Card, Modal } from '@arco-design/web-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { menuList } from '../../api/drama.js';
 import {
@@ -34,8 +34,6 @@ function SearchTable({}) {
       },
     },
   ];
-  const Row = Grid.Row;
-  const Col = Grid.Col;
   const MenuItem = Menu.Item;
   const [visitModal, setvisitModal] = useState(false);
   const [menu_code] = useState('');
@@ -123,8 +121,8 @@ function SearchTable({}) {
         <Breadcrumb.Item>字典管理</Breadcrumb.Item>
       </Breadcrumb>
 
-      <Row gutter={2}>
-        <Col span={4}>
+      <div style={{ display: 'flex', width: '100%' }}>
+        <div style={{ width: 200, marginRight: 20 }}>
           <Menu
             onClickMenuItem={async (key, e, value) => {
               console.log(e);
@@ -144,8 +142,8 @@ function SearchTable({}) {
               return <MenuItem key={dict_code}>{dict_name}</MenuItem>;
             })}
           </Menu>
-        </Col>
-        <Col span={20}>
+        </div>
+        <div style={{ flex: 1 }}>
           <Card style={{ height: '75vh', borderRadius: 4 }}>
             <div>
               {selectdict_code !== '' && (
@@ -168,8 +166,8 @@ function SearchTable({}) {
               data={tabledata}
             ></Table>
           </Card>
-        </Col>
-      </Row>
+        </div>
+      </div>
     </div>
   );
 }

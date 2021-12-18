@@ -106,22 +106,12 @@ function Shop({ closeModalAndReqTable, parentMap, selectdict_code }) {
         >
           <InputNumber placeholder="请填写排序..." />
         </FormItem>
-        <FormItem
-          label="父级ID"
-          field="parent_id"
-          rules={[{ required: false, message: '请填写父级ID' }]}
-        >
-          <InputNumber placeholder="请填写父级ID..." />
-        </FormItem>
-
         <FormItem {...noLabelLayout}>
           <Button
             onClick={async () => {
               if (formRef.current) {
                 try {
                   await formRef.current.validate();
-                  // let param = formRef.current.validate();
-                  // param.dict_code =  selectdict_code,
                   const data = await addLabel(formRef.current.getFields());
                   console.log('data: ', data);
                   if (data.code === 200) {
