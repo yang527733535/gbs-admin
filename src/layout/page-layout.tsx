@@ -15,15 +15,25 @@ import { ReducerState } from '../redux';
 import getUrlParams from '../utils/getUrlParams';
 import lazyload from '../utils/lazyload';
 import styles from './style/layout.module.less';
+let routes = [];
 
 const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-const { user_menu = [] } = userInfo;
-user_menu?.map((item) => {
-  // item.icon = <IconStar />;
-  delete item.icon
-  return item;
-});
-let routes = user_menu;
+console.log('userInfo: ', userInfo);
+if (userInfo) {
+  const { user_menu = [] } = userInfo;
+  user_menu?.map((item) => {
+    delete item.icon;
+    return item;
+  });
+  routes = user_menu
+}
+// const { user_menu = [] } = userInfo;
+// user_menu?.map((item) => {
+//   // item.icon = <IconStar />;
+//   delete item.icon
+//   return item;
+// });
+// let routes = user_menu || [];
 
 const MenuItem = Menu.Item;
 const SubMenu = Menu.SubMenu;
