@@ -1,7 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Input, Breadcrumb, Card, Space, Modal } from '@arco-design/web-react';
+import {
+  Table,
+  Button,
+  Input,
+  Breadcrumb,
+  Card,
+  Space,
+  Modal,
+  InputNumber,
+} from '@arco-design/web-react';
 import { useSelector, useDispatch } from 'react-redux';
-import { shopList, labelsApi } from '../../api/drama.js';
+import { CarList, labelsApi } from '../../api/drama.js';
 import {
   UPDATE_FORM_PARAMS,
   UPDATE_LIST,
@@ -16,12 +25,10 @@ import AddForm from './form/index.jsx';
 function SearchTable({}) {
   const locale = useLocale();
   const [visitModal, setvisitModal] = useState(false);
-  const [store_name, setstore_name] = useState('');
-  const [store_type, setstore_type] = useState('');
-  const [store_status, setstore_status] = useState('');
-  const [store_level, setstore_level] = useState('');
-  const [position_city, setposition_city] = useState('');
   const [clickItem, setclickItem] = useState(null);
+  const [store_code, setstore_code] = useState(null);
+  const [gb_code, setgb_code] = useState(null);
+  const [game_people, setgame_people] = useState(null);
   const columns = [
     {
       title: '店铺名称',
@@ -70,15 +77,12 @@ function SearchTable({}) {
   }, []);
 
   function fetchData(current = 1, pageSize = 10, params = {}) {
-    // const data = dispatch({ type: UPDATE_LOADING, payload: { loading: true } });
-    const data = shopList({
+    const data = CarList({
       page: current,
       page_size: pageSize,
-      store_name,
-      store_type,
-      store_status,
-      store_level,
-      position_city,
+      store_code,
+      gb_code,
+      game_people,
     });
     data.then((res) => {
       const { data, paginator } = res;
@@ -97,40 +101,12 @@ function SearchTable({}) {
       dispatch({ type: UPDATE_LOADING, payload: { loading: false } });
       dispatch({ type: UPDATE_FORM_PARAMS, payload: { params } });
     });
-    // data.then((res) => {
-    //   console.log('res: ', res);
-    // });
-
-    // dispatch({ type: UPDATE_LOADING, payload: { loading: false } });
-    // dispatch({ type: UPDATE_FORM_PARAMS, payload: { params } });
-    // axios
-    //   .get(`/api/policy`, {
-    //     params: {
-    //       page: current,
-    //       pageSize,
-    //       ...params,
-    //     },
-    //   })
-    //   .then((res) => {
-    //   });
   }
 
   function onChangeTable(pagination) {
     const { current, pageSize } = pagination;
     fetchData(current, pageSize, formParams);
   }
-
-  // function onSearch(keyword) {
-  //   fetchData(1, pagination.pageSize, { keyword });
-  // }
-
-  // function onDateChange(date) {
-  //   const [start, end] = date;
-  //   fetchData(1, pagination.pageSize, {
-  //     createdTimeStart: start,
-  //     createdTimeEnd: end,
-  //   });
-  // }
 
   return (
     <div className={styles.container}>
@@ -153,8 +129,8 @@ function SearchTable({}) {
         ></AddForm>
       </Modal>
       <Breadcrumb style={{ marginBottom: 20 }}>
-        <Breadcrumb.Item>{locale['menu.list']}</Breadcrumb.Item>
-        <Breadcrumb.Item>{locale['menu.list.searchTable']}</Breadcrumb.Item>
+        <Breadcrumb.Item>店铺运营</Breadcrumb.Item>
+        <Breadcrumb.Item>店铺组局</Breadcrumb.Item>
       </Breadcrumb>
       <div>
         <Card style={{ marginBottom: 20 }}>
@@ -172,56 +148,32 @@ function SearchTable({}) {
             <div>
               <Space style={{ marginLeft: 20 }} wrap={true}>
                 <Input
-                  value={store_name}
+                  value={store_code}
                   onChange={(e) => {
-                    setstore_name(e);
+                    setstore_code(e);
                   }}
-                  placeholder="请输入店铺名称"
+                  placeholder="请输入店铺编码"
                   style={{ width: 200 }}
                 ></Input>
                 <Input
-                  value={store_type}
+                  value={gb_code}
                   onChange={(e) => {
-                    setstore_type(e);
+                    setgb_code(e);
                   }}
-                  placeholder="请选择门店类型"
+                  placeholder="请输入剧本编码"
                   style={{ width: 200 }}
                 ></Input>
-                <Input
-                  value={store_status}
+                <InputNumber
+                  min={1}
+                  value={game_people}
                   onChange={(e) => {
-                    setstore_status(e);
+                    setgame_people(e);
                   }}
-                  placeholder="请选择门店状态"
+                  placeholder="请输入玩家人数"
                   style={{ width: 200 }}
-                ></Input>
-                <Input
-                  onChange={(e) => {
-                    setstore_level(e);
-                  }}
-                  placeholder="门店等级"
-                  value={store_level}
-                  style={{ width: 200 }}
-                ></Input>
-                <Input
-                  onChange={(e) => {
-                    setposition_city(e);
-                  }}
-                  value={position_city}
-                  placeholder="所在城市"
-                  style={{ width: 200 }}
-                ></Input>
-                <Button
-                  onClick={() => {
-                    setstore_name('');
-                    setstore_type('');
-                    setstore_status('');
-                    setstore_level('');
-                    setposition_city('');
-                  }}
-                >
-                  重置
-                </Button>
+                ></InputNumber>
+
+                <Button onClick={() => {}}>重置</Button>
                 <Button
                   onClick={() => {
                     fetchData();

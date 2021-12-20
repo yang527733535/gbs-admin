@@ -22,6 +22,10 @@ Service.interceptors.request.use((config) => {
 // 添加响应拦截器
 Service.interceptors.response.use(
   (response) => {
+    if (response.data.code === 4003) {
+      localStorage.clear();
+      window.location.reload();
+    }
     return response.data;
   },
   (error) => {

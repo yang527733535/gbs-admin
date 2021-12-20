@@ -24,32 +24,43 @@ import AddForm from './form/index.jsx';
 
 function SearchTable() {
   const locale = useLocale();
+  // gb_title
+  // gb_type
+  // gb_area	
+  // gb_people
+  // gb_status
   const [visitModal, setvisitModal] = useState(false);
-
   const columns = [
     {
-      title: '用户名称',
-      dataIndex: 'user_name',
+      title: '剧本ID',
+      dataIndex: 'gb_id',
     },
     {
-      title: '账号',
-      dataIndex: 'user_account',
+      title: '剧本标题',
+      dataIndex: 'gb_title',
     },
     {
-      title: '邮箱',
-      dataIndex: 'user_email',
+      title: '剧本类型',
+      dataIndex: 'gb_type',
       render: (value) => <Typography.Text copyable>{value}</Typography.Text>,
     },
     {
-      title: '手机号码',
-      dataIndex: 'user_mobile',
+      title: '剧本区域',
+      dataIndex: 'gb_area',
+    },
+    {
+      title: '剧本封面',
+      dataIndex: 'gb_cover',
+      render: (a, element, c) => {
+        console.log(a,c)
+        return <img style={{ width: 60, height: 90 }} src={element.gb_cover}></img>;
+      },
     },
     {
       title: locale['searchTable.columns.createdTime'],
       dataIndex: 'created_time',
     },
     {
-      // title: locale['searchTable.columns.deadline'],
       title: '更新时间',
       dataIndex: 'updated_time',
     },
@@ -81,7 +92,6 @@ function SearchTable() {
   }, []);
 
   function fetchData(current = 1, pageSize = 10, params = {}) {
-    // const data = dispatch({ type: UPDATE_LOADING, payload: { loading: true } });
     const data = dramaList({
       page: current,
       page_size: pageSize,
@@ -104,40 +114,12 @@ function SearchTable() {
       dispatch({ type: UPDATE_LOADING, payload: { loading: false } });
       dispatch({ type: UPDATE_FORM_PARAMS, payload: { params } });
     });
-    // data.then((res) => {
-    //   console.log('res: ', res);
-    // });
-
-    // dispatch({ type: UPDATE_LOADING, payload: { loading: false } });
-    // dispatch({ type: UPDATE_FORM_PARAMS, payload: { params } });
-    // axios
-    //   .get(`/api/policy`, {
-    //     params: {
-    //       page: current,
-    //       pageSize,
-    //       ...params,
-    //     },
-    //   })
-    //   .then((res) => {
-    //   });
   }
 
   function onChangeTable(pagination) {
     const { current, pageSize } = pagination;
     fetchData(current, pageSize, formParams);
   }
-
-  // function onSearch(keyword) {
-  //   fetchData(1, pagination.pageSize, { keyword });
-  // }
-
-  // function onDateChange(date) {
-  //   const [start, end] = date;
-  //   fetchData(1, pagination.pageSize, {
-  //     createdTimeStart: start,
-  //     createdTimeEnd: end,
-  //   });
-  // }
 
   return (
     <div className={styles.container}>
@@ -154,13 +136,14 @@ function SearchTable() {
         <AddForm></AddForm>
       </Modal>
       <Breadcrumb style={{ marginBottom: 20 }}>
-        <Breadcrumb.Item>{locale['menu.list']}</Breadcrumb.Item>
-        <Breadcrumb.Item>{locale['menu.list.searchTable']}</Breadcrumb.Item>
+        <Breadcrumb.Item>运营管理</Breadcrumb.Item>
+        <Breadcrumb.Item>剧本管理</Breadcrumb.Item>
       </Breadcrumb>
       <div>
         <Card style={{ marginBottom: 20 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <Button
+              style={{ marginRight: 20 }}
               onClick={() => {
                 setvisitModal(true);
               }}
@@ -169,19 +152,16 @@ function SearchTable() {
               添加剧本
             </Button>
             <div>
-              <Space>
-                <Input onChange={() => {}} placeholder="请输入账号" style={{ width: 200 }}></Input>
+              <Space style={{flex:1}} wrap>
                 <Input
                   onChange={() => {}}
-                  placeholder="请输入手机号码"
+                  placeholder="请输入剧本标题"
                   style={{ width: 200 }}
                 ></Input>
-                <Input
-                  onChange={() => {}}
-                  placeholder="请输入用户名"
-                  style={{ width: 200 }}
-                ></Input>
-                <Input onChange={() => {}} placeholder="用户状态" style={{ width: 200 }}></Input>
+                <Input onChange={() => {}} placeholder="剧本类型" style={{ width: 200 }}></Input>
+                <Input onChange={() => {}} placeholder="剧本区域" style={{ width: 200 }}></Input>
+                <Input onChange={() => {}} placeholder="玩家人数" style={{ width: 200 }}></Input>
+                <Input onChange={() => {}} placeholder="剧本状态" style={{ width: 200 }}></Input>
                 <Button onClick={() => {}}>重置</Button>
                 <Button
                   onClick={() => {

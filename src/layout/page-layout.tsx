@@ -18,12 +18,11 @@ import styles from './style/layout.module.less';
 // import { reqUserInfo } from '../api/user.js';
 let routes = [];
 const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-console.log('userInfo: ', userInfo);
-
 if (userInfo) {
   const { user_menu = [] } = userInfo;
   user_menu?.map((item) => {
     delete item.icon;
+    item.icon = <IconMenuUnfold />;
     return item;
   });
   user_menu.push({
@@ -172,7 +171,7 @@ function PageLayout() {
                 collapse={collapsed}
                 onClickMenuItem={onClickMenuItem}
                 selectedKeys={selectedKeys}
-                autoOpen
+                autoOpen={false}
               >
                 {renderRoutes(locale)}
               </Menu>

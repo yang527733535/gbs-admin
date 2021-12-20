@@ -33,3 +33,11 @@ export function registerApi(data) {
     data: data,
   });
 }
+
+// RoleTreeApi 角色树
+export function RoleTreeApi() {
+  return Service({
+    url: '/system/role/tree',
+    method: 'GET',
+  });
+}

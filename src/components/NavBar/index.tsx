@@ -29,7 +29,6 @@ function Navbar() {
 
   useEffect(() => {
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-    console.log('userInfo: ', userInfo);
     if (userInfo) {
       setuserInfo(userInfo);
     }

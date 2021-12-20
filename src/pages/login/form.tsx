@@ -27,6 +27,7 @@ export default function LoginForm() {
     window.location.href = history.createHref({
       pathname: '/',
     });
+    window.location.reload();
   }
 
   async function login(params) {

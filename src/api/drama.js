@@ -48,6 +48,14 @@ export function shopList(data) {
   });
 }
 
+export function CarList(data) {
+  return Service({
+    url: '/v1/game/list',
+    data: data,
+    method: 'post',
+  });
+}
+
 // 菜单列表
 export function menuList(data) {
   return Service({
@@ -93,7 +101,6 @@ export function addLabel(data) {
     data: data,
   });
 }
-
 
 // 添加组局
 export function addGame(data) {

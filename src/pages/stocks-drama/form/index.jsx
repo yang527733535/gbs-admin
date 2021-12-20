@@ -89,7 +89,7 @@ function Demo() {
 
         <Form.Item
           label="剧本封面"
-          field="upload"
+          // field="upload"
           triggerPropName="fileList"
           // initialValue={[
           //   {

@@ -1,12 +1,11 @@
 import { Alert } from '@arco-design/web-react';
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { ReducerState } from '../../redux';
+// import { useSelector } from 'react-redux';
+// import { ReducerState } from '../../redux';
 import styles from './style/index.module.less';
 
 export default function Welcome() {
-  const userInfo = useSelector((state: ReducerState) => state.global.userInfo) || {};
-  console.log('userInfo: ', userInfo);
+  // const userInfo = useSelector((state: ReducerState) => state.global.userInfo) || {};
   return (
     <div className={styles.container}>
       <div className={styles.content}>

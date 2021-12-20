@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Tree, Button, Breadcrumb, Card, Modal } from '@arco-design/web-react';
+import { Table, Tree, Button, Breadcrumb, Card, Modal, Space } from '@arco-design/web-react';
 import styles from './style/index.module.less';
+import { RoleTreeApi, userList } from '../../api/user.js';
+import AddForm from './form/index.jsx';
 
-function SearchTable({}) {
+function RoleTree({}) {
   const columns = [
     {
       title: '名称',
@@ -16,28 +18,59 @@ function SearchTable({}) {
       title: '操作',
       render: () => {
         return (
-          <Button size="small" type="primary">
-            修改
-          </Button>
+          <Space>
+            <Button size="small" type="primary">
+              修改
+            </Button>
+            <Button status="danger" size="small" type="primary">
+              删除
+            </Button>
+          </Space>
         );
       },
     },
   ];
   const [visitModal, setvisitModal] = useState(false);
-  // const [menu_code] = useState('');
-  // const [menu_status] = useState('');
-  // const [menu_name] = useState('');
-  // const [menu_path] = useState('');
   const [clickItem] = useState(null);
   const [tabledata] = useState([]);
   const [selectdict_code] = useState('');
-  // const [parentMap, setparentMap] = useState({});
-  useEffect(() => {}, []);
+  const [treeData, settreeData] = useState([]);
+  const [userListData, setuserListData] = useState([]);
+  useEffect(() => {
+    reqRoleTree();
+  }, []);
+  useEffect(() => {
+    reqUserList();
+  }, []);
+  const reqUserList = async () => {
+    const parma = {
+      page: 1,
+      page_size: 100,
+    };
+    const { data } = await userList(parma);
+    console.log('data: ', data);
+    setuserListData(data);
+  };
 
+  const reqRoleTree = async () => {
+    const resdata = await RoleTreeApi();
+    const { data } = resdata;
+    const mapTree = (org) => {
+      const haveChildren = Array.isArray(org.role_child) && org.role_child.length > 0;
+      return {
+        title: String(org.role_name),
+        key: String(org.role_code),
+        children: haveChildren ? org.role_child.map((i) => mapTree(i)) : [],
+      };
+    };
+    let arr = [];
+    arr = data.map((org) => mapTree(org));
+    settreeData(arr);
+  };
   return (
     <div className={styles.container}>
       <Modal
-        title={clickItem === null ? '添加目录' : '修改字典'}
+        title={clickItem === null ? '添加用户' : '修改用户'}
         footer={null}
         onCancel={() => {
           setvisitModal(false);
@@ -46,31 +79,41 @@ function SearchTable({}) {
         style={{ width: 900, minWidth: 900 }}
         visible={visitModal}
       >
-        {/* <AddForm
+        <AddForm
+          userListData={userListData}
           selectdict_code={selectdict_code}
           clickItem={clickItem}
           closeModalAndReqTable={() => {
             setvisitModal(false);
-            fetchData();
+            // fetchData();
           }}
-        ></AddForm> */}
+        ></AddForm>
       </Modal>
       <Breadcrumb style={{ marginBottom: 20 }}>
-        <Breadcrumb.Item>系统设置</Breadcrumb.Item>
-        <Breadcrumb.Item>字典管理</Breadcrumb.Item>
+        <Breadcrumb.Item>权限管理</Breadcrumb.Item>
+        <Breadcrumb.Item>角色分配</Breadcrumb.Item>
       </Breadcrumb>
 
       <div style={{ display: 'flex', width: '100%' }}>
         <div style={{ width: 200, marginRight: 20 }}>
           <Card>
             <Tree
-              defaultSelectedKeys={['0-0-1']}
-              treeData={[{ title: 'Branch 0-0-2', key: '0-0-2' }]}
+              // defaultSelectedKeys={['0-0-1']}
+              treeData={treeData}
             ></Tree>
           </Card>
         </div>
         <div style={{ flex: 1 }}>
           <Card style={{ height: '75vh', borderRadius: 4 }}>
+            <Button
+              onClick={() => {
+                setvisitModal(true);
+              }}
+              style={{ marginBottom: 20 }}
+              type="primary"
+            >
+              角色添加用户
+            </Button>
             <div>
               {selectdict_code !== '' && (
                 <Button
@@ -98,4 +141,4 @@ function SearchTable({}) {
   );
 }
 
-export default SearchTable;
+export default RoleTree;

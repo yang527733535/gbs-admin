@@ -66,7 +66,6 @@ function Shop({ closeModalAndReqTable, clickItem }) {
       };
       let arr = [];
       arr = data.map((org) => mapTree(org));
-      console.log(arr);
       setcascaderOptionsArr(arr);
     });
   }, []);
