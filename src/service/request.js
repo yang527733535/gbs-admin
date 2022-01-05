@@ -22,7 +22,7 @@ Service.interceptors.request.use((config) => {
 // 添加响应拦截器
 Service.interceptors.response.use(
   (response) => {
-    if (response.data.code === 4003) {
+    if (response.data.code === 4003 || response.data.code === 4001 ) {
       localStorage.clear();
       window.location.reload();
     }

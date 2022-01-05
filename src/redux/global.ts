@@ -1,6 +1,10 @@
 import defaultSettings from '../settings.json';
 
 const defaultTheme = localStorage.getItem('arco-theme') || 'light';
+const defaultUser = {
+  name: 'yangtenghui',
+  avatar: '23123',
+};
 
 function changeTheme(newTheme?: 'string') {
   if ((newTheme || defaultTheme) === 'dark') {
@@ -29,9 +33,13 @@ export interface GlobalState {
 const initialState: GlobalState = {
   theme: defaultTheme,
   settings: defaultSettings,
+  userInfo: defaultUser,
 };
 
 export default function(state = initialState, action) {
+  console.log(state);
+  console.log(action);
+
   switch (action.type) {
     case 'toggle-theme': {
       const { theme } = action.payload;
@@ -39,7 +47,6 @@ export default function(state = initialState, action) {
         localStorage.setItem('arco-theme', theme);
         changeTheme(theme);
       }
-
       return {
         ...state,
         theme,

@@ -326,14 +326,11 @@ function Demo() {
               if (formRef.current) {
                 try {
                   await formRef.current.validate();
-                  console.log(formRef.current);
                   // Message.info('校验通过，提交成功！');
                   console.log(formRef.current.getFields());
                   const data = await addDrama(formRef.current.getFields());
-                  console.log('param: ', data);
                 } catch (_) {
                   console.log(formRef.current.getFieldsError());
-
                   Message.error('校验失败，请检查字段！');
                 }
               }

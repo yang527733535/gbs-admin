@@ -64,9 +64,21 @@ function FormDom({ closeModalAndReqTable, userListData, clickItem }) {
         scrollToFirstError
       >
         <FormItem field="user_list" label="添加用户">
-          <Select mode="multiple">
+          <Select
+            filterOption={(inputValue, option) =>
+              option.props.value.toLowerCase().indexOf(inputValue.toLowerCase()) >= 0 ||
+              option.props.children.toLowerCase().indexOf(inputValue.toLowerCase()) >= 0
+            }
+            showSearch
+            allowClear
+            mode="multiple"
+          >
             {userListData.map((item) => {
-              return <Select.Option value={item.user_account}>{item.user_name}</Select.Option>;
+              return (
+                <Select.Option key={item.user_account} value={item.user_account}>
+                  {item.user_name}
+                </Select.Option>
+              );
             })}
           </Select>
         </FormItem>

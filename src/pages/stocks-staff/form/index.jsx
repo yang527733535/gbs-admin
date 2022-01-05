@@ -17,7 +17,7 @@ function Index(props) {
         form={form}
       >
         <FormItem label="用户名">
-          <Input placeholder="请输入你的用户名称..." />
+          <Input  placeholder="请输入你的用户名称..." />
         </FormItem>
         <FormItem label="密码">
           <Input placeholder="请输入你的密码..." />

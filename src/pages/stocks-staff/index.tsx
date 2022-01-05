@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import {
   Table,
-  Typography,
   Button,
   Input,
   Breadcrumb,
   Card,
   Space,
   Modal,
+  Tabs,
+  Typography,
 } from '@arco-design/web-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { userList } from '../../api/user.js';
@@ -21,8 +22,12 @@ import AddForm from './form/index.jsx';
 import useLocale from '../../utils/useLocale';
 import { ReducerState } from '../../redux';
 import styles from './style/index.module.less';
+
+const TabPane = Tabs.TabPane;
+
 function SearchTable() {
   const locale = useLocale();
+  const [tabkey, settabkey] = useState('user');
   const [visitModal, setvisitModal] = useState(false);
   const [user_account, setuser_account] = useState('');
   const [user_mobile, setuser_mobile] = useState('');
@@ -135,18 +140,6 @@ function SearchTable() {
     fetchData(current, pageSize, formParams);
   }
 
-  // function onSearch(keyword) {
-  //   fetchData(1, pagination.pageSize, { keyword });
-  // }
-
-  // function onDateChange(date) {
-  //   const [start, end] = date;
-  //   fetchData(1, pagination.pageSize, {
-  //     createdTimeStart: start,
-  //     createdTimeEnd: end,
-  //   });
-  // }
-
   return (
     <div className={styles.container}>
       <Modal
@@ -161,8 +154,8 @@ function SearchTable() {
         <AddForm name="XIXI"></AddForm>
       </Modal>
       <Breadcrumb style={{ marginBottom: 20 }}>
-        <Breadcrumb.Item>{locale['menu.list']}</Breadcrumb.Item>
-        <Breadcrumb.Item>{locale['menu.list.searchTable']}</Breadcrumb.Item>
+        <Breadcrumb.Item>运营管理</Breadcrumb.Item>
+        <Breadcrumb.Item>人员管理</Breadcrumb.Item>
       </Breadcrumb>
       <div>
         <Card style={{ marginBottom: 20 }}>
@@ -229,14 +222,38 @@ function SearchTable() {
         </Card>
       </div>
       <Card bordered={false}>
-        <Table
-          rowKey="user_account"
-          loading={loading}
-          onChange={onChangeTable}
-          pagination={pagination}
-          columns={columns}
-          data={data}
-        />
+        <Tabs
+          onClickTab={(key: any) => {
+            console.log('key: ', key);
+            settabkey(key);
+          }}
+          activeTab={tabkey}
+        >
+          <TabPane key="user" title="普通员工">
+            <Typography.Paragraph>
+              <Table
+                rowKey="user_account"
+                loading={loading}
+                onChange={onChangeTable}
+                pagination={pagination}
+                columns={columns}
+                data={data}
+              />
+            </Typography.Paragraph>
+          </TabPane>
+          <TabPane key="worker" title="职员">
+            <Typography.Paragraph>
+              <Table
+                rowKey="user_account"
+                loading={loading}
+                onChange={onChangeTable}
+                pagination={pagination}
+                columns={columns}
+                data={data}
+              />
+            </Typography.Paragraph>
+          </TabPane>
+        </Tabs>
       </Card>
     </div>
   );

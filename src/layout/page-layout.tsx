@@ -1,7 +1,16 @@
 import React, { useState, useRef, useMemo } from 'react';
 import { Switch, Route, Link, Redirect } from 'react-router-dom';
 import { Layout, Menu } from '@arco-design/web-react';
-import { IconMenuFold, IconMenuUnfold } from '@arco-design/web-react/icon';
+import {
+  IconMenuFold,
+  IconMenuUnfold,
+  IconStar,
+  IconCalendarClock,
+  IconArchive,
+  IconSelectAll,
+  IconApps,
+  IconDashboard,
+} from '@arco-design/web-react/icon';
 import { useSelector } from 'react-redux';
 import qs from 'query-string';
 import Navbar from '../components/NavBar';
@@ -20,9 +29,19 @@ let routes = [];
 const userInfo = JSON.parse(localStorage.getItem('userInfo'));
 if (userInfo) {
   const { user_menu = [] } = userInfo;
+  const iconMap = {
+    IconStar: <IconStar />,
+    IconCalendarClock: <IconCalendarClock />,
+    IconArchive: <IconArchive />,
+    IconSelectAll: <IconSelectAll />,
+    IconDashboard: <IconDashboard />,
+    IconApps: <IconApps />,
+  };
   user_menu?.map((item) => {
-    delete item.icon;
-    item.icon = <IconMenuUnfold />;
+    // delete item.icon;
+    console.log(item.icon);
+
+    item.icon = iconMap[item.icon];
     return item;
   });
   user_menu.push({

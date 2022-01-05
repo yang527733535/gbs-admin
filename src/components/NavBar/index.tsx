@@ -23,7 +23,8 @@ import styles from './style/index.module.less';
 function Navbar() {
   const locale = useLocale();
   const theme = useSelector((state: ReducerState) => state.global.theme);
-  // const userInfo = useSelector((state: ReducerState) => state.global.userInfo);
+  const userInfo2 = useSelector((state: ReducerState) => state.global.userInfo);
+  console.log('userInfo2,', userInfo2);
   const dispatch = useDispatch();
   const [userInfo, setuserInfo] = useState(null);
 
@@ -56,7 +57,7 @@ function Navbar() {
         <Space size={8}>
           <Logo />
           <Typography.Title style={{ margin: 0, fontSize: 18 }} heading={5}>
-             梦墨Admin
+            梦墨Admin
           </Typography.Title>
         </Space>
       </div>
