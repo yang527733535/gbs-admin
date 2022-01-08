@@ -29,6 +29,7 @@ function SearchTable() {
   const [dmlist, setdmlist] = useState([]);
   const [clickItem, setclickItem] = useState({});
   const [addDmModal, setaddDmModal] = useState(false);
+  const [modalType, setmodalType] = useState('');
   const [visitModal, setvisitModal] = useState(false);
   const [DramaRoleModal, setDramaRoleModal] = useState(false);
   const [labelData, setlabelData] = useState([]);
@@ -91,7 +92,15 @@ function SearchTable() {
             >
               添加dm
             </Button>
-            <Button type="primary" size="mini">
+            <Button
+              onClick={() => {
+                setvisitModal(true);
+                setclickItem(data);
+                setmodalType('edit');
+              }}
+              type="primary"
+              size="mini"
+            >
               {locale['searchTable.columns.operations.update']}
             </Button>
           </Space>
@@ -168,7 +177,12 @@ function SearchTable() {
           setDramaRoleModal(false);
         }}
       >
-        <AddRoleForm clickItem={clickItem}></AddRoleForm>
+        <AddRoleForm
+          closeModalAndRequest={() => {
+            setDramaRoleModal(false);
+          }}
+          clickItem={clickItem}
+        ></AddRoleForm>
       </Modal>
       <Modal
         onCancel={() => {
@@ -199,7 +213,10 @@ function SearchTable() {
         visible={visitModal}
       >
         <AddForm
+          modalType={modalType}
+          clickItem={clickItem}
           closeModalAndRequest={() => {
+            setclickItem(null);
             fetchData();
             setvisitModal(false);
           }}
@@ -216,6 +233,7 @@ function SearchTable() {
             <Button
               style={{ marginRight: 20 }}
               onClick={() => {
+                setmodalType('add');
                 setvisitModal(true);
               }}
               type="primary"

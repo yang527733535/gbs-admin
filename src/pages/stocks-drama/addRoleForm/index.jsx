@@ -1,13 +1,14 @@
 import React, { useState, useRef } from 'react';
 import { reqBindDm, reqBindrole } from '../../../api/drama.js';
-import { Form, Space, Select, Message, Input, Button, Grid } from '@arco-design/web-react';
+import { Form, Space, Select, Message, Upload, Input, Button, Grid } from '@arco-design/web-react';
 import { IconArrowRise, IconArrowFall, IconDelete } from '@arco-design/web-react/icon';
-
+const Row = Grid.Row;
+const Col = Grid.Col;
 const FormItem = Form.Item;
 
 const formItemLayout = {
   labelCol: {
-    span: 7,
+    span: 4,
   },
   wrapperCol: {
     span: 17,
@@ -23,7 +24,7 @@ export default function DmForm({ clickItem, closeModalAndRequest, dmlist }) {
   const formRef = useRef();
   return (
     <div>
-      <Form ref={formRef} {...formItemLayout}>
+      <Form layout="vertical" ref={formRef} {...formItemLayout}>
         <Form.List field="role_array">
           {(fields, { add, remove, move }) => {
             return (
@@ -33,22 +34,17 @@ export default function DmForm({ clickItem, closeModalAndRequest, dmlist }) {
                     <div key={item.key}>
                       <Form.Item label={'角色' + (index + 1)}>
                         <Space>
-                          <Form.Item
-                            label="角色名称"
-                            field={item.field + '.role_name'}
-                            rules={[{ required: true }]}
-                            noStyle
-                          >
-                            <Input placeholder="角色名称" />
-                          </Form.Item>
-                          <Form.Item
-                            label="角色封面"
-                            field={item.field + '.role_cover'}
-                            rules={[{ required: true }]}
-                            noStyle
-                          >
-                            <Input placeholder="角色封面" />
-                          </Form.Item>
+                          <Row>
+                            <Form.Item
+                              label="角色名称"
+                              field={item.field + '.role_name'}
+                              rules={[{ required: true }]}
+                              noStyle
+                            >
+                              <Input placeholder="角色名称" />
+                            </Form.Item>
+                          </Row>
+
                           <Form.Item
                             label="角色简介"
                             field={item.field + '.role_brief'}
@@ -76,6 +72,39 @@ export default function DmForm({ clickItem, closeModalAndRequest, dmlist }) {
                               <Select.Option value={false}>否</Select.Option>
                             </Select>
                           </Form.Item>
+                          <Form.Item
+                            label="角色封面"
+                            field={item.field + '.role_cover'}
+                            rules={[{ required: true }]}
+                            noStyle
+                            // initialValue={[
+                            //   {
+                            //     uid: '-1',
+                            //     url:
+                            //       '//p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/e278888093bef8910e829486fb45dd69.png~tplv-uwbnlip3yd-webp.webp',
+                            //     name: '20200717',
+                            //   },
+                            // ]}
+                          >
+                            <Input placeholder="角色封面" />
+                            {/* <Upload
+                              listType="picture-card"
+                              multiple
+                              name="files"
+                              action="/"
+                              onPreview={(file) => {
+                                Modal.info({
+                                  title: 'Preview',
+                                  content: (
+                                    <img
+                                      src={file.url || URL.createObjectURL(file.originFile)}
+                                      style={{ maxWidth: '100%' }}
+                                    ></img>
+                                  ),
+                                });
+                              }}
+                            /> */}
+                          </Form.Item>
                           <Button
                             icon={<IconDelete />}
                             shape="circle"
@@ -87,7 +116,7 @@ export default function DmForm({ clickItem, closeModalAndRequest, dmlist }) {
                     </div>
                   );
                 })}
-                <Form.Item wrapperCol={{ offset: 5 }}>
+                <Form.Item wrapperCol={{ offset: 4 }}>
                   <Button
                     onClick={() => {
                       add();
@@ -100,7 +129,7 @@ export default function DmForm({ clickItem, closeModalAndRequest, dmlist }) {
             );
           }}
         </Form.List>
-        <FormItem {...noLabelLayout}>
+        <FormItem wrapperCol={{ offset: 4 }}>
           <Button
             onClick={async () => {
               if (formRef.current) {
@@ -110,12 +139,12 @@ export default function DmForm({ clickItem, closeModalAndRequest, dmlist }) {
                   param.gb_code = clickItem.gb_code;
                   const data = await reqBindrole(param);
                   if (data.code === 200) {
+                    Message.info('提交成功！');
+                    closeModalAndRequest();
                   }
-                  Message.info('提交成功！');
-                  closeModalAndRequest();
                 } catch (_) {
-                  console.log(formRef.current.getFieldsError());
-                  Message.error('校验失败，请检查字段！');
+                  // console.log(formRef.current.getFieldsError());
+                  // Message.error('校验失败，请检查字段！');
                 }
               }
             }}

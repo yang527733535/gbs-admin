@@ -147,3 +147,18 @@ export function reqBindrole(data) {
     method: 'post',
   });
 }
+export function editDrama(data) {
+  return Service({
+    url: '/v1/drama/edit',
+    data: data,
+    method: 'post',
+  });
+}
+
+export function dramaDetail(data) {
+  return Service({
+    url: '/v1/drama/view',
+    data: data,
+    method: 'post',
+  });
+}
