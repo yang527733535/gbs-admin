@@ -42,7 +42,7 @@ export function dramaList(data) {
 
 export function getDmList(data) {
   return Service({
-    url: '/v1/option/user',
+    url: '/v1/option/user-dm',
     data: data,
   });
 }
@@ -129,5 +129,21 @@ export function regionsList() {
   return Service({
     url: '/system/basic/regions',
     method: 'GET',
+  });
+}
+
+export function reqBindDm(data) {
+  return Service({
+    url: '/v1/drama/add-dm',
+    data: data,
+    method: 'post',
+  });
+}
+
+export function reqBindrole(data) {
+  return Service({
+    url: '/v1/drama/save-role',
+    data: data,
+    method: 'post',
   });
 }

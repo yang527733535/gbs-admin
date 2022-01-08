@@ -37,8 +37,6 @@ const noLabelLayout = {
 };
 
 function DramaForm({ labelData, closeModalAndRequest }) {
-  console.log('labelData: ', labelData);
-
   const formRef = useRef();
   const [ImgData, setImgData] = useState(null);
   const [size, setSize] = useState('default');
