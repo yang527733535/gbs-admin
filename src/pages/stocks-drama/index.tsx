@@ -10,7 +10,7 @@ import {
   Modal,
 } from '@arco-design/web-react';
 import { useSelector, useDispatch } from 'react-redux';
-import { dramaList } from '../../api/drama.js';
+import { dramaList, labelsApi } from '../../api/drama.js';
 import {
   UPDATE_FORM_PARAMS,
   UPDATE_LIST,
@@ -24,12 +24,8 @@ import AddForm from './form/index.jsx';
 
 function SearchTable() {
   const locale = useLocale();
-  // gb_title
-  // gb_type
-  // gb_area	
-  // gb_people
-  // gb_status
   const [visitModal, setvisitModal] = useState(false);
+  const [labelData, setlabelData] = useState([]);
   const columns = [
     {
       title: '剧本ID',
@@ -52,7 +48,7 @@ function SearchTable() {
       title: '剧本封面',
       dataIndex: 'gb_cover',
       render: (a, element, c) => {
-        console.log(a,c)
+        console.log(a, c);
         return <img style={{ width: 60, height: 90 }} src={element.gb_cover}></img>;
       },
     },
@@ -84,12 +80,19 @@ function SearchTable() {
   ];
 
   const searchTableState = useSelector((state: ReducerState) => state.searchTable);
-
   const { data, pagination, loading, formParams } = searchTableState;
   const dispatch = useDispatch();
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    getlabelsApi();
+  }, []);
+  const getlabelsApi = async () => {
+    const data = await labelsApi();
+    setlabelData(data.data);
+  };
 
   function fetchData(current = 1, pageSize = 10, params = {}) {
     const data = dramaList({
@@ -133,7 +136,7 @@ function SearchTable() {
         style={{ width: 900, minWidth: 900 }}
         visible={visitModal}
       >
-        <AddForm></AddForm>
+        <AddForm labelData={labelData}></AddForm>
       </Modal>
       <Breadcrumb style={{ marginBottom: 20 }}>
         <Breadcrumb.Item>运营管理</Breadcrumb.Item>
@@ -152,7 +155,7 @@ function SearchTable() {
               添加剧本
             </Button>
             <div>
-              <Space style={{flex:1}} wrap>
+              <Space style={{ flex: 1 }} wrap>
                 <Input
                   onChange={() => {}}
                   placeholder="请输入剧本标题"

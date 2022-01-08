@@ -4,7 +4,6 @@ import {
   AutoComplete,
   Input,
   Select,
-  TreeSelect,
   Button,
   Checkbox,
   Switch,
@@ -37,12 +36,37 @@ const noLabelLayout = {
   },
 };
 
-function Demo() {
-  const formRef = useRef();
-  const [size, setSize] = useState('default');
+function DramaForm({ labelData }) {
+  console.log('labelData: ', labelData);
 
+  const formRef = useRef();
+  const [ImgData, setImgData] = useState(null);
+  const [size, setSize] = useState('default');
+  const [gb_typeSelectData, setgb_typeSelectData] = useState([]);
+  const [gb_levelSelectData, setgb_levelSelectData] = useState([]);
+  const [gb_peopleSelectData, setgb_peopleSelectData] = useState([]);
+  const [gb_text_tagSelectData, setgb_text_tagSelectData] = useState([]);
+  const [gb_status_Data, setgb_status_Data] = useState([]);
   useEffect(() => {
-    // formRef.current.setFieldsValue({ rate: 5 });
+    for (let index = 0; index < labelData.length; index++) {
+      const element = labelData[index];
+      if (element.dict_code === 'app_gb_type') {
+        setgb_typeSelectData(element);
+      }
+      if (element.dict_code === 'app_gb_level') {
+        setgb_levelSelectData(element);
+      }
+      if (element.dict_code === 'app_gb_people') {
+        setgb_peopleSelectData(element);
+      }
+      if (element.dict_code === 'app_gb_text_tag') {
+        setgb_text_tagSelectData(element);
+      }
+      if (element.dict_code === 'app_gb_status') {
+        setgb_status_Data(element);
+      }
+      // "app_gb_status"
+    }
   }, []);
 
   const onValuesChange = (changeValue, values) => {
@@ -55,12 +79,12 @@ function Demo() {
         ref={formRef}
         {...formItemLayout}
         size={size}
-        // initialValues={{
-        //   slider: 20,
-        //   'a.b[0].c': ['b'],
-        // }}
         onSubmit={(e) => {
-          console.log(e);
+          const param = {
+            ...e,
+            gb_cover: e.gb_cover['response']['data']['file_url'],
+          };
+          console.log(param);
         }}
         onValuesChange={onValuesChange}
         scrollToFirstError
@@ -72,39 +96,16 @@ function Demo() {
         >
           <Input placeholder="请填写剧本名称..." />
         </FormItem>
-        <FormItem
-          label="剧本类型"
-          field="gb_type"
-          rules={[{ required: false, message: '请填写剧本类型' }]}
-        >
-          <Input placeholder="请填写剧本类型..." />
-        </FormItem>
-        <FormItem
-          label="剧本区域"
-          field="gb_area"
-          rules={[{ required: false, message: '请填写剧本区域' }]}
-        >
-          <Input placeholder="请填写剧本区域..." />
-        </FormItem>
-
         <Form.Item
+          rules={[{ required: true, message: '请上传剧本封面' }]}
           label="剧本封面"
-          // field="upload"
-          triggerPropName="fileList"
-          // initialValue={[
-          //   {
-          //     uid: '-1',
-          //     url:
-          //       '//p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/e278888093bef8910e829486fb45dd69.png~tplv-uwbnlip3yd-webp.webp',
-          //     name: '20200717',
-          //   },
-          // ]}
+          field="gb_cover"
+          triggerPropName="gb_cover"
         >
           <Upload
             listType="picture-card"
             multiple
-            name="files"
-            // action="http://120.24.188.169:8000/system/upload/image"
+            name="gb_cover"
             customRequest={(option) => {
               console.log(option);
               const { onProgress, onError, onSuccess, file } = option;
@@ -126,7 +127,8 @@ function Demo() {
                 if (xhr.status < 200 || xhr.status >= 300) {
                   return onError(xhr.responseText);
                 }
-                onSuccess(xhr.responseText, xhr);
+                setImgData(JSON.parse(xhr.responseText));
+                onSuccess(JSON.parse(xhr.responseText), xhr);
               };
               const formData = new FormData();
               formData.append('up_file', file);
@@ -148,83 +150,124 @@ function Demo() {
             }}
           />
         </Form.Item>
-        <FormItem label="玩家人数" field="gb_people" rules={[{ type: 'number', required: false }]}>
-          <InputNumber min={1} placeholder="请输入玩家人数" />
+        <FormItem
+          label="剧本类型"
+          field="gb_type"
+          rules={[{ required: true, message: '请填写剧本类型' }]}
+        >
+          <Select placeholder="请选择剧本类型">
+            {gb_typeSelectData?.dict_label?.map((item) => {
+              return (
+                <Select.Option key={item.label_value} value={item.label_value}>
+                  {item.label_zh}
+                </Select.Option>
+              );
+            })}
+          </Select>
         </FormItem>
-        <FormItem label="参考价格" field="gb_price" rules={[{ type: 'number', required: false }]}>
-          <InputNumber min={1} placeholder="请输入参考价格" />
+        <FormItem
+          label="剧本难度"
+          field="gb_level"
+          rules={[{ required: true, message: '请选中剧本难度' }]}
+        >
+          <Select placeholder="请选择剧本难度">
+            {gb_levelSelectData?.dict_label?.map((item) => {
+              return (
+                <Select.Option key={item.label_value} value={item.label_value}>
+                  {item.label_zh}
+                </Select.Option>
+              );
+            })}
+          </Select>
         </FormItem>
+
+        <FormItem
+          label="玩家人数"
+          field="gb_people"
+          rules={[{ required: true, message: '请填写玩家说明' }]}
+        >
+          <InputNumber placeholder="请填写玩家说明..." />
+        </FormItem>
+
+        <FormItem
+          label="剧本状态"
+          field="gb_status"
+          rules={[{ required: false, message: '请选择剧本状态' }]}
+        >
+          <Select placeholder="请选择剧本状态">
+            {gb_status_Data?.dict_label?.map((item) => {
+              return (
+                <Select.Option key={item.label_value} value={item.label_value}>
+                  {item.label_zh}
+                </Select.Option>
+              );
+            })}
+          </Select>
+        </FormItem>
+
+        {/* gb_status_Data */}
         <FormItem
           label="玩家说明"
           field="gb_people_note"
-          rules={[{ required: false, message: '请填写玩家说明' }]}
+          rules={[{ required: true, message: '请填写玩家说明' }]}
         >
           <Input placeholder="请填写玩家说明..." />
         </FormItem>
-        {/* <FormItem label="Auto-complete" field="autocomplete" rules={[{ required: true }]}>
-          <AutoComplete placeholder="please enter" data={['123', '234', '345', '456']} />
-        </FormItem> */}
-        {/* <FormItem label="Post" field="post" rules={[{ required: true }]}>
-          <Select
-            placeholder="please select"
-            options={[
-              { label: 'one', value: 0 },
-              { label: 'two', value: 1 },
-              { label: 'three', value: 2 },
-            ]}
-            allowClear
-          />
-        </FormItem> */}
-        {/* <FormItem
-          label="Multiple Choice"
-          required
-          field="a.b[0].c"
-          rules={[
-            {
-              type: 'array',
-              minLength: 1,
-              message: 'choice is required',
-            },
-          ]}
+        <FormItem
+          label="剧本标签"
+          field="gb_text_tag_arr"
+          rules={[{ required: true, message: '请选择剧本标签' }]}
         >
-          <Select
-            mode="multiple"
-            allowCreate
-            placeholder="please select"
-            options={['a', 'b', 'c', 'd', 'e']}
-          />
-        </FormItem> */}
-        {/* <FormItem
-          label="TreeSelect"
-          field="treenode"
-          rules={[
-            {
-              required: true,
-              message: 'treenode is required',
-            },
-          ]}
+          <Select mode="multiple" allowClear placeholder="请选择剧本标签">
+            {gb_text_tagSelectData?.dict_label?.map((item) => {
+              return (
+                <Select.Option key={item.label_value} value={item.label_value}>
+                  {item.label_zh}
+                </Select.Option>
+              );
+            })}
+          </Select>
+        </FormItem>
+
+        <FormItem
+          label="剧本时长/小时"
+          field="gb_hour"
+          rules={[{ type: 'number', required: true }]}
         >
-          <TreeSelect allowClear placeholder="please select">
-            <TreeSelect.Node key="node1" title="Trunk(node1)">
-              <TreeSelect.Node key="node2" title="Leaf(node2)" />
-            </TreeSelect.Node>
-            <TreeSelect.Node key="node3" title="Trunk2(node3)">
-              <TreeSelect.Node key="node4" title="Leaf(node4)" />
-              <TreeSelect.Node key="node5" title="Leaf(node5)" />
-            </TreeSelect.Node>
-          </TreeSelect>
-        </FormItem> */}
+          <InputNumber min={1} placeholder="请输入参考价格" />
+        </FormItem>
+        <FormItem label="工作日价格" field="gb_price" rules={[{ type: 'number', required: true }]}>
+          <InputNumber min={1} placeholder="请输入工作日价格" />
+        </FormItem>
+        <FormItem label="周末价格" field="gb_price2" rules={[{ type: 'number', required: true }]}>
+          <InputNumber min={1} placeholder="请输入工作日价格" />
+        </FormItem>
+
         <FormItem
           label="推荐星级"
           field="gb_star_lev"
           rules={[
             {
-              required: false,
+              required: true,
               type: 'number',
             },
           ]}
         >
           <Rate allowHalf />
+        </FormItem>
+        <FormItem
+          label="剧本概要"
+          field="gb_text_brief"
+          rules={[{ required: true, message: '请填写剧本概要' }]}
+        >
+          <Input placeholder="请填写剧本概要..." />
+        </FormItem>
+        <FormItem
+          label="剧本描述"
+          field="gb_text_content"
+          rules={[{ required: false, message: '请填写剧本描述' }]}
+        >
+          <Input placeholder="请填写剧本描述..." />
         </FormItem>
 
         <FormItem
@@ -232,12 +275,32 @@ function Demo() {
           field="gb_add_time"
           rules={[
             {
-              required: true,
+              required: false,
               message: 'gb_add_time is required',
             },
           ]}
         >
           <DatePicker showTime />
+        </FormItem>
+        <FormItem
+          label="是否新本"
+          field="is_new"
+          rules={[{ required: false, message: '请填写版权信息' }]}
+        >
+          <Select placeholder="是否新本">
+            <Select.Option value={1}>是</Select.Option>
+            <Select.Option value={0}>否</Select.Option>
+          </Select>
+        </FormItem>
+        <FormItem
+          label="是否热门"
+          field="is_hot"
+          rules={[{ required: false, message: '请填写版权信息' }]}
+        >
+          <Select placeholder="是否热门">
+            <Select.Option value={1}>是</Select.Option>
+            <Select.Option value={0}>否</Select.Option>
+          </Select>
         </FormItem>
         <FormItem
           label="版权信息"
@@ -246,10 +309,11 @@ function Demo() {
         >
           <Input placeholder="请填写版权信息..." />
         </FormItem>
+
         <FormItem
           label="备注说明"
           field="gb_remarks"
-          rules={[{ required: true, message: '请填写备注说明' }]}
+          rules={[{ required: false, message: '请填写备注说明' }]}
         >
           <Input placeholder="请填写备注说明..." />
         </FormItem>
@@ -326,8 +390,9 @@ function Demo() {
               if (formRef.current) {
                 try {
                   await formRef.current.validate();
-                  // Message.info('校验通过，提交成功！');
                   console.log(formRef.current.getFields());
+                  const param = formRef.current.getFields();
+                  param.gb_cover = param.gb_cover[0]['response']['data'].file_url;
                   const data = await addDrama(formRef.current.getFields());
                 } catch (_) {
                   console.log(formRef.current.getFieldsError());
@@ -361,4 +426,4 @@ function Demo() {
   );
 }
 
-export default Demo;
+export default DramaForm;
