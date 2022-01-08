@@ -16,13 +16,22 @@ import { dictcategoryApi, reqReadDict } from '../../api/drama.js';
 function SearchTable({}) {
   const columns = [
     {
-      title: '名称',
+      title: '中文',
       dataIndex: 'label_zh',
+    },
+    {
+      title: '英文',
+      dataIndex: 'label_en',
     },
     {
       title: '字典编码',
       dataIndex: 'dict_code',
     },
+    {
+      title: '取值编码',
+      dataIndex: 'label_value',
+    },
+
     {
       title: '操作',
       render: () => {
