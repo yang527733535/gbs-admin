@@ -40,6 +40,13 @@ export function dramaList(data) {
   });
 }
 
+export function getDmList(data) {
+  return Service({
+    url: '/v1/option/user',
+    data: data,
+  });
+}
+
 export function shopList(data) {
   return Service({
     url: '/v1/store/list',

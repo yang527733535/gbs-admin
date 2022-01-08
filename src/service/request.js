@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Message } from '@arco-design/web-react';
 
-const ConfigBaseURL = 'http://120.24.188.169:8000/'; //默认路径，这里也可以使用env来判断环境
+const ConfigBaseURL = 'https://gbs.toptian.com/'; //默认路径，这里也可以使用env来判断环境
 
 //使用create方法创建axios实例
 export const Service = axios.create({
@@ -22,7 +22,7 @@ Service.interceptors.request.use((config) => {
 // 添加响应拦截器
 Service.interceptors.response.use(
   (response) => {
-    if (response.data.code === 4003 || response.data.code === 4001 ) {
+    if (response.data.code === 4003 || response.data.code === 4001) {
       localStorage.clear();
       window.location.reload();
     }

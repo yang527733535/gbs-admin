@@ -36,7 +36,7 @@ const noLabelLayout = {
   },
 };
 
-function DramaForm({ labelData }) {
+function DramaForm({ labelData, closeModalAndRequest }) {
   console.log('labelData: ', labelData);
 
   const formRef = useRef();
@@ -100,16 +100,23 @@ function DramaForm({ labelData }) {
           rules={[{ required: true, message: '请上传剧本封面' }]}
           label="剧本封面"
           field="gb_cover"
-          triggerPropName="gb_cover"
+          triggerPropName="fileList"
+          initialValue={[
+            {
+              uid: '1',
+              url:
+                '//p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/e278888093bef8910e829486fb45dd69.png~tplv-uwbnlip3yd-webp.webp',
+              name: '20200717',
+            },
+          ]}
         >
           <Upload
+            limit={1}
             listType="picture-card"
             multiple
             name="gb_cover"
             customRequest={(option) => {
-              console.log(option);
               const { onProgress, onError, onSuccess, file } = option;
-              console.log('file: ', file);
               const xhr = new XMLHttpRequest();
               if (xhr.upload) {
                 xhr.upload.onprogress = function(event) {
@@ -133,7 +140,7 @@ function DramaForm({ labelData }) {
               const formData = new FormData();
               formData.append('up_file', file);
               formData.append('module', 'drama');
-              xhr.open('post', 'http://120.24.188.169:8000/system/upload/image', true);
+              xhr.open('post', 'https://gbs.toptian.com/system/upload/image', true);
               xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
               xhr.send(formData);
             }}
@@ -393,7 +400,11 @@ function DramaForm({ labelData }) {
                   console.log(formRef.current.getFields());
                   const param = formRef.current.getFields();
                   param.gb_cover = param.gb_cover[0]['response']['data'].file_url;
-                  const data = await addDrama(formRef.current.getFields());
+                  const data = await addDrama(param);
+                  if (data.code === 200) {
+                    Message.success('添加成功');
+                    closeModalAndRequest();
+                  }
                 } catch (_) {
                   console.log(formRef.current.getFieldsError());
                   Message.error('校验失败，请检查字段！');

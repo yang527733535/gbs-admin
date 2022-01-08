@@ -10,7 +10,7 @@ import {
   Modal,
 } from '@arco-design/web-react';
 import { useSelector, useDispatch } from 'react-redux';
-import { dramaList, labelsApi } from '../../api/drama.js';
+import { dramaList, labelsApi, getDmList } from '../../api/drama.js';
 import {
   UPDATE_FORM_PARAMS,
   UPDATE_LIST,
@@ -24,6 +24,7 @@ import AddForm from './form/index.jsx';
 
 function SearchTable() {
   const locale = useLocale();
+  const [addDmModal, setaddDmModal] = useState(false);
   const [visitModal, setvisitModal] = useState(false);
   const [labelData, setlabelData] = useState([]);
   const columns = [
@@ -69,6 +70,18 @@ function SearchTable() {
             {locale['searchTable.columns.operations.view']}
           </Button>
           <Button type="text" size="small">
+            添加角色
+          </Button>
+          <Button
+            onClick={() => {
+              setaddDmModal(true);
+            }}
+            type="text"
+            size="small"
+          >
+            添加dm
+          </Button>
+          <Button type="text" size="small">
             {locale['searchTable.columns.operations.update']}
           </Button>
           <Button type="text" status="danger" size="small">
@@ -78,7 +91,6 @@ function SearchTable() {
       ),
     },
   ];
-
   const searchTableState = useSelector((state: ReducerState) => state.searchTable);
   const { data, pagination, loading, formParams } = searchTableState;
   const dispatch = useDispatch();
@@ -88,10 +100,16 @@ function SearchTable() {
 
   useEffect(() => {
     getlabelsApi();
+    getDmListApi();
   }, []);
   const getlabelsApi = async () => {
     const data = await labelsApi();
     setlabelData(data.data);
+  };
+
+  const getDmListApi = async () => {
+    const data = await getDmList();
+    console.log('data: ', data);
   };
 
   function fetchData(current = 1, pageSize = 10, params = {}) {
@@ -126,6 +144,7 @@ function SearchTable() {
 
   return (
     <div className={styles.container}>
+      <Modal visible={addDmModal} unmountOnExit={true} footer={null} title="添加dm"></Modal>
       <Modal
         title="添加剧本"
         footer={null}
@@ -136,7 +155,13 @@ function SearchTable() {
         style={{ width: 900, minWidth: 900 }}
         visible={visitModal}
       >
-        <AddForm labelData={labelData}></AddForm>
+        <AddForm
+          closeModalAndRequest={() => {
+            fetchData();
+            setvisitModal(false);
+          }}
+          labelData={labelData}
+        ></AddForm>
       </Modal>
       <Breadcrumb style={{ marginBottom: 20 }}>
         <Breadcrumb.Item>运营管理</Breadcrumb.Item>
@@ -181,7 +206,7 @@ function SearchTable() {
       </div>
       <Card bordered={false}>
         <Table
-          rowKey="user_account"
+          rowKey="gb_id"
           loading={loading}
           onChange={onChangeTable}
           pagination={pagination}
