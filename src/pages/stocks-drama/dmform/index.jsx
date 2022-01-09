@@ -1,5 +1,4 @@
 import React, { useState, useRef } from 'react';
-import { reqBindDm } from '../../../api/drama.js';
 import {
   Form,
   AutoComplete,
@@ -19,6 +18,7 @@ import {
   DatePicker,
   Modal,
 } from '@arco-design/web-react';
+import { reqBindDm } from '../../../api/drama.js';
 
 const FormItem = Form.Item;
 
@@ -69,7 +69,7 @@ export default function DmForm({ clickItem, closeModalAndRequest, dmlist }) {
               if (formRef.current) {
                 try {
                   await formRef.current.validate();
-                  let param = await formRef.current.validate();
+                  const param = await formRef.current.validate();
                   param.gb_code = clickItem.gb_code;
                   param.dm_array = param.dm_array.map((item) => {
                     return { user_account: item };

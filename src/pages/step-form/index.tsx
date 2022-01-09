@@ -41,22 +41,22 @@ function StepForm() {
     fetchData();
   }, []);
   const [ds, setds] = useState(null);
-  let [time, settime] = useState(5);
+  const [time, settime] = useState(5);
   const [phoneNum, setphoneNum] = useState(null);
 
   useEffect(() => {
     document.addEventListener('', function() {});
   }, []);
-  var myreg = /^[1][3,4,5,7,8,9][0-9]{9}$/;
+  const myreg = /^[1][3,4,5,7,8,9][0-9]{9}$/;
 
   const myfn = () => {
-    //在这里启动一个计时器
+    // 在这里启动一个计时器
     const id = setInterval(() => {
       console.log(time);
       if (time === 0) {
         clearInterval(ds);
       } else {
-        let id = settime((time) => time - 1);
+        const id = settime((time) => time - 1);
         setds(id);
       }
     }, 1000);
@@ -73,7 +73,7 @@ function StepForm() {
               setphoneNum(e);
             }}
             placeholder="请输入手机号码"
-          ></Input>
+          />
           <Button
             disabled={time != 5}
             onClick={() => {

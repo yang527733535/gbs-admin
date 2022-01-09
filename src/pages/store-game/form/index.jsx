@@ -19,8 +19,9 @@ import {
   DatePicker,
   Modal,
 } from '@arco-design/web-react';
-import { addDrama, addGame, updateShop, regionsList } from '../../../api/drama.js';
 import { IconArrowRise, IconArrowFall, IconDelete } from '@arco-design/web-react/icon';
+import { addDrama, addGame, updateShop, regionsList } from '../../../api/drama.js';
+
 const FormItem = Form.Item;
 
 const formItemLayout = {
@@ -131,17 +132,17 @@ function Shop({ closeModalAndReqTable, clickItem }) {
                 {fields.map((item, index) => {
                   return (
                     <div key={item.key}>
-                      <Form.Item label={'玩家' + (1 + index)}>
+                      <Form.Item label={`玩家${1 + index}`}>
                         <Space>
                           <Form.Item
-                            field={item.field + '.player_user'}
+                            field={`${item.field}.player_user`}
                             rules={[{ required: true }]}
                             noStyle
                           >
                             <Input placeholder="玩家账号" />
                           </Form.Item>
                           <Form.Item
-                            field={item.field + '.player_type'}
+                            field={`${item.field}.player_type`}
                             rules={[{ required: true }]}
                             noStyle
                           >
@@ -152,14 +153,14 @@ function Shop({ closeModalAndReqTable, clickItem }) {
                           </Form.Item>
 
                           <Form.Item
-                            field={item.field + '.player_name'}
+                            field={`${item.field}.player_name`}
                             rules={[{ required: true }]}
                             noStyle
                           >
                             <Input placeholder="玩家名称" />
                           </Form.Item>
                           <Form.Item
-                            field={item.field + '.player_note'}
+                            field={`${item.field}.player_note`}
                             rules={[{ required: true }]}
                             noStyle
                           >
@@ -170,7 +171,7 @@ function Shop({ closeModalAndReqTable, clickItem }) {
                             shape="circle"
                             status="danger"
                             onClick={() => remove(index)}
-                          ></Button>
+                          />
                         </Space>
                       </Form.Item>
                     </div>
@@ -219,7 +220,7 @@ function Shop({ closeModalAndReqTable, clickItem }) {
                     param.store_code = clickItem.store_code;
                     var data = await updateShop(param);
                   }
-                 
+
                   if (data.code === 200) {
                     Message.success('添加成功');
                     closeModalAndReqTable();

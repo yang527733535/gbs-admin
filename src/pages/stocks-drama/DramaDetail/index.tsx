@@ -1,7 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import styles from './style/index.module.less';
-// import AddForm from '../form/index.jsx';
-import { ReducerState } from '../../../redux';
 import { useSelector } from 'react-redux';
 import {
   Form,
@@ -20,20 +17,24 @@ import {
   Modal,
   Space,
 } from '@arco-design/web-react';
+import styles from './style/index.module.less';
+import { ReducerState } from '../../../redux';
 import { dramaDetail, editDrama } from '../../../api/drama.js';
 import DramaRole from './roleDetail/index';
 import DramaDm from './dmDetail/index';
+import { FormInstance } from '@arco-design/web-react/es/Form';
+
 const FormItem = Form.Item;
 const Row = Grid.Row;
 const Col = Grid.Col;
 const TabPane = Tabs.TabPane;
 export default function DramaDetail({}) {
-  const formRef = useRef();
+  const formRef = useRef<FormInstance>();
   const [role_array, setrole_array] = useState([]);
   const [drama_dms, setdrama_dms] = useState([]);
   const [loading, setloading] = useState(false);
-  const [gb_typeSelectData, setgb_typeSelectData] = useState([]);
-  const [gb_levelSelectData, setgb_levelSelectData] = useState([]);
+  const [gb_typeSelectData, setgb_typeSelectData] = useState<any[]>([]);
+  const [gb_levelSelectData, setgb_levelSelectData] = useState<any[]>([]);
   const [gb_text_tagSelectData, setgb_text_tagSelectData] = useState([]);
   const [gb_status_Data, setgb_status_Data] = useState([]);
   const dramaInfoStore = useSelector((state: ReducerState) => {
@@ -44,17 +45,17 @@ export default function DramaDetail({}) {
     for (let index = 0; index < labelData.length; index++) {
       const element = labelData[index];
       if (element.dict_code === 'app_gb_type') {
-        setgb_typeSelectData(element);
+        setgb_typeSelectData(element.dict_label);
       }
       if (element.dict_code === 'app_gb_level') {
-        setgb_levelSelectData(element);
+        setgb_levelSelectData(element.dict_label);
       }
 
       if (element.dict_code === 'app_gb_text_tag') {
-        setgb_text_tagSelectData(element);
+        setgb_text_tagSelectData(element.dict_label);
       }
       if (element.dict_code === 'app_gb_status') {
-        setgb_status_Data(element);
+        setgb_status_Data(element.dict_label);
       }
       // "app_gb_status"
     }
@@ -104,14 +105,13 @@ export default function DramaDetail({}) {
                           <Button
                             onClick={async () => {
                               if (formRef.current) {
-                                console.log(formRef.current.getFields());
                                 try {
                                   await formRef.current.validate();
                                   console.log(formRef.current.getFields());
                                   const param = formRef.current.getFields();
                                   param.gb_cover =
-                                    param.gb_cover[0]['url'] ||
-                                    param.gb_cover[0]['response']['data'].file_url;
+                                    param.gb_cover[0].url ||
+                                    param.gb_cover[0].response.data.file_url;
                                   const data = await editDrama(param);
                                   if (data.code === 200) {
                                     Message.success('修改成功');
@@ -164,7 +164,7 @@ export default function DramaDetail({}) {
                         rules={[{ required: true, message: '请填写剧本类型' }]}
                       >
                         <Select placeholder="请选择剧本类型">
-                          {gb_typeSelectData?.dict_label?.map((item) => {
+                          {gb_typeSelectData?.map((item) => {
                             return (
                               <Select.Option key={item.label_value} value={item.label_value}>
                                 {item.label_zh}
@@ -183,7 +183,7 @@ export default function DramaDetail({}) {
                         rules={[{ required: true, message: '请选中剧本难度' }]}
                       >
                         <Select placeholder="请选择剧本难度">
-                          {gb_levelSelectData?.dict_label?.map((item) => {
+                          {gb_levelSelectData?.map((item) => {
                             return (
                               <Select.Option key={item.label_value} value={item.label_value}>
                                 {item.label_zh}
@@ -216,7 +216,7 @@ export default function DramaDetail({}) {
                         rules={[{ required: false, message: '请选择剧本状态' }]}
                       >
                         <Select placeholder="请选择剧本状态">
-                          {gb_status_Data?.dict_label?.map((item) => {
+                          {gb_status_Data?.map((item) => {
                             return (
                               <Select.Option key={item.label_value} value={item.label_value}>
                                 {item.label_zh}
@@ -248,7 +248,7 @@ export default function DramaDetail({}) {
                         rules={[{ required: true, message: '请选择剧本标签' }]}
                       >
                         <Select mode="multiple" allowClear placeholder="请选择剧本标签">
-                          {gb_text_tagSelectData?.dict_label?.map((item) => {
+                          {gb_text_tagSelectData?.map((item) => {
                             return (
                               <Select.Option key={item.label_value} value={item.label_value}>
                                 {item.label_zh}
@@ -425,9 +425,8 @@ export default function DramaDetail({}) {
                           };
                           xhr.onload = function onload() {
                             if (xhr.status < 200 || xhr.status >= 300) {
-                              return onError(xhr.responseText);
                             }
-                            onSuccess(JSON.parse(xhr.responseText), xhr);
+                            onSuccess(JSON.parse(xhr.responseText));
                           };
                           const formData = new FormData();
                           formData.append('up_file', file);
@@ -443,7 +442,7 @@ export default function DramaDetail({}) {
                               <img
                                 src={file.url || URL.createObjectURL(file.originFile)}
                                 style={{ maxWidth: '100%' }}
-                              ></img>
+                              />
                             ),
                           });
                         }}
@@ -460,10 +459,10 @@ export default function DramaDetail({}) {
       <div className={styles.otherDetail}>
         <Tabs defaultActiveTab="1">
           <TabPane key="1" title="剧本角色">
-            <DramaRole role_array={role_array}></DramaRole>
+            <DramaRole role_array={role_array} />
           </TabPane>
           <TabPane key="2" title="剧本DM">
-            <DramaDm drama_dms={drama_dms}></DramaDm>
+            <DramaDm drama_dms={drama_dms} />
           </TabPane>
         </Tabs>
       </div>

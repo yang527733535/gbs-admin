@@ -1,9 +1,10 @@
 import React, { useRef, useEffect } from 'react';
-import { reqBindrole } from '../../../../api/drama.js';
 import { Form, Space, Select, Message, Input, Button, Grid } from '@arco-design/web-react';
 import { IconDelete } from '@arco-design/web-react/icon';
 import { useSelector } from 'react-redux';
+import { reqBindrole } from '../../../../api/drama.js';
 import { ReducerState } from '../../../../redux/index';
+import { FormInstance } from '@arco-design/web-react/es/Form';
 const Row = Grid.Row;
 const Col = Grid.Col;
 const FormItem = Form.Item;
@@ -18,7 +19,7 @@ const formItemLayout = {
 };
 
 export default function DmForm({ role_array }) {
-  const formRef = useRef();
+  const formRef = useRef<FormInstance>();
   const dramaInfoStore = useSelector((state: ReducerState) => {
     return state.myState;
   });
@@ -42,7 +43,7 @@ export default function DmForm({ role_array }) {
                     if (formRef.current) {
                       try {
                         await formRef.current.validate();
-                        let param = await formRef.current.validate();
+                        const param = await formRef.current.validate();
                         param.gb_code = clickItem.gb_code;
                         const data = await reqBindrole(param);
                         if (data.code === 200) {
@@ -70,18 +71,18 @@ export default function DmForm({ role_array }) {
         </Row>
 
         <Form.List field="role_array">
-          {(fields, { add, remove, move }) => {
+          {(fields, { add, remove }) => {
             return (
               <div>
                 {fields.map((item, index) => {
                   return (
                     <div key={item.key}>
-                      <Form.Item label={'角色' + (index + 1)}>
+                      <Form.Item label={`角色${index + 1}`}>
                         <Space>
                           <Row>
                             <Form.Item
                               label="角色名称"
-                              field={item.field + '.role_name'}
+                              field={`${item.field}.role_name`}
                               rules={[{ required: true }]}
                               noStyle
                             >
@@ -91,7 +92,7 @@ export default function DmForm({ role_array }) {
 
                           <Form.Item
                             label="角色简介"
-                            field={item.field + '.role_brief'}
+                            field={`${item.field}.role_brief`}
                             rules={[{ required: true }]}
                             noStyle
                           >
@@ -99,7 +100,7 @@ export default function DmForm({ role_array }) {
                           </Form.Item>
                           <Form.Item
                             label="角色备注"
-                            field={item.field + '.role_remarks'}
+                            field={`${item.field}.role_remarks`}
                             rules={[{ required: true }]}
                             noStyle
                           >
@@ -107,7 +108,7 @@ export default function DmForm({ role_array }) {
                           </Form.Item>
                           <Form.Item
                             label="是否凶手"
-                            field={item.field + '.is_murderer'}
+                            field={`${item.field}.is_murderer`}
                             rules={[{ required: true }]}
                             noStyle
                           >
@@ -118,7 +119,7 @@ export default function DmForm({ role_array }) {
                           </Form.Item>
                           <Form.Item
                             label="角色封面"
-                            field={item.field + '.role_cover'}
+                            field={`${item.field}.role_cover`}
                             rules={[{ required: true }]}
                             noStyle
                             // initialValue={[
@@ -154,7 +155,7 @@ export default function DmForm({ role_array }) {
                             shape="circle"
                             status="danger"
                             onClick={() => remove(index)}
-                          ></Button>
+                          />
                         </Space>
                       </Form.Item>
                     </div>

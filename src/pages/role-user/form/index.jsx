@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Form, Select, Button, Message } from '@arco-design/web-react';
 import { addGame, updateShop, regionsList } from '../../../api/drama.js';
+
 const FormItem = Form.Item;
 const formItemLayout = {
   labelCol: {
@@ -98,7 +99,7 @@ function FormDom({ closeModalAndReqTable, userListData, clickItem }) {
                     param.store_code = clickItem.store_code;
                     var data = await updateShop(param);
                   }
-                 
+
                   if (data.code === 200) {
                     Message.success('添加成功');
                     closeModalAndReqTable();

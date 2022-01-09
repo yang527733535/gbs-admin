@@ -102,7 +102,7 @@ function SearchTable() {
     data.then((res) => {
       console.log(res);
       const { data, paginator } = res;
-      dispatch({ type: UPDATE_LIST, payload: { data: data } });
+      dispatch({ type: UPDATE_LIST, payload: { data } });
       dispatch({
         type: UPDATE_PAGINATION,
         payload: {
@@ -151,7 +151,7 @@ function SearchTable() {
         style={{ width: 600 }}
         visible={visitModal}
       >
-        <AddForm name="XIXI"></AddForm>
+        <AddForm name="XIXI" />
       </Modal>
       <Breadcrumb style={{ marginBottom: 20 }}>
         <Breadcrumb.Item>运营管理</Breadcrumb.Item>
@@ -176,28 +176,28 @@ function SearchTable() {
                   }}
                   placeholder="请输入账号"
                   style={{ width: 200 }}
-                ></Input>
+                />
                 <Input
                   onChange={(e) => {
                     setuser_mobile(e);
                   }}
                   placeholder="请输入手机号码"
                   style={{ width: 200 }}
-                ></Input>
+                />
                 <Input
                   onChange={(e) => {
                     setuser_name(e);
                   }}
                   placeholder="请输入用户名"
                   style={{ width: 200 }}
-                ></Input>
+                />
                 <Input
                   onChange={(e) => {
                     setuser_status(e);
                   }}
                   placeholder="用户状态"
                   style={{ width: 200 }}
-                ></Input>
+                />
                 <Button
                   onClick={() => {
                     setuser_account('');

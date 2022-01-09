@@ -14,20 +14,23 @@ import {
   Modal,
   Space,
 } from '@arco-design/web-react';
-import { addDrama, dramaDetail, editDrama } from '../../../api/drama.js';
 import { useSelector } from 'react-redux';
+import { addDrama, dramaDetail, editDrama } from '../../../api/drama.js';
 import { ReducerState } from '../../../redux';
+import { FormInstance } from '@arco-design/web-react/es/Form';
 const FormItem = Form.Item;
 const Row = Grid.Row;
 const Col = Grid.Col;
 
 function DramaForm({ modalType = 'add', closeModalAndRequest }) {
-  const formRef = useRef();
+  // 初始化值为一个对象时
+
+  const formRef = useRef<FormInstance>();
   const [loading, setloading] = useState(false);
-  const [gb_typeSelectData, setgb_typeSelectData] = useState([]);
-  const [gb_levelSelectData, setgb_levelSelectData] = useState([]);
-  const [gb_text_tagSelectData, setgb_text_tagSelectData] = useState([]);
-  const [gb_status_Data, setgb_status_Data] = useState([]);
+  const [gb_typeSelectData, setgb_typeSelectData] = useState<any[]>([]);
+  const [gb_levelSelectData, setgb_levelSelectData] = useState<any[]>([]);
+  const [gb_text_tagSelectData, setgb_text_tagSelectData] = useState<any[]>([]);
+  const [gb_status_Data, setgb_status_Data] = useState<any[]>([]);
 
   const dramaInfoStore = useSelector((state: ReducerState) => {
     return state.myState;
@@ -59,17 +62,17 @@ function DramaForm({ modalType = 'add', closeModalAndRequest }) {
     for (let index = 0; index < labelData.length; index++) {
       const element = labelData[index];
       if (element.dict_code === 'app_gb_type') {
-        setgb_typeSelectData(element);
+        setgb_typeSelectData(element.dict_label);
       }
       if (element.dict_code === 'app_gb_level') {
-        setgb_levelSelectData(element);
+        setgb_levelSelectData(element.dict_label);
       }
 
       if (element.dict_code === 'app_gb_text_tag') {
-        setgb_text_tagSelectData(element);
+        setgb_text_tagSelectData(element.dict_label);
       }
       if (element.dict_code === 'app_gb_status') {
-        setgb_status_Data(element);
+        setgb_status_Data(element.dict_label);
       }
       // "app_gb_status"
     }
@@ -82,11 +85,7 @@ function DramaForm({ modalType = 'add', closeModalAndRequest }) {
   return (
     <Spin style={{ width: '100%' }} loading={loading}>
       <div>
-        <Form
-          ref={formRef}
-          onValuesChange={onValuesChange}
-          scrollToFirstError
-        >
+        <Form ref={formRef} onValuesChange={onValuesChange} scrollToFirstError>
           <Row className="grid-demo" style={{ marginBottom: 10 }}>
             <Col xs={24} sm={12} md={12} lg={8} xl={8} xxl={8}>
               <div>
@@ -107,7 +106,7 @@ function DramaForm({ modalType = 'add', closeModalAndRequest }) {
                   rules={[{ required: true, message: '请填写剧本类型' }]}
                 >
                   <Select placeholder="请选择剧本类型">
-                    {gb_typeSelectData?.dict_label?.map((item) => {
+                    {gb_typeSelectData?.map((item) => {
                       return (
                         <Select.Option key={item.label_value} value={item.label_value}>
                           {item.label_zh}
@@ -127,7 +126,7 @@ function DramaForm({ modalType = 'add', closeModalAndRequest }) {
                   rules={[{ required: true, message: '请选中剧本难度' }]}
                 >
                   <Select placeholder="请选择剧本难度">
-                    {gb_levelSelectData?.dict_label?.map((item) => {
+                    {gb_levelSelectData?.map((item) => {
                       return (
                         <Select.Option key={item.label_value} value={item.label_value}>
                           {item.label_zh}
@@ -160,7 +159,7 @@ function DramaForm({ modalType = 'add', closeModalAndRequest }) {
                   rules={[{ required: false, message: '请选择剧本状态' }]}
                 >
                   <Select placeholder="请选择剧本状态">
-                    {gb_status_Data?.dict_label?.map((item) => {
+                    {gb_status_Data?.map((item) => {
                       return (
                         <Select.Option key={item.label_value} value={item.label_value}>
                           {item.label_zh}
@@ -192,7 +191,7 @@ function DramaForm({ modalType = 'add', closeModalAndRequest }) {
                   rules={[{ required: true, message: '请选择剧本标签' }]}
                 >
                   <Select mode="multiple" allowClear placeholder="请选择剧本标签">
-                    {gb_text_tagSelectData?.dict_label?.map((item) => {
+                    {gb_text_tagSelectData.map((item: any) => {
                       return (
                         <Select.Option key={item.label_value} value={item.label_value}>
                           {item.label_zh}
@@ -387,7 +386,7 @@ function DramaForm({ modalType = 'add', closeModalAndRequest }) {
                         <img
                           src={file.url || URL.createObjectURL(file.originFile)}
                           style={{ maxWidth: '100%' }}
-                        ></img>
+                        />
                       ),
                     });
                   }}
@@ -409,11 +408,9 @@ function DramaForm({ modalType = 'add', closeModalAndRequest }) {
                         if (formRef.current) {
                           try {
                             await formRef.current.validate();
-
                             const param = formRef.current.getFields();
                             param.gb_cover =
-                              param.gb_cover[0]['url'] ||
-                              param.gb_cover[0]['response']['data'].file_url;
+                              param.gb_cover[0].url || param.gb_cover[0].response.data.file_url;
                             if (modalType === 'edit') {
                               const data = await editDrama(param);
                               if (data.code === 200) {
@@ -421,12 +418,11 @@ function DramaForm({ modalType = 'add', closeModalAndRequest }) {
                                 closeModalAndRequest();
                               }
                               return;
-                            } else {
-                              const data = await addDrama(param);
-                              if (data.code === 200) {
-                                Message.success('添加成功');
-                                closeModalAndRequest();
-                              }
+                            }
+                            const data = await addDrama(param);
+                            if (data.code === 200) {
+                              Message.success('添加成功');
+                              closeModalAndRequest();
                             }
                           } catch (_) {
                             Message.error('校验失败，请检查字段！');

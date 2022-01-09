@@ -58,7 +58,7 @@ function SearchTable() {
       title: '剧本封面',
       dataIndex: 'gb_cover',
       render: (_, element) => {
-        return <img style={{ width: 60, height: 90 }} src={element.gb_cover}></img>;
+        return <img style={{ width: 60, height: 90 }} src={element.gb_cover} />;
       },
     },
     {
@@ -140,7 +140,7 @@ function SearchTable() {
   }, []);
   const getlabelsApi = async () => {
     const { data } = await labelsApi();
-    let needdata = {};
+    const needdata = {};
     for (let index = 0; index < data.length; index++) {
       const element = data[index];
       if (element.dict_name === '剧本类型') {
@@ -169,7 +169,7 @@ function SearchTable() {
     });
     data.then((res) => {
       const { data, paginator } = res;
-      dispatch({ type: UPDATE_LIST, payload: { data: data } });
+      dispatch({ type: UPDATE_LIST, payload: { data } });
       dispatch({
         type: UPDATE_PAGINATION,
         payload: {
@@ -198,7 +198,7 @@ function SearchTable() {
        */}
       <Drawer
         onCancel={() => {
-          //这里需要二次确认
+          // 这里需要二次确认
           Modal.confirm({
             title: '当前页面正在编辑,确定退出?',
             okButtonProps: { status: 'danger' },
@@ -210,7 +210,7 @@ function SearchTable() {
         footer={null}
         visible={show}
         title="剧本详情"
-        unmountOnExit={true}
+        unmountOnExit
         width="90vw"
       >
         <DramaDetail />
@@ -218,7 +218,7 @@ function SearchTable() {
 
       <Modal
         style={{ width: 800 }}
-        unmountOnExit={true}
+        unmountOnExit
         footer={null}
         title="添加角色"
         visible={DramaRoleModal}
@@ -231,14 +231,14 @@ function SearchTable() {
             setDramaRoleModal(false);
           }}
           clickItem={clickItem}
-        ></AddRoleForm>
+        />
       </Modal>
       <Modal
         onCancel={() => {
           setaddDmModal(false);
         }}
         visible={addDmModal}
-        unmountOnExit={true}
+        unmountOnExit
         footer={null}
         title="添加dm"
       >
@@ -249,7 +249,7 @@ function SearchTable() {
           }}
           dmlist={dmlist}
           clickItem={clickItem}
-        ></DmForm>
+        />
       </Modal>
       <Modal
         title="添加剧本"
@@ -264,7 +264,7 @@ function SearchTable() {
             },
           });
         }}
-        unmountOnExit={true}
+        unmountOnExit
         style={{ width: '80vw' }}
         visible={visitModal}
       >
@@ -275,7 +275,7 @@ function SearchTable() {
             setvisitModal(false);
           }}
           modalType={modalType}
-        ></AddForm>
+        />
       </Modal>
       <Breadcrumb style={{ marginBottom: 20 }}>
         <Breadcrumb.Item>运营管理</Breadcrumb.Item>
@@ -296,15 +296,11 @@ function SearchTable() {
             </Button>
             <div>
               <Space style={{ flex: 1 }} wrap>
-                <Input
-                  onChange={() => {}}
-                  placeholder="请输入剧本标题"
-                  style={{ width: 200 }}
-                ></Input>
-                <Input onChange={() => {}} placeholder="剧本类型" style={{ width: 200 }}></Input>
-                <Input onChange={() => {}} placeholder="剧本区域" style={{ width: 200 }}></Input>
-                <Input onChange={() => {}} placeholder="玩家人数" style={{ width: 200 }}></Input>
-                <Input onChange={() => {}} placeholder="剧本状态" style={{ width: 200 }}></Input>
+                <Input onChange={() => {}} placeholder="请输入剧本标题" style={{ width: 200 }} />
+                <Input onChange={() => {}} placeholder="剧本类型" style={{ width: 200 }} />
+                <Input onChange={() => {}} placeholder="剧本区域" style={{ width: 200 }} />
+                <Input onChange={() => {}} placeholder="玩家人数" style={{ width: 200 }} />
+                <Input onChange={() => {}} placeholder="剧本状态" style={{ width: 200 }} />
                 <Button onClick={() => {}}>重置</Button>
                 <Button
                   onClick={() => {

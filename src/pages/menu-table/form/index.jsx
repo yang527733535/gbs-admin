@@ -143,7 +143,7 @@ function Shop({ closeModalAndReqTable }) {
                 try {
                   await formRef.current.validate();
                   const data = await addMenu(formRef.current.getFields());
-                 
+
                   if (data.code === 200) {
                     Message.success('添加成功');
                     closeModalAndReqTable();

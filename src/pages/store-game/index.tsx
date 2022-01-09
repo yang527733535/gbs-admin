@@ -83,7 +83,7 @@ function SearchTable({}) {
     });
     data.then((res) => {
       const { data, paginator } = res;
-      dispatch({ type: UPDATE_LIST, payload: { data: data } });
+      dispatch({ type: UPDATE_LIST, payload: { data } });
       dispatch({
         type: UPDATE_PAGINATION,
         payload: {
@@ -113,7 +113,7 @@ function SearchTable({}) {
         onCancel={() => {
           setvisitModal(false);
         }}
-        unmountOnExit={true}
+        unmountOnExit
         style={{ width: 900, minWidth: 900 }}
         visible={visitModal}
       >
@@ -123,7 +123,7 @@ function SearchTable({}) {
             setvisitModal(false);
             fetchData();
           }}
-        ></AddForm>
+        />
       </Modal>
       <Breadcrumb style={{ marginBottom: 20 }}>
         <Breadcrumb.Item>店铺运营</Breadcrumb.Item>
@@ -143,7 +143,7 @@ function SearchTable({}) {
               添加组局
             </Button>
             <div>
-              <Space style={{ marginLeft: 20 }} wrap={true}>
+              <Space style={{ marginLeft: 20 }} wrap>
                 <Input
                   value={store_code}
                   onChange={(e) => {
@@ -151,7 +151,7 @@ function SearchTable({}) {
                   }}
                   placeholder="请输入店铺编码"
                   style={{ width: 200 }}
-                ></Input>
+                />
                 <Input
                   value={gb_code}
                   onChange={(e) => {
@@ -159,7 +159,7 @@ function SearchTable({}) {
                   }}
                   placeholder="请输入剧本编码"
                   style={{ width: 200 }}
-                ></Input>
+                />
                 <InputNumber
                   min={1}
                   value={game_people}
@@ -168,7 +168,7 @@ function SearchTable({}) {
                   }}
                   placeholder="请输入玩家人数"
                   style={{ width: 200 }}
-                ></InputNumber>
+                />
 
                 <Button onClick={() => {}}>重置</Button>
                 <Button

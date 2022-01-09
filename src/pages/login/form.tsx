@@ -38,7 +38,7 @@ export default function LoginForm() {
     console.log('res: ', res);
     if (res.code === 200) {
       Message.info('登录成功!');
-      let token = 'Bearer ' + res.data.access_token;
+      const token = `Bearer ${res.data.access_token}`;
       localStorage.setItem('userInfo', JSON.stringify(res.data));
       localStorage.setItem('token', token);
       const labels = await labelsApi();

@@ -78,7 +78,7 @@ function SearchTable({}) {
     });
     data.then((res) => {
       const { data, paginator } = res;
-      dispatch({ type: UPDATE_LIST, payload: { data: data } });
+      dispatch({ type: UPDATE_LIST, payload: { data } });
       dispatch({
         type: UPDATE_PAGINATION,
         payload: {
@@ -136,7 +136,7 @@ function SearchTable({}) {
         onCancel={() => {
           setvisitModal(false);
         }}
-        unmountOnExit={true}
+        unmountOnExit
         style={{ width: 900, minWidth: 900 }}
         visible={visitModal}
       >
@@ -146,7 +146,7 @@ function SearchTable({}) {
             setvisitModal(false);
             fetchData();
           }}
-        ></AddForm>
+        />
       </Modal>
       <Breadcrumb style={{ marginBottom: 20 }}>
         <Breadcrumb.Item>{locale['menu.list']}</Breadcrumb.Item>
@@ -166,7 +166,7 @@ function SearchTable({}) {
               添加门店
             </Button>
             <div>
-              <Space style={{ marginLeft: 20 }} wrap={true}>
+              <Space style={{ marginLeft: 20 }} wrap>
                 <Input
                   value={store_name}
                   onChange={(e) => {
@@ -174,7 +174,7 @@ function SearchTable({}) {
                   }}
                   placeholder="请输入店铺名称"
                   style={{ width: 200 }}
-                ></Input>
+                />
                 <Input
                   value={store_type}
                   onChange={(e) => {
@@ -182,7 +182,7 @@ function SearchTable({}) {
                   }}
                   placeholder="请选择门店类型"
                   style={{ width: 200 }}
-                ></Input>
+                />
                 <Input
                   value={store_status}
                   onChange={(e) => {
@@ -190,7 +190,7 @@ function SearchTable({}) {
                   }}
                   placeholder="请选择门店状态"
                   style={{ width: 200 }}
-                ></Input>
+                />
                 <Input
                   onChange={(e) => {
                     setstore_level(e);
@@ -198,7 +198,7 @@ function SearchTable({}) {
                   placeholder="门店等级"
                   value={store_level}
                   style={{ width: 200 }}
-                ></Input>
+                />
                 <Input
                   onChange={(e) => {
                     setposition_city(e);
@@ -206,7 +206,7 @@ function SearchTable({}) {
                   value={position_city}
                   placeholder="所在城市"
                   style={{ width: 200 }}
-                ></Input>
+                />
                 <Button
                   onClick={() => {
                     setstore_name('');

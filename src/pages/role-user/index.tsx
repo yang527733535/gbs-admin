@@ -48,7 +48,7 @@ function RoleTree({}) {
       page_size: 100,
     };
     const { data } = await userList(parma);
-   
+
     setuserListData(data);
   };
 
@@ -75,7 +75,7 @@ function RoleTree({}) {
         onCancel={() => {
           setvisitModal(false);
         }}
-        unmountOnExit={true}
+        unmountOnExit
         style={{ width: 900, minWidth: 900 }}
         visible={visitModal}
       >
@@ -87,7 +87,7 @@ function RoleTree({}) {
             setvisitModal(false);
             // fetchData();
           }}
-        ></AddForm>
+        />
       </Modal>
       <Breadcrumb style={{ marginBottom: 20 }}>
         <Breadcrumb.Item>权限管理</Breadcrumb.Item>
@@ -100,7 +100,7 @@ function RoleTree({}) {
             <Tree
               // defaultSelectedKeys={['0-0-1']}
               treeData={treeData}
-            ></Tree>
+            />
           </Card>
         </div>
         <div style={{ flex: 1 }}>
@@ -128,12 +128,12 @@ function RoleTree({}) {
               )}
             </div>
             <Table
-              showHeader={true}
+              showHeader
               // stripe={true}
-              hover={true}
+              hover
               columns={columns}
               data={tabledata}
-            ></Table>
+            />
           </Card>
         </div>
       </div>

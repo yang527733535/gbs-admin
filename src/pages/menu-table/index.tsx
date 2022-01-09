@@ -77,7 +77,7 @@ function SearchTable({}) {
     });
     data.then((res) => {
       const { data, paginator } = res;
-      dispatch({ type: UPDATE_LIST, payload: { data: data } });
+      dispatch({ type: UPDATE_LIST, payload: { data } });
       dispatch({
         type: UPDATE_PAGINATION,
         payload: {
@@ -107,7 +107,7 @@ function SearchTable({}) {
         onCancel={() => {
           setvisitModal(false);
         }}
-        unmountOnExit={true}
+        unmountOnExit
         style={{ width: 900, minWidth: 900 }}
         visible={visitModal}
       >
@@ -117,7 +117,7 @@ function SearchTable({}) {
             setvisitModal(false);
             fetchData();
           }}
-        ></AddForm>
+        />
       </Modal>
       <Breadcrumb style={{ marginBottom: 20 }}>
         <Breadcrumb.Item>{locale['menu.list']}</Breadcrumb.Item>
@@ -137,7 +137,7 @@ function SearchTable({}) {
               添加菜单
             </Button>
             <div>
-              <Space style={{ marginLeft: 20 }} wrap={true}>
+              <Space style={{ marginLeft: 20 }} wrap>
                 <Input
                   value={menu_code}
                   onChange={(e) => {
@@ -145,7 +145,7 @@ function SearchTable({}) {
                   }}
                   placeholder="请输入菜单编码"
                   style={{ width: 200 }}
-                ></Input>
+                />
                 <Input
                   value={menu_status}
                   onChange={(e) => {
@@ -153,7 +153,7 @@ function SearchTable({}) {
                   }}
                   placeholder="请选择菜单状态"
                   style={{ width: 200 }}
-                ></Input>
+                />
                 <Input
                   value={menu_name}
                   onChange={(e) => {
@@ -161,7 +161,7 @@ function SearchTable({}) {
                   }}
                   placeholder="请输入菜单名称"
                   style={{ width: 200 }}
-                ></Input>
+                />
                 <Input
                   onChange={(e) => {
                     setmenu_path(e);
@@ -169,7 +169,7 @@ function SearchTable({}) {
                   placeholder="菜单路径"
                   value={menu_path}
                   style={{ width: 200 }}
-                ></Input>
+                />
 
                 <Button
                   onClick={() => {

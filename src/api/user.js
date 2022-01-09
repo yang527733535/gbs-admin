@@ -3,7 +3,7 @@ import { Service } from '../service/request';
 export function loginApi(data) {
   return Service({
     url: '/system/user/login',
-    data: data,
+    data,
   });
 }
 export function reqUserInfo() {
@@ -16,7 +16,7 @@ export function reqUserInfo() {
 export function userList(data) {
   return Service({
     url: '/system/user/list',
-    data: data,
+    data,
   });
 }
 
@@ -30,7 +30,7 @@ export function resLogout() {
 export function registerApi(data) {
   return Service({
     url: '/system/user/register',
-    data: data,
+    data,
   });
 }
 

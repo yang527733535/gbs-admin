@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { Message } from '@arco-design/web-react';
 
-const ConfigBaseURL = 'https://gbs.toptian.com/'; //默认路径，这里也可以使用env来判断环境
+const ConfigBaseURL = 'https://gbs.toptian.com/'; // 默认路径，这里也可以使用env来判断环境
 
-//使用create方法创建axios实例
+// 使用create方法创建axios实例
 export const Service = axios.create({
   timeout: 7000, // 请求超时时间
   baseURL: ConfigBaseURL,
@@ -15,7 +15,7 @@ export const Service = axios.create({
 // 添加请求拦截器
 Service.interceptors.request.use((config) => {
   if (localStorage.getItem('token')) {
-    config.headers['Authorization'] = localStorage.getItem('token');
+    config.headers.Authorization = localStorage.getItem('token');
   }
   return config;
 });
@@ -32,7 +32,7 @@ Service.interceptors.response.use(
     console.log('TCL: error', error);
     const msg = error.Message !== undefined ? error.Message : '';
     Message({
-      message: '网络错误' + msg,
+      message: `网络错误${msg}`,
       type: 'error',
       duration: 3 * 1000,
     });

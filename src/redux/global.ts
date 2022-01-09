@@ -1,4 +1,5 @@
 import defaultSettings from '../settings.json';
+
 const defaultTheme = localStorage.getItem('arco-theme') || 'light';
 const defaultUser = {
   name: 'yangtenghui',

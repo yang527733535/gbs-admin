@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Menu, Button, Breadcrumb, Card, Modal } from '@arco-design/web-react';
 import { useSelector, useDispatch } from 'react-redux';
-import { menuList } from '../../api/drama.js';
+import { menuList, dictcategoryApi, reqReadDict } from '../../api/drama.js';
 import {
   UPDATE_FORM_PARAMS,
   UPDATE_LIST,
@@ -11,7 +11,6 @@ import {
 import { ReducerState } from '../../redux';
 import styles from './style/index.module.less';
 import AddForm from './form/index.jsx';
-import { dictcategoryApi, reqReadDict } from '../../api/drama.js';
 
 function SearchTable({}) {
   const columns = [
@@ -81,7 +80,7 @@ function SearchTable({}) {
     });
     data.then((res) => {
       const { data, paginator } = res;
-      dispatch({ type: UPDATE_LIST, payload: { data: data } });
+      dispatch({ type: UPDATE_LIST, payload: { data } });
       dispatch({
         type: UPDATE_PAGINATION,
         payload: {
@@ -111,7 +110,7 @@ function SearchTable({}) {
         onCancel={() => {
           setvisitModal(false);
         }}
-        unmountOnExit={true}
+        unmountOnExit
         style={{ width: 900, minWidth: 900 }}
         visible={visitModal}
       >
@@ -122,8 +121,7 @@ function SearchTable({}) {
             setvisitModal(false);
             fetchData();
           }}
-          // parentMap={parentMap}
-        ></AddForm>
+        />
       </Modal>
       <Breadcrumb style={{ marginBottom: 20 }}>
         <Breadcrumb.Item>系统设置</Breadcrumb.Item>
@@ -168,12 +166,12 @@ function SearchTable({}) {
               )}
             </div>
             <Table
-              showHeader={true}
+              showHeader
               // stripe={true}
-              hover={true}
+              hover
               columns={columns}
               data={tabledata}
-            ></Table>
+            />
           </Card>
         </div>
       </div>

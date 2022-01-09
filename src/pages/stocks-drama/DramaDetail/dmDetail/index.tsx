@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { reqBindDm, getDmList } from '../../../../api/drama.js';
 import { Form, Select, Tag, Message } from '@arco-design/web-react';
 import { useSelector } from 'react-redux';
-import { ReducerState } from '../../../../redux/index';
 import { IconDelete } from '@arco-design/web-react/icon';
-
+import { ReducerState } from '../../../../redux/index';
+import { reqBindDm, getDmList } from '../../../../api/drama.js';
+import { FormInstance } from '@arco-design/web-react/es/Form';
 const FormItem = Form.Item;
 
 export default function DmForm({ drama_dms }) {
@@ -12,7 +12,7 @@ export default function DmForm({ drama_dms }) {
     return state.myState;
   });
   const { clickItem } = dramaInfoStore;
-  const formRef = useRef();
+  const formRef = useRef<FormInstance>();
   const [dmlist, setdmlist] = useState([]);
   const [imgMap, setimgMap] = useState({});
   useEffect(() => {
@@ -25,7 +25,7 @@ export default function DmForm({ drama_dms }) {
 
   useEffect(() => {
     // clickItem
-    let obj = {};
+    const obj = {};
     for (let index = 0; index < drama_dms.length; index++) {
       const element = drama_dms[index];
       obj[element.user_account] = element.user_photo;
@@ -40,7 +40,7 @@ export default function DmForm({ drama_dms }) {
 
   const onValuesChange = async (changeValue, values) => {
     console.log('onValuesChange: ', changeValue, values);
-    let param = new Object();
+    const param: any = new Object();
     param.gb_code = clickItem.gb_code;
     param.dm_array = values.dm_array.map((item) => {
       return { user_account: item };
