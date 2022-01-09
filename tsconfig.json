@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "strict": false,
     "moduleResolution": "node",
     "esModuleInterop": true,
     "experimentalDecorators": true,
@@ -11,10 +12,24 @@
     "target": "es5",
     "declaration": true,
     "outDir": "es",
-    "lib": ["es5", "dom"],
-    "types": ["node", "jest"],
+    "lib": [
+      "es5",
+      "dom"
+    ],
+    "types": [
+      "node",
+      "jest"
+    ],
     "resolveJsonModule": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/pages/stocks-staff2/form/index.jsx"],
-  "exclude": ["node_modules"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/pages/stocks-staff2/form/index.jsx",
+    "src/pages/stocks-drama/addRoleForm/index.jsx",
+    "src/pages/stocks-drama/form/index.jsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

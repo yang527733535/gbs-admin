@@ -113,7 +113,6 @@ function Shop({ closeModalAndReqTable, parentMap, selectdict_code }) {
                 try {
                   await formRef.current.validate();
                   const data = await addLabel(formRef.current.getFields());
-                  console.log('data: ', data);
                   if (data.code === 200) {
                     Message.success('添加成功');
                     closeModalAndReqTable();

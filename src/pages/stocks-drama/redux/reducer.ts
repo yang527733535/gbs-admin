@@ -1,5 +1,11 @@
 import { PaginationProps } from '@arco-design/web-react/es/Pagination/pagination';
-import { UPDATE_LIST, UPDATE_LOADING, UPDATE_PAGINATION, UPDATE_FORM_PARAMS } from './actionTypes';
+import {
+  UPDATE_LIST,
+  UPDATE_LOADING,
+  UPDATE_PAGINATION,
+  UPDATE_FORM_PARAMS,
+  CHANGE_DRAWER_STATUS,
+} from './actionTypes';
 
 const initialState = {
   data: [],
@@ -27,6 +33,13 @@ export interface SearchTableState {
 
 export default function(state = initialState, action) {
   switch (action.type) {
+    case CHANGE_DRAWER_STATUS: {
+      const { dramaDetailDrawer } = action.payload;
+      return {
+        ...state,
+        dramaDetailDrawer,
+      };
+    }
     case UPDATE_LIST: {
       const { data } = action.payload;
       return {

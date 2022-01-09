@@ -38,9 +38,6 @@ if (userInfo) {
     IconApps: <IconApps />,
   };
   user_menu?.map((item) => {
-    // delete item.icon;
-    console.log(item.icon);
-
     item.icon = iconMap[item.icon];
     return item;
   });

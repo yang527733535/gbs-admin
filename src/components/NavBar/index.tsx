@@ -23,8 +23,6 @@ import styles from './style/index.module.less';
 function Navbar() {
   const locale = useLocale();
   const theme = useSelector((state: ReducerState) => state.global.theme);
-  const userInfo2 = useSelector((state: ReducerState) => state.global.userInfo);
-  console.log('userInfo2,', userInfo2);
   const dispatch = useDispatch();
   const [userInfo, setuserInfo] = useState(null);
 
@@ -38,7 +36,7 @@ function Navbar() {
   async function logout() {
     localStorage.setItem('userStatus', 'logout');
     const data = await resLogout();
-    console.log('data: ', data);
+
     if (data.code === 200) {
       localStorage.clear();
       history.push('/user/login');

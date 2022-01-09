@@ -10,7 +10,7 @@ import {
   InputNumber,
 } from '@arco-design/web-react';
 import { useSelector, useDispatch } from 'react-redux';
-import { CarList, labelsApi } from '../../api/drama.js';
+import { CarList } from '../../api/drama.js';
 import {
   UPDATE_FORM_PARAMS,
   UPDATE_LIST,
@@ -19,6 +19,7 @@ import {
 } from './redux/actionTypes';
 import useLocale from '../../utils/useLocale';
 import { ReducerState } from '../../redux';
+
 import styles from './style/index.module.less';
 import AddForm from './form/index.jsx';
 
@@ -70,10 +71,6 @@ function SearchTable({}) {
   const dispatch = useDispatch();
   useEffect(() => {
     fetchData();
-  }, []);
-  useEffect(() => {
-    const data = labelsApi();
-    console.log('data: ', data);
   }, []);
 
   function fetchData(current = 1, pageSize = 10, params = {}) {

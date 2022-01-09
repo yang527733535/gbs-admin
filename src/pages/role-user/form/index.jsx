@@ -98,7 +98,7 @@ function FormDom({ closeModalAndReqTable, userListData, clickItem }) {
                     param.store_code = clickItem.store_code;
                     var data = await updateShop(param);
                   }
-                  console.log('data: ', data);
+                 
                   if (data.code === 200) {
                     Message.success('添加成功');
                     closeModalAndReqTable();

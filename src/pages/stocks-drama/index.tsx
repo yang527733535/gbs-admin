@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   Table,
-  Typography,
+  Drawer,
   Button,
   Input,
   Breadcrumb,
@@ -16,23 +16,24 @@ import {
   UPDATE_LIST,
   UPDATE_LOADING,
   UPDATE_PAGINATION,
+  CHANGE_DRAWER_STATUS,
 } from './redux/actionTypes';
 import useLocale from '../../utils/useLocale';
 import { ReducerState } from '../../redux';
 import styles from './style/index.module.less';
-import AddForm from './form/index.jsx';
-import DmForm from './dmform/index.jsx';
-import AddRoleForm from './addRoleForm/index.jsx';
+import AddForm from './form/index';
+import DmForm from './dmform/index';
+import AddRoleForm from './addRoleForm/index';
+import DramaDetail from './DramaDetail/index';
 
 function SearchTable() {
   const locale = useLocale();
   const [dmlist, setdmlist] = useState([]);
-  const [clickItem, setclickItem] = useState({});
   const [addDmModal, setaddDmModal] = useState(false);
   const [modalType, setmodalType] = useState('');
   const [visitModal, setvisitModal] = useState(false);
   const [DramaRoleModal, setDramaRoleModal] = useState(false);
-  const [labelData, setlabelData] = useState([]);
+  const [gb_typeMap, setgb_typeMap] = useState({});
   const columns = [
     {
       title: '剧本ID',
@@ -45,7 +46,9 @@ function SearchTable() {
     {
       title: '剧本类型',
       dataIndex: 'gb_type',
-      render: (value) => <Typography.Text copyable>{value}</Typography.Text>,
+      render: (value) => {
+        return <span>{gb_typeMap[value]}</span>;
+      },
     },
     {
       title: '剧本区域',
@@ -73,29 +76,39 @@ function SearchTable() {
         <div className={styles.operations}>
           <Space>
             <Button
+              type="primary"
+              size="mini"
+              onClick={() => {
+                dispatch({ type: 'toggle-show', payload: { show: true } });
+                dispatch({ type: 'save-item', payload: { clickItem: data } });
+              }}
+            >
+              剧本详情
+            </Button>
+            {/* <Button
               onClick={() => {
                 setDramaRoleModal(true);
-                setclickItem(data);
+                dispatch({ type: 'save-item', payload: { clickItem: data } });
               }}
               type="primary"
               size="mini"
             >
               添加角色
-            </Button>
-            <Button
+            </Button> */}
+            {/* <Button
               onClick={() => {
-                setclickItem(data);
+                dispatch({ type: 'save-item', payload: { clickItem: data } });
                 setaddDmModal(true);
               }}
               type="primary"
               size="mini"
             >
               添加dm
-            </Button>
+            </Button> */}
             <Button
               onClick={() => {
                 setvisitModal(true);
-                setclickItem(data);
+                dispatch({ type: 'save-item', payload: { clickItem: data } });
                 setmodalType('edit');
               }}
               type="primary"
@@ -104,28 +117,42 @@ function SearchTable() {
               {locale['searchTable.columns.operations.update']}
             </Button>
           </Space>
-
-          {/* <Button type="text" status="danger" size="small">
-            {locale['searchTable.columns.operations.delete']}
-          </Button> */}
         </div>
       ),
     },
   ];
-  const searchTableState = useSelector((state: ReducerState) => state.searchTable);
-  const { data, pagination, loading, formParams } = searchTableState;
   const dispatch = useDispatch();
   useEffect(() => {
     fetchData();
   }, []);
 
+  const searchTableState = useSelector((state: ReducerState) => {
+    return state.searchTable;
+  });
+  const dramaInfoStore = useSelector((state: ReducerState) => {
+    return state.myState;
+  });
+  const { show, clickItem } = dramaInfoStore;
+  const { data, pagination, loading, formParams } = searchTableState;
   useEffect(() => {
     getlabelsApi();
     getDmListApi();
   }, []);
   const getlabelsApi = async () => {
-    const data = await labelsApi();
-    setlabelData(data.data);
+    const { data } = await labelsApi();
+    let needdata = {};
+    for (let index = 0; index < data.length; index++) {
+      const element = data[index];
+      if (element.dict_name === '剧本类型') {
+        const myneeddata = element.dict_label;
+        for (let index = 0; index < myneeddata.length; index++) {
+          const item = myneeddata[index];
+          needdata[item.label_value] = item.label_zh;
+        }
+      }
+    }
+    setgb_typeMap(needdata);
+    dispatch({ type: 'save-label', payload: { labelData: data } });
   };
 
   const getDmListApi = async () => {
@@ -134,13 +161,13 @@ function SearchTable() {
     setdmlist(data.data);
   };
 
+  // 获取table数据
   function fetchData(current = 1, pageSize = 10, params = {}) {
     const data = dramaList({
       page: current,
       page_size: pageSize,
     });
     data.then((res) => {
-      console.log(res);
       const { data, paginator } = res;
       dispatch({ type: UPDATE_LIST, payload: { data: data } });
       dispatch({
@@ -155,6 +182,7 @@ function SearchTable() {
         },
       });
       dispatch({ type: UPDATE_LOADING, payload: { loading: false } });
+      dispatch({ type: CHANGE_DRAWER_STATUS, payload: { dramaDetailDrawer: false } });
       dispatch({ type: UPDATE_FORM_PARAMS, payload: { params } });
     });
   }
@@ -166,7 +194,28 @@ function SearchTable() {
 
   return (
     <div className={styles.container}>
-      {/* DramaRoleModal */}
+      {/* 剧本详情页
+       */}
+      <Drawer
+        onCancel={() => {
+          //这里需要二次确认
+          Modal.confirm({
+            title: '当前页面正在编辑,确定退出?',
+            okButtonProps: { status: 'danger' },
+            onOk: () => {
+              dispatch({ type: 'toggle-show', payload: { show: false } });
+            },
+          });
+        }}
+        footer={null}
+        visible={show}
+        title="剧本详情"
+        unmountOnExit={true}
+        width="90vw"
+      >
+        <DramaDetail />
+      </Drawer>
+
       <Modal
         style={{ width: 800 }}
         unmountOnExit={true}
@@ -206,21 +255,26 @@ function SearchTable() {
         title="添加剧本"
         footer={null}
         onCancel={() => {
-          setvisitModal(false);
+          Modal.confirm({
+            title: '当前页面正在编辑,确定退出?',
+            okButtonProps: { status: 'danger' },
+            onOk: () => {
+              // dispatch({ type: 'toggle-show', payload: { show: false } });
+              setvisitModal(false);
+            },
+          });
         }}
         unmountOnExit={true}
-        style={{ width: 900, minWidth: 900 }}
+        style={{ width: '80vw' }}
         visible={visitModal}
       >
         <AddForm
-          modalType={modalType}
-          clickItem={clickItem}
           closeModalAndRequest={() => {
-            setclickItem(null);
+            dispatch({ type: 'save-item', payload: { clickItem: null } });
             fetchData();
             setvisitModal(false);
           }}
-          labelData={labelData}
+          modalType={modalType}
         ></AddForm>
       </Modal>
       <Breadcrumb style={{ marginBottom: 20 }}>

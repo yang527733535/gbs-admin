@@ -1,8 +1,9 @@
-import React, { useState, useRef } from 'react';
-import { reqBindDm, reqBindrole } from '../../../api/drama.js';
+import React, { useRef, useEffect } from 'react';
+import { reqBindrole } from '../../../../api/drama.js';
 import { Form, Space, Select, Message, Input, Button, Grid } from '@arco-design/web-react';
 import { IconDelete } from '@arco-design/web-react/icon';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { ReducerState } from '../../../../redux/index';
 const Row = Grid.Row;
 const Col = Grid.Col;
 const FormItem = Form.Item;
@@ -16,17 +17,58 @@ const formItemLayout = {
   },
 };
 
-const noLabelLayout = {
-  wrapperCol: {
-    span: 17,
-    offset: 7,
-  },
-};
-export default function DmForm({ clickItem, closeModalAndRequest, dmlist }) {
+export default function DmForm({ role_array }) {
   const formRef = useRef();
+  const dramaInfoStore = useSelector((state: ReducerState) => {
+    return state.myState;
+  });
+  useEffect(() => {
+    formRef.current.setFieldsValue({ role_array });
+  }, [role_array]);
+
+  const { clickItem } = dramaInfoStore;
+  const onValuesChange = (changeValue, values) => {
+    console.log('onValuesChange: ', changeValue, values);
+  };
   return (
     <div>
-      <Form layout="vertical" ref={formRef} {...formItemLayout}>
+      <Form onValuesChange={onValuesChange} layout="vertical" ref={formRef} {...formItemLayout}>
+        <Row style={{ width: '100%' }}>
+          <Col span={24}>
+            <FormItem style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Space>
+                <Button
+                  onClick={async () => {
+                    if (formRef.current) {
+                      try {
+                        await formRef.current.validate();
+                        let param = await formRef.current.validate();
+                        param.gb_code = clickItem.gb_code;
+                        const data = await reqBindrole(param);
+                        if (data.code === 200) {
+                          Message.info('提交成功！');
+                        }
+                      } catch (_) {
+                        // Message.error('校验失败，请检查字段！');
+                      }
+                    }
+                  }}
+                  type="primary"
+                >
+                  提交
+                </Button>
+                <Button
+                  onClick={() => {
+                    formRef.current.resetFields();
+                  }}
+                >
+                  重置
+                </Button>
+              </Space>
+            </FormItem>
+          </Col>
+        </Row>
+
         <Form.List field="role_array">
           {(fields, { add, remove, move }) => {
             return (
@@ -70,8 +112,8 @@ export default function DmForm({ clickItem, closeModalAndRequest, dmlist }) {
                             noStyle
                           >
                             <Select placeholder="是否凶手">
-                              <Select.Option value={true}>是</Select.Option>
-                              <Select.Option value={false}>否</Select.Option>
+                              <Select.Option value="1">是</Select.Option>
+                              <Select.Option value="0">否</Select.Option>
                             </Select>
                           </Form.Item>
                           <Form.Item
@@ -118,7 +160,7 @@ export default function DmForm({ clickItem, closeModalAndRequest, dmlist }) {
                     </div>
                   );
                 })}
-                <Form.Item wrapperCol={{ offset: 4 }}>
+                <Form.Item>
                   <Button
                     onClick={() => {
                       add();
@@ -131,38 +173,6 @@ export default function DmForm({ clickItem, closeModalAndRequest, dmlist }) {
             );
           }}
         </Form.List>
-        <FormItem wrapperCol={{ offset: 4 }}>
-          <Button
-            onClick={async () => {
-              if (formRef.current) {
-                try {
-                  await formRef.current.validate();
-                  let param = await formRef.current.validate();
-                  param.gb_code = clickItem.gb_code;
-                  const data = await reqBindrole(param);
-                  if (data.code === 200) {
-                    Message.info('提交成功！');
-                    closeModalAndRequest();
-                  }
-                } catch (_) {
-                  // console.log(formRef.current.getFieldsError());
-                  // Message.error('校验失败，请检查字段！');
-                }
-              }
-            }}
-            type="primary"
-            style={{ marginRight: 24 }}
-          >
-            提交
-          </Button>
-          <Button
-            onClick={() => {
-              formRef.current.resetFields();
-            }}
-          >
-            重置
-          </Button>
-        </FormItem>
       </Form>
     </div>
   );

@@ -48,7 +48,7 @@ function RoleTree({}) {
       page_size: 100,
     };
     const { data } = await userList(parma);
-    console.log('data: ', data);
+   
     setuserListData(data);
   };
 

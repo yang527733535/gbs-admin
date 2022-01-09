@@ -1,5 +1,4 @@
 import defaultSettings from '../settings.json';
-
 const defaultTheme = localStorage.getItem('arco-theme') || 'light';
 const defaultUser = {
   name: 'yangtenghui',
@@ -37,9 +36,6 @@ const initialState: GlobalState = {
 };
 
 export default function(state = initialState, action) {
-  console.log(state);
-  console.log(action);
-
   switch (action.type) {
     case 'toggle-theme': {
       const { theme } = action.payload;

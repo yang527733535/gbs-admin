@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Button, Input, Breadcrumb, Card, Space, Modal } from '@arco-design/web-react';
 import { useSelector, useDispatch } from 'react-redux';
-import { shopList, labelsApi } from '../../api/drama.js';
+import { shopList } from '../../api/drama.js';
 import {
   UPDATE_FORM_PARAMS,
   UPDATE_LIST,
@@ -63,10 +63,6 @@ function SearchTable({}) {
   const dispatch = useDispatch();
   useEffect(() => {
     fetchData();
-  }, []);
-  useEffect(() => {
-    const data = labelsApi();
-    console.log('data: ', data);
   }, []);
 
   function fetchData(current = 1, pageSize = 10, params = {}) {
