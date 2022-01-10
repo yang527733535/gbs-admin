@@ -40,6 +40,13 @@ export function dramaList(data) {
   });
 }
 
+export function getUserList(data) {
+  return Service({
+    url: '/v1/option/user',
+    data,
+  });
+}
+
 export function getDmList(data) {
   return Service({
     url: '/v1/option/user-dm',
@@ -158,6 +165,13 @@ export function editDrama(data) {
 export function dramaDetail(data) {
   return Service({
     url: '/v1/drama/view',
+    data,
+    method: 'post',
+  });
+}
+export function bindDm(data) {
+  return Service({
+    url: '/system/user/set-dm',
     data,
     method: 'post',
   });

@@ -7,11 +7,10 @@ import {
   Card,
   Space,
   Modal,
-  Tabs,
   Typography,
 } from '@arco-design/web-react';
 import { useSelector, useDispatch } from 'react-redux';
-import { userList } from '../../api/user.js';
+import { dmList, getUserList } from '../../api/user.js';
 import {
   UPDATE_FORM_PARAMS,
   UPDATE_LIST,
@@ -23,16 +22,16 @@ import useLocale from '../../utils/useLocale';
 import { ReducerState } from '../../redux';
 import styles from './style/index.module.less';
 
-const TabPane = Tabs.TabPane;
+// const TabPane = Tabs.TabPane;
 
-function SearchTable() {
+function SearchTable({}) {
   const locale = useLocale();
-  const [tabkey, settabkey] = useState('user');
-  const [visitModal, setvisitModal] = useState(false);
-  const [user_account, setuser_account] = useState('');
-  const [user_mobile, setuser_mobile] = useState('');
-  const [user_name, setuser_name] = useState('');
-  const [user_status, setuser_status] = useState('');
+  const [UserList, setUserList] = useState<any[]>([]);
+  const [visitModal, setvisitModal] = useState<boolean>();
+  const [user_account, setuser_account] = useState<string>('');
+  const [user_mobile, setuser_mobile] = useState<string>('');
+  const [user_name, setuser_name] = useState<string>('');
+  const [user_status, setuser_status] = useState<string>('');
   const columns = [
     {
       title: '用户名称',
@@ -81,17 +80,23 @@ function SearchTable() {
 
   const searchTableState = useSelector((state: ReducerState) => state.searchTable);
 
-  const { data, pagination, loading, formParams } = searchTableState;
+  const { pagination, loading, formParams } = searchTableState;
   const dispatch = useDispatch();
   useEffect(() => {
     fetchData();
   }, []);
+  useEffect(() => {
+    getUserListApi();
+  }, []);
 
-  useEffect(() => {}, []);
+  const getUserListApi = async () => {
+    const data = await getUserList();
+    setUserList(data.data);
+    console.log('data: ', data);
+  };
 
   function fetchData(current = 1, pageSize = 10, params = {}) {
-    // const data = dispatch({ type: UPDATE_LOADING, payload: { loading: true } });
-    const data = userList({
+    const data = dmList({
       page: current,
       page_size: pageSize,
       user_account,
@@ -100,7 +105,6 @@ function SearchTable() {
       user_status,
     });
     data.then((res) => {
-      console.log(res);
       const { data, paginator } = res;
       dispatch({ type: UPDATE_LIST, payload: { data } });
       dispatch({
@@ -117,22 +121,6 @@ function SearchTable() {
       dispatch({ type: UPDATE_LOADING, payload: { loading: false } });
       dispatch({ type: UPDATE_FORM_PARAMS, payload: { params } });
     });
-    // data.then((res) => {
-    //   console.log('res: ', res);
-    // });
-
-    // dispatch({ type: UPDATE_LOADING, payload: { loading: false } });
-    // dispatch({ type: UPDATE_FORM_PARAMS, payload: { params } });
-    // axios
-    //   .get(`/api/policy`, {
-    //     params: {
-    //       page: current,
-    //       pageSize,
-    //       ...params,
-    //     },
-    //   })
-    //   .then((res) => {
-    //   });
   }
 
   function onChangeTable(pagination) {
@@ -151,7 +139,12 @@ function SearchTable() {
         style={{ width: 600 }}
         visible={visitModal}
       >
-        <AddForm name="XIXI" />
+        <AddForm
+          closeModalAndReqNewTableData={() => {
+            setvisitModal(false);
+          }}
+          UserList={UserList}
+        />
       </Modal>
       <Breadcrumb style={{ marginBottom: 20 }}>
         <Breadcrumb.Item>运营管理</Breadcrumb.Item>
@@ -166,7 +159,7 @@ function SearchTable() {
               }}
               type="primary"
             >
-              添加用户
+              添加主持人
             </Button>
             <div>
               <Space>
@@ -222,38 +215,13 @@ function SearchTable() {
         </Card>
       </div>
       <Card bordered={false}>
-        <Tabs
-          onClickTab={(key: any) => {
-            console.log('key: ', key);
-            settabkey(key);
-          }}
-          activeTab={tabkey}
-        >
-          <TabPane key="user" title="普通员工">
-            <Typography.Paragraph>
-              <Table
-                rowKey="user_account"
-                loading={loading}
-                onChange={onChangeTable}
-                pagination={pagination}
-                columns={columns}
-                data={data}
-              />
-            </Typography.Paragraph>
-          </TabPane>
-          <TabPane key="worker" title="职员">
-            <Typography.Paragraph>
-              <Table
-                rowKey="user_account"
-                loading={loading}
-                onChange={onChangeTable}
-                pagination={pagination}
-                columns={columns}
-                data={data}
-              />
-            </Typography.Paragraph>
-          </TabPane>
-        </Tabs>
+        <Table
+          rowKey="user_account"
+          loading={loading}
+          onChange={onChangeTable}
+          pagination={pagination}
+          columns={columns}
+        />
       </Card>
     </div>
   );

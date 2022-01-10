@@ -23,6 +23,11 @@ Service.interceptors.request.use((config) => {
 Service.interceptors.response.use(
   (response) => {
     if (response.data.code === 4003 || response.data.code === 4001) {
+      Message({
+        message: '长时间未操作,已强制退出,请重新登录',
+        type: 'error',
+        duration: 3 * 1000,
+      });
       localStorage.clear();
       window.location.reload();
     }

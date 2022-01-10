@@ -19,6 +19,20 @@ export function userList(data) {
     data,
   });
 }
+export function dmList(data) {
+  return Service({
+    url: '/system/worker/dm-list',
+    data,
+    method: 'POST',
+  });
+}
+export function getUserList(data) {
+  return Service({
+    url: '/v1/option/user',
+    data,
+    method: 'POST',
+  });
+}
 
 export function resLogout() {
   return Service({

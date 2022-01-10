@@ -28,7 +28,7 @@
     "src/pages/stocks-staff2/form/index.jsx",
     "src/pages/stocks-drama/addRoleForm/index.jsx",
     "src/pages/stocks-drama/form/index.jsx"
-  ],
+, "src/pages/stocks-staff-dm/form/index.jsx"  ],
   "exclude": [
     "node_modules"
   ]
