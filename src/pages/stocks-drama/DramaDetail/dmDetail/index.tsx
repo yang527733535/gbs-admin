@@ -53,8 +53,6 @@ export default function DmForm({ drama_dms }) {
 
   function tagRender(props) {
     const { label, value } = props;
-    console.log('value: ', value);
-    // console.log('src: ', src);
 
     return (
       <div
@@ -95,7 +93,6 @@ export default function DmForm({ drama_dms }) {
               return (
                 <Select.Option key={item.user_account} value={item.user_account}>
                   {item.user_nick}
-                  <img src={item.user_photo} alt="" />
                 </Select.Option>
               );
             })}
