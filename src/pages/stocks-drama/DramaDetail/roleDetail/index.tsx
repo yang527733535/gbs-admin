@@ -1,10 +1,11 @@
-import React, { useRef, useEffect } from 'react';
-import { Form, Space, Select, Message, Input, Button, Grid } from '@arco-design/web-react';
+import React, { useRef, useState, useEffect } from 'react';
+import { Form, Space, Modal, Select, Message, Input, Button, Grid } from '@arco-design/web-react';
 import { IconDelete } from '@arco-design/web-react/icon';
 import { useSelector } from 'react-redux';
 import { reqBindrole } from '../../../../api/drama.js';
 import { ReducerState } from '../../../../redux/index';
 import { FormInstance } from '@arco-design/web-react/es/Form';
+import AddRoleDetailForm from './AddRoleDetailForm/index';
 const Row = Grid.Row;
 const Col = Grid.Col;
 const FormItem = Form.Item;
@@ -31,9 +32,25 @@ export default function DmForm({ role_array }) {
   const onValuesChange = (changeValue, values) => {
     console.log('onValuesChange: ', changeValue, values);
   };
+  const [addRoleToDramaModal, setaddRoleToDramaModal] = useState<boolean>(false);
   return (
     <>
-      <div>剧本角色</div>
+      {/* 在这里添加的要带上之前的 */}
+      <Modal
+        onCancel={() => {
+          setaddRoleToDramaModal(false);
+        }}
+        visible={addRoleToDramaModal}
+      >
+        <AddRoleDetailForm clickItem={clickItem}></AddRoleDetailForm>
+      </Modal>
+      <Button
+        onClick={() => {
+          setaddRoleToDramaModal(true);
+        }}
+      >
+        添加角色
+      </Button>
       <Form
         style={{ display: 'none' }}
         onValuesChange={onValuesChange}
