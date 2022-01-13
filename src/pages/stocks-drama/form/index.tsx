@@ -349,7 +349,8 @@ function DramaForm({ modalType = 'add', closeModalAndRequest }) {
               >
                 <Upload
                   limit={1}
-                  listType="picture-card"
+                  style={{ width: 200, height: 400 }}
+                  // listType="picture-card"
                   name="gb_cover"
                   customRequest={(option) => {
                     const { onProgress, onError, onSuccess, file } = option;
@@ -419,6 +420,7 @@ function DramaForm({ modalType = 'add', closeModalAndRequest }) {
                               }
                               return;
                             }
+                            param.gb_star_lev = param.gb_star_lev * 2;
                             const data = await addDrama(param);
                             if (data.code === 200) {
                               Message.success('添加成功');

@@ -32,44 +32,15 @@ export default function DmForm({ role_array }) {
     console.log('onValuesChange: ', changeValue, values);
   };
   return (
-    <div>
-      <Form onValuesChange={onValuesChange} layout="vertical" ref={formRef} {...formItemLayout}>
-        <Row style={{ width: '100%' }}>
-          <Col span={24}>
-            <FormItem style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <Space>
-                <Button
-                  onClick={async () => {
-                    if (formRef.current) {
-                      try {
-                        await formRef.current.validate();
-                        const param = await formRef.current.validate();
-                        param.gb_code = clickItem.gb_code;
-                        const data = await reqBindrole(param);
-                        if (data.code === 200) {
-                          Message.info('提交成功！');
-                        }
-                      } catch (_) {
-                        // Message.error('校验失败，请检查字段！');
-                      }
-                    }
-                  }}
-                  type="primary"
-                >
-                  提交
-                </Button>
-                <Button
-                  onClick={() => {
-                    formRef.current.resetFields();
-                  }}
-                >
-                  重置
-                </Button>
-              </Space>
-            </FormItem>
-          </Col>
-        </Row>
-
+    <>
+      <div>123</div>
+      <Form
+        style={{ display: 'none' }}
+        onValuesChange={onValuesChange}
+        layout="vertical"
+        ref={formRef}
+        {...formItemLayout}
+      >
         <Form.List field="role_array">
           {(fields, { add, remove }) => {
             return (
@@ -174,7 +145,42 @@ export default function DmForm({ role_array }) {
             );
           }}
         </Form.List>
+        <Row style={{ width: '100%' }}>
+          <Col span={24}>
+            <FormItem style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Space>
+                <Button
+                  onClick={async () => {
+                    if (formRef.current) {
+                      try {
+                        await formRef.current.validate();
+                        const param = await formRef.current.validate();
+                        param.gb_code = clickItem.gb_code;
+                        const data = await reqBindrole(param);
+                        if (data.code === 200) {
+                          Message.info('提交成功！');
+                        }
+                      } catch (_) {
+                        // Message.error('校验失败，请检查字段！');
+                      }
+                    }
+                  }}
+                  type="primary"
+                >
+                  提交
+                </Button>
+                <Button
+                  onClick={() => {
+                    formRef.current.resetFields();
+                  }}
+                >
+                  重置
+                </Button>
+              </Space>
+            </FormItem>
+          </Col>
+        </Row>
       </Form>
-    </div>
+    </>
   );
 }

@@ -210,7 +210,6 @@ function Shop({ closeModalAndReqTable, clickItem }) {
               if (formRef.current) {
                 try {
                   await formRef.current.validate();
-                  // Message.info('校验通过，提交成功！');
                   if (clickItem === null) {
                     console.log(formRef.current.getFields());
                     var data = await addGame(formRef.current.getFields());

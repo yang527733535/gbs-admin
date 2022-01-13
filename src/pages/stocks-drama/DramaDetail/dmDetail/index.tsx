@@ -24,7 +24,6 @@ export default function DmForm({ drama_dms }) {
   };
 
   useEffect(() => {
-    // clickItem
     const obj = {};
     for (let index = 0; index < drama_dms.length; index++) {
       const element = drama_dms[index];
@@ -39,7 +38,6 @@ export default function DmForm({ drama_dms }) {
   }, [drama_dms]);
 
   const onValuesChange = async (changeValue, values) => {
-    console.log('onValuesChange: ', changeValue, values);
     const param: any = new Object();
     param.gb_code = clickItem.gb_code;
     param.dm_array = values.dm_array.map((item) => {

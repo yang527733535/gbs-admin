@@ -265,7 +265,7 @@ function SearchTable() {
           });
         }}
         unmountOnExit
-        style={{ width: '80vw' }}
+        style={{ width: '90vw' }}
         visible={visitModal}
       >
         <AddForm
