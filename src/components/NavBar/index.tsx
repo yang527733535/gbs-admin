@@ -14,7 +14,6 @@ import { IconSunFill, IconMoonFill } from '@arco-design/web-react/icon';
 import { useSelector, useDispatch } from 'react-redux';
 import { ReducerState } from '../../redux';
 import useLocale from '../../utils/useLocale';
-import Logo from '../../assets/logo.svg';
 import history from '../../history';
 import { resLogout } from '../../api/user.js';
 import MessageBox from '../MessageBox';

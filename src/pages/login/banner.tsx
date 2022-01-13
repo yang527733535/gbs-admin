@@ -16,7 +16,6 @@ export default function LoginBannber() {
         <div key={`${index}`}>
           <div className={styles['carousel-item']}>
             <div className={styles['carousel-title']}>{item.slogan}</div>
-            <div className={styles['carousel-sub-title']}>{item.subSlogan}</div>
             <img className={styles['carousel-image']} src={item.image} />
           </div>
         </div>
