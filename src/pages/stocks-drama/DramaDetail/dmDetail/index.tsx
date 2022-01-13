@@ -38,6 +38,7 @@ export default function DmForm({ drama_dms }) {
   }, [drama_dms]);
 
   const onValuesChange = async (changeValue, values) => {
+    console.log('changeValue: ', changeValue);
     const param: any = new Object();
     param.gb_code = clickItem.gb_code;
     param.dm_array = values.dm_array.map((item) => {
