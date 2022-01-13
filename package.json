@@ -1,7 +1,7 @@
 {
   "name": "arco-design-pro",
   "version": "1.0.0",
-  "description": "Arco Design Pro",
+  "description": "梦墨绘梦馆",
   "scripts": {
     "prepublishOnly": "npm run build",
     "dev": "arco-scripts dev:site --port 9090",
