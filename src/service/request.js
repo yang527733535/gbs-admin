@@ -22,14 +22,16 @@ Service.interceptors.request.use((config) => {
 // 添加响应拦截器
 Service.interceptors.response.use(
   (response) => {
-    if (response.data.code === 4003 || response.data.code === 4001) {
+    console.log('response.data.code: ', response.data.code);
+    if (response.data.code == 4002 || response.data.code == 4003) {
+      console.log('4002');
+      window.localStorage.clear();
+      window.location.reload();
       Message({
         message: '长时间未操作,已强制退出,请重新登录',
         type: 'error',
         duration: 3 * 1000,
       });
-      localStorage.clear();
-      window.location.reload();
     }
     return response.data;
   },

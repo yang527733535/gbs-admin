@@ -8,6 +8,7 @@ import {
   Dropdown,
   Menu,
   Space,
+  Image
 } from '@arco-design/web-react';
 import { IconSunFill, IconMoonFill } from '@arco-design/web-react/icon';
 import { useSelector, useDispatch } from 'react-redux';
@@ -53,9 +54,13 @@ function Navbar() {
     <div className={styles.navbar}>
       <div className={styles.left}>
         <Space size={8}>
-          <Logo />
+          {/* <Logo /> */}
+          <Image
+          src='https://gbs.toptian.com/image/show?file=drama_I00111-1642061758.png'
+           width={50}
+          ></Image>
           <Typography.Title style={{ margin: 0, fontSize: 18 }} heading={5}>
-            梦墨Admin
+          梦墨剧本杀
           </Typography.Title>
         </Space>
       </div>
