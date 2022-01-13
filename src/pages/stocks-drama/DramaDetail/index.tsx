@@ -290,7 +290,7 @@ export default function DramaDetail({}) {
                             field="gb_text_brief"
                             rules={[{ required: true, message: '请填写剧本概要' }]}
                           >
-                            <Input.TextArea placeholder="请填写剧本概要..." />
+                            <Input.TextArea rows={5} placeholder="请填写剧本概要..." />
                           </FormItem>
                         </div>
                       </Col>
@@ -301,7 +301,7 @@ export default function DramaDetail({}) {
                             field="gb_text_content"
                             rules={[{ required: false, message: '请填写剧本描述' }]}
                           >
-                            <Input.TextArea placeholder="请填写剧本描述..." />
+                            <Input.TextArea rows={5} placeholder="请填写剧本描述..." />
                           </FormItem>
                         </div>
                       </Col>
@@ -311,7 +311,9 @@ export default function DramaDetail({}) {
                           field="gb_producer"
                           rules={[{ required: true, message: '请填写版权信息' }]}
                         >
-                          <Input.TextArea placeholder="请填写版权信息..." />
+                          <Input.TextArea
+                           rows={5} 
+                           placeholder="请填写版权信息..." />
                         </FormItem>
                       </Col>
                     </Row>
