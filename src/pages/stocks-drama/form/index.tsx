@@ -349,7 +349,7 @@ function DramaForm({ modalType = 'add', closeModalAndRequest }) {
               >
                 <Upload
                   limit={1}
-                  style={{ width: 200, height: 400 }}
+                  // style={{ width: 200, height: 400 }}
                   name="gb_cover"
                   customRequest={(option) => {
                     const { onProgress, onError, onSuccess, file } = option;

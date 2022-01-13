@@ -93,13 +93,19 @@ export default function DramaDetail({}) {
   return (
     <div className={styles.AllContanier}>
       <div className={styles.myDetail}>
-        <Tabs>
+        <Tabs type="rounded">
           <TabPane key="1" title="剧本基础信息">
             <div className={styles.myDetail_form}>
               <Spin loading={loading} style={{ width: '100%' }}>
                 <div>
-                  <Form ref={formRef} onValuesChange={onValuesChange} scrollToFirstError>
-                    <Row className="grid-demo" style={{ marginBottom: 10 }}>
+                  <Form
+                    className={styles['form-group']}
+                    layout="vertical"
+                    ref={formRef}
+                    onValuesChange={onValuesChange}
+                    scrollToFirstError
+                  >
+                    <Row gutter={80} className="grid-demo" style={{ marginBottom: 10 }}>
                       <Col xs={24} sm={12} md={12} lg={8} xl={8} xxl={8}>
                         <div>
                           <FormItem
@@ -150,7 +156,7 @@ export default function DramaDetail({}) {
                         </div>
                       </Col>
                     </Row>
-                    <Row>
+                    <Row gutter={80}>
                       <Col xs={24} sm={12} md={12} lg={8} xl={8} xxl={8}>
                         <div>
                           <FormItem
@@ -194,7 +200,7 @@ export default function DramaDetail({}) {
                         </div>
                       </Col>
                     </Row>
-                    <Row>
+                    <Row gutter={80}>
                       <Col xs={24} sm={12} md={12} lg={8} xl={8} xxl={8}>
                         <div>
                           <FormItem
@@ -237,7 +243,7 @@ export default function DramaDetail({}) {
                         </div>
                       </Col>
                     </Row>
-                    <Row>
+                    <Row gutter={80}>
                       <Col xs={24} sm={12} md={12} lg={8} xl={8} xxl={8}>
                         <div>
                           <FormItem
@@ -282,44 +288,8 @@ export default function DramaDetail({}) {
                         </div>
                       </Col>
                     </Row>
-                    <Row>
+                    <Row gutter={80}>
                       <Col xs={24} sm={12} md={12} lg={8} xl={8} xxl={8}>
-                        <div>
-                          <FormItem
-                            label="剧本概要"
-                            field="gb_text_brief"
-                            rules={[{ required: true, message: '请填写剧本概要' }]}
-                          >
-                            <Input.TextArea rows={5} placeholder="请填写剧本概要..." />
-                          </FormItem>
-                        </div>
-                      </Col>
-                      <Col xs={24} sm={12} md={12} lg={8} xl={8} xxl={8}>
-                        <div>
-                          <FormItem
-                            label="剧本描述"
-                            field="gb_text_content"
-                            rules={[{ required: false, message: '请填写剧本描述' }]}
-                          >
-                            <Input.TextArea rows={5} placeholder="请填写剧本描述..." />
-                          </FormItem>
-                        </div>
-                      </Col>
-                      <Col xs={24} sm={12} md={12} lg={8} xl={8} xxl={8}>
-                        <FormItem
-                          label="版权信息"
-                          field="gb_producer"
-                          rules={[{ required: true, message: '请填写版权信息' }]}
-                        >
-                          <Input.TextArea
-                           rows={5} 
-                           placeholder="请填写版权信息..." />
-                        </FormItem>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col xs={24} sm={12} md={12} lg={8} xl={8} xxl={8}>
-                        {' '}
                         <FormItem
                           label="是否新本"
                           field="is_new"
@@ -353,7 +323,40 @@ export default function DramaDetail({}) {
                         </FormItem>
                       </Col>
                     </Row>
-                    <Row>
+                    <Row gutter={80}>
+                      <Col xs={24} sm={12} md={12} lg={8} xl={8} xxl={8}>
+                        <div>
+                          <FormItem
+                            label="剧本概要"
+                            field="gb_text_brief"
+                            rules={[{ required: true, message: '请填写剧本概要' }]}
+                          >
+                            <Input.TextArea rows={5} placeholder="请填写剧本概要..." />
+                          </FormItem>
+                        </div>
+                      </Col>
+                      <Col xs={24} sm={12} md={12} lg={8} xl={8} xxl={8}>
+                        <div>
+                          <FormItem
+                            label="剧本描述"
+                            field="gb_text_content"
+                            rules={[{ required: false, message: '请填写剧本描述' }]}
+                          >
+                            <Input.TextArea rows={5} placeholder="请填写剧本描述..." />
+                          </FormItem>
+                        </div>
+                      </Col>
+                      <Col xs={24} sm={12} md={12} lg={8} xl={8} xxl={8}>
+                        <FormItem
+                          label="版权信息"
+                          field="gb_producer"
+                          rules={[{ required: true, message: '请填写版权信息' }]}
+                        >
+                          <Input.TextArea rows={5} placeholder="请填写版权信息..." />
+                        </FormItem>
+                      </Col>
+                    </Row>
+                    <Row gutter={80}>
                       <Col xs={24} sm={12} md={12} lg={8} xl={8} xxl={8}>
                         <Form.Item
                           rules={[{ required: true, message: '请上传剧本封面' }]}
@@ -362,8 +365,9 @@ export default function DramaDetail({}) {
                           triggerPropName="fileList"
                         >
                           <Upload
+                            style={{ width: 200, height: 400 }}
                             limit={1}
-                            // listType="picture-card"
+                            listType="picture-list"
                             name="gb_cover"
                             customRequest={(option) => {
                               const { onProgress, onError, onSuccess, file } = option;
@@ -408,7 +412,7 @@ export default function DramaDetail({}) {
                       </Col>
                     </Row>
 
-                    <Row>
+                    <Row gutter={80}>
                       <Col
                         style={{
                           display: 'flex',
@@ -469,7 +473,7 @@ export default function DramaDetail({}) {
             </div>
           </TabPane>
           <TabPane key="2" title="剧本角色">
-            <DramaRole role_array={role_array} />
+            <DramaRole getInitFormData={getInitFormData} role_array={role_array} />
           </TabPane>
           <TabPane key="3" title="剧本DM">
             <DramaDm drama_dms={drama_dms} />
