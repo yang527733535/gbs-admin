@@ -142,7 +142,7 @@ export default function DmForm({ clickItem, closeModalAndRequest, dmlist }) {
                   param.gb_code = clickItem.gb_code;
                   const data = await reqBindrole(param);
                   if (data.code === 200) {
-                    Message.info('提交成功！');
+                    Message.info('提交成功');
                     closeModalAndRequest();
                   }
                 } catch (_) {

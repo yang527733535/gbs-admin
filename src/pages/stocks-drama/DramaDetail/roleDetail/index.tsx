@@ -85,26 +85,24 @@ export default function DmForm({ getInitFormData, role_array }) {
               style={{ width: 350, maxHeight: 450, marginRight: 20 }}
               extra={
                 <Popconfirm
-                  title="Are you sure you want to delete?"
+                  title="确定删除这个角色?"
                   onOk={async () => {
                     console.log('setsaveDeleteItem', saveDeleteItem);
                     console.log('role_array', role_array);
                     let newrole_array = role_array.filter((item) => {
                       return saveDeleteItem.role_code !== item.role_code;
                     });
-                    // console.log('newrole_array,', newrole_array);
                     const param = {
                       gb_code: clickItem.gb_code,
                       role_array: newrole_array,
                     };
                     const data = await reqBindrole(param);
                     if (data.code === 200) {
-                      Message.success('修改成功');
+                      Message.success('删除成功');
                       getInitFormData();
                     }
                   }}
                   onCancel={() => {
-                    // Message.error({ content: 'cancel' });
                   }}
                 >
                   <Button

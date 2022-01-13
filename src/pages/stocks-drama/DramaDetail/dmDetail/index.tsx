@@ -20,6 +20,7 @@ export default function DmForm({ drama_dms }) {
   }, []);
   const getDmListfN = async () => {
     const data = await getDmList();
+    console.log('data: ', data);
     setdmlist(data.data);
   };
 
@@ -35,10 +36,11 @@ export default function DmForm({ drama_dms }) {
         return item.user_account;
       }),
     });
-  }, [drama_dms]);
+  }, []);
 
   const onValuesChange = async (changeValue, values) => {
     console.log('changeValue: ', changeValue);
+    return;
     const param: any = new Object();
     param.gb_code = clickItem.gb_code;
     param.dm_array = values.dm_array.map((item) => {
