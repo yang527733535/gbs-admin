@@ -66,11 +66,12 @@ export default function DramaDetail({}) {
     getInitFormData();
   }, []);
 
+  useEffect(() => {}, []);
+
   // 获取基础数据
   const getInitFormData = async () => {
     setloading(true);
     const { data } = await dramaDetail({ gb_code: clickItem.gb_code });
-    console.log('data: ', data);
     setloading(false);
     setrole_array(data.drama_roles);
     setdrama_dms(data.drama_dms);

@@ -13,3 +13,7 @@
   margin-top: 0;
   margin-bottom: 16px;
 }
+.form-group > :global(.arco-card) h6 {
+  margin-top: 0;
+  margin-bottom: 16px;
+}

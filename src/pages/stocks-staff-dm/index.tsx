@@ -1,14 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Table,
-  Button,
-  Input,
-  Breadcrumb,
-  Card,
-  Space,
-  Modal,
-  Typography,
-} from '@arco-design/web-react';
+import { Table, Button, Input, Breadcrumb, Card, Space, Modal } from '@arco-design/web-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { dmList, getUserList } from '../../api/user.js';
 import {
@@ -22,8 +13,6 @@ import useLocale from '../../utils/useLocale';
 import { ReducerState } from '../../redux';
 import styles from './style/index.module.less';
 
-// const TabPane = Tabs.TabPane;
-
 function SearchTable({}) {
   const locale = useLocale();
   const [UserList, setUserList] = useState<any[]>([]);
@@ -35,52 +24,33 @@ function SearchTable({}) {
   const columns = [
     {
       title: '用户名称',
-      dataIndex: 'user_name',
+      dataIndex: 'user_nick',
     },
     {
       title: '账号',
       dataIndex: 'user_account',
     },
     {
-      title: '邮箱',
-      dataIndex: 'user_email',
-      render: (value) => <Typography.Text copyable>{value}</Typography.Text>,
+      title: '账号',
+      dataIndex: 'user_photo',
+      render: (item) => {
+        return <img src={item} style={{ width: 100, height: 100 }} alt="" />;
+      },
     },
-    {
-      title: '手机号码',
-      dataIndex: 'user_mobile',
-    },
+
     {
       title: locale['searchTable.columns.createdTime'],
-      dataIndex: 'created_time',
+      dataIndex: 'join_date',
     },
     {
-      // title: locale['searchTable.columns.deadline'],
       title: '更新时间',
-      dataIndex: 'updated_time',
-    },
-    {
-      title: locale['searchTable.columns.operations'],
-      dataIndex: 'operations',
-      render: () => (
-        <div className={styles.operations}>
-          <Button type="text" size="small">
-            {locale['searchTable.columns.operations.view']}
-          </Button>
-          <Button type="text" size="small">
-            {locale['searchTable.columns.operations.update']}
-          </Button>
-          <Button type="text" status="danger" size="small">
-            {locale['searchTable.columns.operations.delete']}
-          </Button>
-        </div>
-      ),
+      dataIndex: 'update_time',
     },
   ];
 
   const searchTableState = useSelector((state: ReducerState) => state.searchTable);
 
-  const { pagination, loading, formParams } = searchTableState;
+  const { pagination, loading, data, formParams } = searchTableState;
   const dispatch = useDispatch();
   useEffect(() => {
     fetchData();
@@ -92,7 +62,6 @@ function SearchTable({}) {
   const getUserListApi = async () => {
     const data = await getUserList();
     setUserList(data.data);
-    console.log('data: ', data);
   };
 
   function fetchData(current = 1, pageSize = 10, params = {}) {
@@ -142,6 +111,7 @@ function SearchTable({}) {
         <AddForm
           closeModalAndReqNewTableData={() => {
             setvisitModal(false);
+            fetchData();
           }}
           UserList={UserList}
         />
@@ -218,6 +188,7 @@ function SearchTable({}) {
         <Table
           rowKey="user_account"
           loading={loading}
+          data={data}
           onChange={onChangeTable}
           pagination={pagination}
           columns={columns}

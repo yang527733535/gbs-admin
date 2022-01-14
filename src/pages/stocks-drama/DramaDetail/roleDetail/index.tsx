@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import styles from './styles/index.module.less';
 import {
   Form,
   Space,
@@ -11,10 +12,12 @@ import {
   Card,
   Result,
   Popconfirm,
+  Typography,
+  Tooltip,
 } from '@arco-design/web-react';
 import { IconDelete } from '@arco-design/web-react/icon';
 import { useSelector } from 'react-redux';
-import { reqBindrole } from '../../../../api/drama.js';
+import { reqBindrole, reqDeleteBindrole } from '../../../../api/drama.js';
 import { ReducerState } from '../../../../redux/index';
 import { FormInstance } from '@arco-design/web-react/es/Form';
 import AddRoleDetailForm from './AddRoleDetailForm/index';
@@ -34,6 +37,7 @@ const formItemLayout = {
 
 export default function DmForm({ getInitFormData, role_array }) {
   const formRef = useRef<FormInstance>();
+
   const dramaInfoStore = useSelector((state: ReducerState) => {
     return state.myState;
   });
@@ -41,6 +45,7 @@ export default function DmForm({ getInitFormData, role_array }) {
     formRef.current.setFieldsValue({ role_array });
   }, [role_array]);
   const [saveDeleteItem, setsaveDeleteItem] = useState<any>();
+  const [saveEditItem, setsaveEditItem] = useState<any>();
   const [modalType, setmodalType] = useState<string>('');
   const { clickItem } = dramaInfoStore;
   const onValuesChange = (changeValue, values) => {
@@ -50,7 +55,6 @@ export default function DmForm({ getInitFormData, role_array }) {
 
   return (
     <>
-      {/* 在这里添加的要带上之前的 */}
       <Modal
         onCancel={() => {
           setaddRoleToDramaModal(false);
@@ -58,8 +62,11 @@ export default function DmForm({ getInitFormData, role_array }) {
         title={modalType === 'add' ? '添加角色' : '修改角色'}
         visible={addRoleToDramaModal}
         footer={null}
+        unmountOnExit
       >
         <AddRoleDetailForm
+          getInitFormData={getInitFormData}
+          saveEditItem={saveEditItem}
           modalType={modalType}
           closeModal={() => {
             setaddRoleToDramaModal(false);
@@ -83,14 +90,19 @@ export default function DmForm({ getInitFormData, role_array }) {
         {role_array.map((item) => {
           return (
             <Card
+              key={item.role_code}
+              className={styles.Meta}
               hoverable
-              style={{ width: 350, maxHeight: 450, marginRight: 20, marginBottom: 20 }}
+              style={{ width: 212, maxHeight: 505, marginRight: 20, marginBottom: 20 }}
               extra={
                 <Space>
                   <Button
                     onClick={() => {
                       setmodalType('edit');
+                      setsaveEditItem(item);
+                      setaddRoleToDramaModal(true);
                     }}
+                    size="mini"
                     type="primary"
                   >
                     修改角色
@@ -98,16 +110,14 @@ export default function DmForm({ getInitFormData, role_array }) {
                   <Popconfirm
                     title="确定删除这个角色?"
                     onOk={async () => {
-                      console.log('setsaveDeleteItem', saveDeleteItem);
-                      console.log('role_array', role_array);
                       let newrole_array = role_array.filter((item) => {
-                        return saveDeleteItem.role_code !== item.role_code;
+                        return saveDeleteItem.role_code === item.role_code;
                       });
                       const param = {
                         gb_code: clickItem.gb_code,
                         role_array: newrole_array,
                       };
-                      const data = await reqBindrole(param);
+                      const data = await reqDeleteBindrole(param);
                       if (data.code === 200) {
                         Message.success('删除成功');
                         getInitFormData();
@@ -116,6 +126,7 @@ export default function DmForm({ getInitFormData, role_array }) {
                     onCancel={() => {}}
                   >
                     <Button
+                      size="mini"
                       onClick={() => {
                         setsaveDeleteItem(item);
                       }}
@@ -140,7 +151,21 @@ export default function DmForm({ getInitFormData, role_array }) {
                 </div>
               }
             >
-              <Meta title={item.role_name} description={<>{item.role_brief}</>} />
+              <Meta
+                title={<span style={{ color: 'white' }}>{item.role_name}</span>}
+                description={
+                  <>
+                    <Tooltip content={item.role_brief}>
+                      <Typography.Paragraph
+                        ellipsis={true}
+                        style={{ width: '100%', color: 'white' }}
+                      >
+                        {item.role_brief}
+                      </Typography.Paragraph>
+                    </Tooltip>
+                  </>
+                }
+              />
             </Card>
           );
         })}

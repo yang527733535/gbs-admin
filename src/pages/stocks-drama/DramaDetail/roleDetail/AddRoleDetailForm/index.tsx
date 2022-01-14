@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import {
   Form,
   Grid,
@@ -18,17 +18,27 @@ const FormItem = Form.Item;
 const Row = Grid.Row;
 const Col = Grid.Col;
 
-
-function DramaRoleForm({ clickItem, modalType, closeModal, role_array }) {
-  console.log('modalType: ', modalType);
-  console.log('clickItem: ', clickItem);
+function DramaRoleForm({
+  clickItem,
+  modalType,
+  getInitFormData,
+  saveEditItem,
+  closeModal,
+  role_array,
+}) {
   // 初始化值为一个对象时
-
   const formRef = useRef<FormInstance>();
   const onValuesChange = (changeValue, values) => {
     console.log('onValuesChange: ', changeValue, values);
   };
+  const [roleUrl, setroleUrl] = useState<string>('');
 
+  useEffect(() => {
+    if (modalType === 'edit') {
+      setroleUrl(saveEditItem.role_cover);
+      formRef.current.setFieldsValue(saveEditItem);
+    }
+  }, []);
   return (
     <Spin style={{ width: '100%' }}>
       <div>
@@ -94,6 +104,7 @@ function DramaRoleForm({ clickItem, modalType, closeModal, role_array }) {
               >
                 <Upload
                   limit={1}
+                  renderUploadList={() => null}
                   name="role_cover"
                   customRequest={(option) => {
                     const { onProgress, onError, onSuccess, file } = option;
@@ -114,7 +125,9 @@ function DramaRoleForm({ clickItem, modalType, closeModal, role_array }) {
                       if (xhr.status < 200 || xhr.status >= 300) {
                         // return onError(xhr.responseText);
                       }
-                      onSuccess(JSON.parse(xhr.responseText));
+                      let data = JSON.parse(xhr.responseText);
+                      setroleUrl(data.data.file_url);
+                      onSuccess(data);
                     };
                     const formData = new FormData();
                     formData.append('up_file', file);
@@ -138,6 +151,14 @@ function DramaRoleForm({ clickItem, modalType, closeModal, role_array }) {
               </Form.Item>
             </Col>
           </Row>
+          {roleUrl === '' ? null : (
+            <Row>
+              <Form.Item label="封面图片">
+                <img style={{ width: 212, height: 300 }} src={roleUrl} alt="" />
+              </Form.Item>
+            </Row>
+          )}
+
           <Row>
             <Col style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <div>
@@ -149,17 +170,39 @@ function DramaRoleForm({ clickItem, modalType, closeModal, role_array }) {
                           try {
                             await formRef.current.validate();
                             const param = formRef.current.getFields();
-                            param.role_cover =
-                              param.role_cover[0].url || param.role_cover[0].response.data.file_url;
-
-                            role_array.push(param);
-                            let param2: any = {};
-                            param2.role_array = role_array;
-                            param2.gb_code = clickItem.gb_code;
-                            const data = await reqBindrole(param2);
-                            if (data.code === 200) {
-                              Message.success('修改成功');
-                              closeModal();
+                            param.role_cover = roleUrl;
+                            console.log('param', param);
+                            let newrole_array = role_array.map((item) => {
+                              if (item.role_code === param.role_code) {
+                                return param;
+                              } else {
+                                return item;
+                              }
+                            });
+                            //新增的话 就是push
+                            // 不然就是替换
+                            if (modalType === 'add') {
+                              role_array.push(param);
+                              let param2: any = {};
+                              param2.role_array = role_array;
+                              param2.gb_code = clickItem.gb_code;
+                              const data = await reqBindrole(param2);
+                              if (data.code === 200) {
+                                Message.success('添加成功');
+                                getInitFormData();
+                                closeModal();
+                              }
+                            }
+                            if (modalType === 'edit') {
+                              let param2: any = {};
+                              param2.role_array = newrole_array;
+                              param2.gb_code = clickItem.gb_code;
+                              const data = await reqBindrole(param2);
+                              if (data.code === 200) {
+                                Message.success('修改成功');
+                                getInitFormData();
+                                closeModal();
+                              }
                             }
                           } catch (_) {
                             Message.error('校验失败，请检查字段！');

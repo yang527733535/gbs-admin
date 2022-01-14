@@ -147,7 +147,6 @@ export default function DmForm({ clickItem, closeModalAndRequest, dmlist }) {
                   }
                 } catch (_) {
                   // console.log(formRef.current.getFieldsError());
-                  // Message.error('校验失败，请检查字段！');
                 }
               }
             }}

@@ -22,9 +22,7 @@ Service.interceptors.request.use((config) => {
 // 添加响应拦截器
 Service.interceptors.response.use(
   (response) => {
-    console.log('response.data.code: ', response.data.code);
     if (response.data.code == 4002 || response.data.code == 4003) {
-      console.log('4002');
       window.localStorage.clear();
       window.location.reload();
       Message({
@@ -36,7 +34,6 @@ Service.interceptors.response.use(
     return response.data;
   },
   (error) => {
-    console.log('TCL: error', error);
     const msg = error.Message !== undefined ? error.Message : '';
     Message({
       message: `网络错误${msg}`,

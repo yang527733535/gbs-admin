@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+</body>
+
+
+<script>
+    // 使用递归
+    // 1.检查传递的对象是否null,如果是,返回null
+    // 2.使用Object.assign()和空对象创建初始的浅层克隆
+    // 3.使用Object.keys()和Array.prototype.forEach()确定需要的深度克隆的键值对
+    // 4.如果对象是一个Array,设置clone和length,使用Array.from 创建一个克隆
+    // const deepClone
+
+    const deepClone = (obj) => {
+        if (obj === null) return null
+        let clone = Object.assign({}, obj)
+        console.log('clone: ', clone);
+        Object.keys(clone).forEach((key) => {
+            return clone[key] = typeof obj[key] === 'object' ? deepClone(obj[key]) : obj[key]
+        })
+        if (Array.isArray(obj)) {
+            clone.length = obj.length
+            return Array.from(clone)
+        }
+        return clone
+    }
+    const a = { foo: 'bar', too: { a: 1, b: 2, c: "3", d: [24, 5, 6, 7, { v: 1, b3: 3 }] }, noo: [1, 2, 3, 4] }
+    // const b = deepClone(a)
+
+    const myClone = (obj) => {
+        if (obj === null) {
+            return null
+        }
+        let clone = Object.assign({}, obj)
+        Object.keys(clone).forEach((key) => {
+            if (typeof clone[key] === 'object') {
+                myClone(clone[key])
+            } else {
+                return clone[key]
+            }
+        })
+        if (Array.isArray(obj)) {
+            clone.length = obj.length
+            return Array.from(clone)
+        }
+        return clone
+    }
+    const b = myClone(a)
+    console.log('deepClone', b)
+
+    // js中的快速排序
+    const quickSort = function (arr) {
+        if (arr.length <= 1) return arr
+        // 获取中间值
+        var pivotIndex = Math.floor(arr.length / 2);
+        var pivot = arr.splice(pivotIndex, 1)[0];
+        var left = []
+        var rigth = []
+        for (let index = 0; index < arr.length; index++) {
+            if (arr[index] > pivot) {
+                rigth.push(arr[index])
+            } else {
+                left.push(arr[index])
+            }
+        }
+        return quickSort(left).concat([pivot], quickSort(rigth));
+    }
+
+
+    const bubbleSort = function (array) {
+        for (let index = 0; index < array.length; index++) {
+            let element = array[index];
+            for (let index2 = 0; index2 < array.length - 1 - index; index2++) {
+                if (array[index] > array[index2]) {
+                    [array[index], array[index2]] = [array[index2], array[index]]
+                }
+            }
+        }
+        return array
+    }
+
+    // 我自己的手写冒泡
+    const myQuickSort = (arr) => {
+        if (arr.length <= 1) return arr
+        let middle = Math.floor(arr.length / 2)
+        let middleValue = arr.splice(middle, 1)[0]
+        let left = []
+        let rigth = []
+        for (let index = 0; index < arr.length; index++) {
+            const element = arr[index];
+            if (arr[index] > middleValue) {
+                left.push(arr[index])
+            } else {
+                rigth.push(arr[index])
+            }
+        }
+        return myQuickSort(left).concat([middleValue], myQuickSort(rigth))
+        // return arr
+    }
+
+    const myBubbleSort = (arr) => {
+        for (let i = 0; i < arr.length; i++) {
+            for (let j = 0; j < arr.length - 1 - i; j++) {
+                if (arr[j] < arr[j + 1]) {
+                    [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]]
+                }
+            }
+        }
+        return arr
+    }
+    // console.log('myBubbleSort', myBubbleSort([4, 56, 34, 3453, 234324, 55, 12, 234]))
+
+    var isSymmetric = (root) => {
+        let check = (left, rigth) => {
+
+        }
+    }
+
+    var isSymmetric = (root) => {
+        let check = (leftNode, rigthNode) => {
+            // 如果有一个节点为空,则要判断右边的节点是不是也空,如果不是空的,肯定不是对称的
+            if (leftNode === null || rigthNode === null) return rigthNode === leftNode;
+            return leftNode.value === rigthNode.value && check(leftNode.value, rigthNode.value) && check(rigthNode.value, leftNode.value)
+        }
+        return check(root, root)
+    }
+
+
+
+</script>
+
+</html>

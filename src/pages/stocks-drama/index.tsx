@@ -90,37 +90,6 @@ function SearchTable() {
             >
               剧本详情
             </Button>
-            {/* <Button
-              onClick={() => {
-                setDramaRoleModal(true);
-                dispatch({ type: 'save-item', payload: { clickItem: data } });
-              }}
-              type="primary"
-              size="mini"
-            >
-              添加角色
-            </Button> */}
-            {/* <Button
-              onClick={() => {
-                dispatch({ type: 'save-item', payload: { clickItem: data } });
-                setaddDmModal(true);
-              }}
-              type="primary"
-              size="mini"
-            >
-              添加dm
-            </Button> */}
-            <Button
-              onClick={() => {
-                setvisitModal(true);
-                dispatch({ type: 'save-item', payload: { clickItem: data } });
-                setmodalType('edit');
-              }}
-              type="primary"
-              size="mini"
-            >
-              {locale['searchTable.columns.operations.update']}
-            </Button>
           </Space>
         </div>
       ),
@@ -162,7 +131,6 @@ function SearchTable() {
 
   const getDmListApi = async () => {
     const data = await getDmList();
-    console.log('data: ', data);
     setdmlist(data.data);
   };
 

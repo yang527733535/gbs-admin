@@ -3,7 +3,7 @@ import { Grid, Spin, Button, Result, Message } from '@arco-design/web-react';
 import { useSelector } from 'react-redux';
 import { ReducerState } from '../../../../redux/index';
 import { IconFaceSmileFill } from '@arco-design/web-react/icon';
-import { reqBindDm, getDmList } from '../../../../api/drama.js';
+import { reqBindDm, reqBindDeleteDm, getDmList } from '../../../../api/drama.js';
 
 const Row = Grid.Row;
 
@@ -84,17 +84,11 @@ export default function DmForm({ drama_dms, getInitFormData }) {
                     <Button
                       onClick={async () => {
                         console.log(user_account);
-                        // 这个是要取消的DM_user_account
-                        console.log('drama_dms', drama_dms);
-                        let newdrama_dms = drama_dms.filter((item) => {
-                          return item.user_account !== user_account;
-                        });
                         let parma = {
                           gb_code: clickItem.gb_code,
-                          dm_array: newdrama_dms,
+                          dm_array: [{ user_account: user_account }],
                         };
-                        const data = await reqBindDm(parma);
-                        console.log('data: ', data);
+                        const data = await reqBindDeleteDm(parma);
                         if (data.code === 200) {
                           Message.success('操作成功');
                           getInitFormData();
