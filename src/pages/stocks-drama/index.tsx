@@ -29,8 +29,8 @@ import DramaDetail from './DramaDetail/index';
 function SearchTable() {
   const locale = useLocale();
   const [dmlist, setdmlist] = useState([]);
-  const [addDmModal, setaddDmModal] = useState(false);
   const [modalType, setmodalType] = useState('');
+  const [addDmModal, setaddDmModal] = useState(false);
   const [visitModal, setvisitModal] = useState(false);
   const [DramaRoleModal, setDramaRoleModal] = useState(false);
   const [gb_typeMap, setgb_typeMap] = useState({});

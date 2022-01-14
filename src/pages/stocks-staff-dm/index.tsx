@@ -109,6 +109,7 @@ function SearchTable({}) {
         visible={visitModal}
       >
         <AddForm
+          fetchData={fetchData}
           closeModalAndReqNewTableData={() => {
             setvisitModal(false);
             fetchData();
