@@ -305,7 +305,6 @@ function DramaForm({ modalType = 'add', closeModalAndRequest }) {
           </Row>
           <Row>
             <Col xs={24} sm={12} md={12} lg={8} xl={8} xxl={8}>
-              {' '}
               <FormItem
                 label="是否新本"
                 field="is_new"

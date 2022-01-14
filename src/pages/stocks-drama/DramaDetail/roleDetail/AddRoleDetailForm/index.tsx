@@ -18,7 +18,9 @@ const FormItem = Form.Item;
 const Row = Grid.Row;
 const Col = Grid.Col;
 
-function DramaRoleForm({ clickItem, closeModal, role_array }) {
+
+function DramaRoleForm({ clickItem, modalType, closeModal, role_array }) {
+  console.log('modalType: ', modalType);
   console.log('clickItem: ', clickItem);
   // 初始化值为一个对象时
 

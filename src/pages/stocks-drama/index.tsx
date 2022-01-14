@@ -34,6 +34,11 @@ function SearchTable() {
   const [visitModal, setvisitModal] = useState(false);
   const [DramaRoleModal, setDramaRoleModal] = useState(false);
   const [gb_typeMap, setgb_typeMap] = useState({});
+  const [gb_title, setgb_title] = useState('');
+  const [gb_people, setgb_people] = useState('');
+  const [gb_type, setgb_type] = useState('');
+  const [gb_area, setgb_area] = useState('');
+  const [gb_status, setgb_status] = useState('');
   const columns = [
     {
       title: '剧本ID',
@@ -166,6 +171,11 @@ function SearchTable() {
     const data = dramaList({
       page: current,
       page_size: pageSize,
+      gb_title,
+      gb_people,
+      gb_type,
+      gb_area,
+      gb_status,
     });
     data.then((res) => {
       const { data, paginator } = res;
@@ -204,6 +214,7 @@ function SearchTable() {
             okButtonProps: { status: 'danger' },
             onOk: () => {
               dispatch({ type: 'toggle-show', payload: { show: false } });
+              fetchData();
             },
           });
         }}
@@ -296,12 +307,58 @@ function SearchTable() {
             </Button>
             <div>
               <Space style={{ flex: 1 }} wrap>
-                <Input onChange={() => {}} placeholder="请输入剧本标题" style={{ width: 200 }} />
-                <Input onChange={() => {}} placeholder="剧本类型" style={{ width: 200 }} />
-                <Input onChange={() => {}} placeholder="剧本区域" style={{ width: 200 }} />
-                <Input onChange={() => {}} placeholder="玩家人数" style={{ width: 200 }} />
-                <Input onChange={() => {}} placeholder="剧本状态" style={{ width: 200 }} />
-                <Button onClick={() => {}}>重置</Button>
+                <Input
+                  value={gb_title}
+                  onChange={(e) => {
+                    setgb_title(e);
+                  }}
+                  placeholder="请输入剧本标题"
+                  style={{ width: 200 }}
+                />
+                <Input
+                  onChange={(e) => {
+                    setgb_type(e);
+                  }}
+                  value={gb_type}
+                  placeholder="剧本类型"
+                  style={{ width: 200 }}
+                />
+                <Input
+                  onChange={(e) => {
+                    setgb_area(e);
+                  }}
+                  value={gb_area}
+                  placeholder="剧本区域"
+                  style={{ width: 200 }}
+                />
+                <Input
+                  onChange={(e) => {
+                    setgb_people(e);
+                  }}
+                  value={gb_people}
+                  placeholder="玩家人数"
+                  style={{ width: 200 }}
+                />
+                <Input
+                  onChange={(e) => {
+                    setgb_status(e);
+                  }}
+                  value={gb_status}
+                  placeholder="剧本状态"
+                  style={{ width: 200 }}
+                />
+                <Button
+                  onClick={() => {
+                    setgb_title('');
+                    setgb_type('');
+                    setgb_area('');
+                    setgb_people('');
+                    setgb_status('');
+                    console.log('重置');
+                  }}
+                >
+                  重置
+                </Button>
                 <Button
                   onClick={() => {
                     fetchData();

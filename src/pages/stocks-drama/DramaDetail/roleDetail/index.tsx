@@ -41,7 +41,7 @@ export default function DmForm({ getInitFormData, role_array }) {
     formRef.current.setFieldsValue({ role_array });
   }, [role_array]);
   const [saveDeleteItem, setsaveDeleteItem] = useState<any>();
-
+  const [modalType, setmodalType] = useState<string>('');
   const { clickItem } = dramaInfoStore;
   const onValuesChange = (changeValue, values) => {
     console.log('onValuesChange: ', changeValue, values);
@@ -55,11 +55,12 @@ export default function DmForm({ getInitFormData, role_array }) {
         onCancel={() => {
           setaddRoleToDramaModal(false);
         }}
-        title="添加角色"
+        title={modalType === 'add' ? '添加角色' : '修改角色'}
         visible={addRoleToDramaModal}
         footer={null}
       >
         <AddRoleDetailForm
+          modalType={modalType}
           closeModal={() => {
             setaddRoleToDramaModal(false);
           }}
@@ -70,6 +71,7 @@ export default function DmForm({ getInitFormData, role_array }) {
       <Button
         onClick={() => {
           setaddRoleToDramaModal(true);
+          setmodalType('add');
         }}
         type="primary"
       >
@@ -82,39 +84,47 @@ export default function DmForm({ getInitFormData, role_array }) {
           return (
             <Card
               hoverable
-              style={{ width: 350, maxHeight: 450, marginRight: 20 }}
+              style={{ width: 350, maxHeight: 450, marginRight: 20, marginBottom: 20 }}
               extra={
-                <Popconfirm
-                  title="确定删除这个角色?"
-                  onOk={async () => {
-                    console.log('setsaveDeleteItem', saveDeleteItem);
-                    console.log('role_array', role_array);
-                    let newrole_array = role_array.filter((item) => {
-                      return saveDeleteItem.role_code !== item.role_code;
-                    });
-                    const param = {
-                      gb_code: clickItem.gb_code,
-                      role_array: newrole_array,
-                    };
-                    const data = await reqBindrole(param);
-                    if (data.code === 200) {
-                      Message.success('删除成功');
-                      getInitFormData();
-                    }
-                  }}
-                  onCancel={() => {
-                  }}
-                >
+                <Space>
                   <Button
                     onClick={() => {
-                      setsaveDeleteItem(item);
-                      // role_code
+                      setmodalType('edit');
                     }}
-                    status="danger"
+                    type="primary"
                   >
-                    删除角色
+                    修改角色
                   </Button>
-                </Popconfirm>
+                  <Popconfirm
+                    title="确定删除这个角色?"
+                    onOk={async () => {
+                      console.log('setsaveDeleteItem', saveDeleteItem);
+                      console.log('role_array', role_array);
+                      let newrole_array = role_array.filter((item) => {
+                        return saveDeleteItem.role_code !== item.role_code;
+                      });
+                      const param = {
+                        gb_code: clickItem.gb_code,
+                        role_array: newrole_array,
+                      };
+                      const data = await reqBindrole(param);
+                      if (data.code === 200) {
+                        Message.success('删除成功');
+                        getInitFormData();
+                      }
+                    }}
+                    onCancel={() => {}}
+                  >
+                    <Button
+                      onClick={() => {
+                        setsaveDeleteItem(item);
+                      }}
+                      status="danger"
+                    >
+                      删除角色
+                    </Button>
+                  </Popconfirm>
+                </Space>
               }
               cover={
                 <div
@@ -130,7 +140,7 @@ export default function DmForm({ getInitFormData, role_array }) {
                 </div>
               }
             >
-              <Meta title="我是角色" description={<>{item.role_brief}</>} />
+              <Meta title={item.role_name} description={<>{item.role_brief}</>} />
             </Card>
           );
         })}

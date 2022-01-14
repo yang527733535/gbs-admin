@@ -3,7 +3,7 @@
   width: 100%;
 }
 .myDetail {
-  height: 100%;
+  height: 98%;
   overflow-y: auto;
 }
 .otherDetail {
