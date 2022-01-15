@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
-
-import { Form, Input, Button, Message, Upload, Modal, Select } from '@arco-design/web-react';
-import { reqBindRoom, getUserList, reqBindStaff, reqEditRoom } from '../../../../api/drama.js';
+import { IconArrowRise, IconArrowFall, IconDelete } from '@arco-design/web-react/icon';
+import { Form, Input, Space, Button, Message, Upload, Modal, Select } from '@arco-design/web-react';
+import { reqBindRoom, getUserList, reqEditRoom } from '../../../../api/drama.js';
 const FormItem = Form.Item;
 
 const formItemLayout = {
@@ -47,26 +47,63 @@ export default function RoomForm({ store_code, modalType, closeModal }) {
   return (
     <div>
       <Form ref={formRef} {...formItemLayout} onValuesChange={onValuesChange} scrollToFirstError>
-        <FormItem
-          label="用户账号"
-          field="user_account"
-          rules={[{ required: true, message: '请输入用户账号' }]}
-        >
-          <Select placeholder="please enter...">
-            {userList?.map(({ user_account, user_name }) => {
-              console.log('user_account: ', user_account);
-              return <Select.Option key={user_account}>{user_name}</Select.Option>;
-            })}
-          </Select>
-        </FormItem>
-        <FormItem label="角色编码" field="user_role">
-          <Select placeholder="请选择角色编码...">
-            {roleList?.map(({ label_zh, label_value }) => {
-              console.log('user_account: ', user_account);
-              return <Select.Option key={label_value}>{label_zh}</Select.Option>;
-            })}
-          </Select>
-        </FormItem>
+        <Form.List field="user_array">
+          {(fields, { add, remove, move }) => {
+            return (
+              <div>
+                {fields.map((item, index) => {
+                  return (
+                    <div key={item.key}>
+                      <Form.Item label={'店员' + (index + 1)}>
+                        <Space>
+                          <Form.Item
+                            field={item.field + '.user_account'}
+                            rules={[{ required: true }]}
+                            noStyle
+                          >
+                            <Select placeholder="请选择账号">
+                              {userList?.map(({ user_account, user_name }) => {
+                                return (
+                                  <Select.Option key={user_account}>{user_name}</Select.Option>
+                                );
+                              })}
+                            </Select>
+                          </Form.Item>
+                          <Form.Item
+                            field={item.field + '.user_role'}
+                            rules={[{ required: true }]}
+                            noStyle
+                          >
+                            <Select placeholder="请选择角色编码...">
+                              {roleList?.map(({ label_en, label_value }) => {
+                                return <Select.Option key={label_value}>{label_en}</Select.Option>;
+                              })}
+                            </Select>
+                          </Form.Item>
+                          <Button
+                            icon={<IconDelete />}
+                            shape="circle"
+                            status="danger"
+                            onClick={() => remove(index)}
+                          ></Button>
+                        </Space>
+                      </Form.Item>
+                    </div>
+                  );
+                })}
+                <Form.Item wrapperCol={{ offset: 5 }}>
+                  <Button
+                    onClick={() => {
+                      add();
+                    }}
+                  >
+                    Add User
+                  </Button>
+                </Form.Item>
+              </div>
+            );
+          }}
+        </Form.List>
 
         {/* <Form.Item label="房间照片" field="room_image" triggerPropName="fileList">
           <Upload
@@ -123,13 +160,14 @@ export default function RoomForm({ store_code, modalType, closeModal }) {
                   await formRef.current.validate();
                   let param = formRef.current.getFields();
                   param.store_code = store_code;
-                  param.user_array = [{ user_account, user_role }];
-                  const res = await reqBindStaff(param);
-                  if (res.code === 200) {
-                    Message.info('提交成功！');
-                    closeModal();
+                  console.log(param);
+                  if (modalType === 'add') {
+                    const res = await reqBindRoom(param);
+                    if (res.code === 200) {
+                      Message.info('提交成功！');
+                      closeModal();
+                    }
                   }
-                  return;
                   if (modalType === 'edit') {
                     const res = await reqEditRoom(param);
                     if (res.code === 200) {
