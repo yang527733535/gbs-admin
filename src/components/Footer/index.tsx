@@ -10,7 +10,7 @@ export default (props: FooterProps = {}) => {
   const { className, ...restProps } = props;
   return (
     <Footer className={cs(styles.footer, className)} {...restProps}>
-      梦墨Admin v1.0.0
+      梦墨Admin v1.0.1
     </Footer>
   );
 };
