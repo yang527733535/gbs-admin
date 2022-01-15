@@ -194,3 +194,36 @@ export function bindDm(data) {
     method: 'post',
   });
 }
+
+export function StoreDetailApi(data) {
+  return Service({
+    url: '/v1/store/view',
+    data,
+    method: 'post',
+  });
+}
+
+export function reqBindRoom(data) {
+  return Service({
+    url: '/v1/store/add-room',
+    data,
+    method: 'post',
+  });
+}
+export function reqEditRoom(data) {
+  return Service({
+    url: '/v1/store/edit-room',
+    data,
+    method: 'post',
+  });
+}
+
+export function DeleteRoom(data) {
+  return Service({
+    url: '/v1/store/del-room',
+    data,
+    method: 'post',
+  });
+}
+
+

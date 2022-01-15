@@ -19,7 +19,7 @@ import {
 } from '@arco-design/web-react';
 import styles from './style/index.module.less';
 import { ReducerState } from '../../../redux';
-import { dramaDetail, editDrama } from '../../../api/drama.js';
+import { dramaDetail, editDrama, addDrama } from '../../../api/drama.js';
 import DramaRole from './roleDetail/index';
 import DramaDm from './dmDetail/index';
 import { FormInstance } from '@arco-design/web-react/es/Form';
@@ -28,7 +28,7 @@ const FormItem = Form.Item;
 const Row = Grid.Row;
 const Col = Grid.Col;
 const TabPane = Tabs.TabPane;
-export default function DramaDetail({}) {
+export default function DramaDetail({ modalType, closeModalAndReq }) {
   const formRef = useRef<FormInstance>();
   const [role_array, setrole_array] = useState([]);
   const [drama_dms, setdrama_dms] = useState([]);
@@ -70,6 +70,9 @@ export default function DramaDetail({}) {
 
   // 获取基础数据
   const getInitFormData = async () => {
+    if (modalType === 'add') {
+      return;
+    }
     setloading(true);
     const { data } = await dramaDetail({ gb_code: clickItem.gb_code });
     setloading(false);
@@ -127,7 +130,6 @@ export default function DramaDetail({}) {
                         marginTop: 10,
                       }}
                     >
-                      {/* <Button>更换封面</Button> */}
                       <Upload
                         renderUploadList={() => null}
                         style={{
@@ -372,7 +374,7 @@ export default function DramaDetail({}) {
                                   },
                                 ]}
                               >
-                                <DatePicker showTime />
+                                <DatePicker />
                               </FormItem>
                             </div>
                           </Col>
@@ -412,20 +414,6 @@ export default function DramaDetail({}) {
                               <Input placeholder="请填写备注说明..." />
                             </FormItem>
                           </Col>
-                        </Row>
-                        <Row gutter={80}>
-                          <Col xs={24} sm={12} md={12} lg={6} xl={6} xxl={6}>
-                            <div>
-                              <FormItem
-                                label="剧本概要"
-                                field="gb_text_brief"
-                                rules={[{ required: true, message: '请填写剧本概要' }]}
-                              >
-                                <Input.TextArea rows={1} placeholder="请填写剧本概要..." />
-                              </FormItem>
-                            </div>
-                          </Col>
-
                           <Col xs={24} sm={12} md={12} lg={6} xl={6} xxl={6}>
                             <FormItem
                               label="版权信息"
@@ -436,68 +424,20 @@ export default function DramaDetail({}) {
                             </FormItem>
                           </Col>
                         </Row>
-                        {/* <Row gutter={80}>
-                          <Col xs={24} sm={12} md={12} lg={6} xl={6} xxl={6}>
-                            <Form.Item
-                              rules={[{ required: true, message: '请上传剧本封面' }]}
-                              label="剧本封面"
-                              field="gb_cover"
-                              triggerPropName="fileList"
-                            >
-                              <Upload
-                                style={{ width: 200, height: 400 }}
-                                limit={1}
-                                listType="picture-list"
-                                name="gb_cover"
-                                customRequest={(option) => {
-                                  const { onProgress, onError, onSuccess, file } = option;
-                                  const xhr = new XMLHttpRequest();
-                                  if (xhr.upload) {
-                                    xhr.upload.onprogress = function(event) {
-                                      let percent;
-                                      if (event.total > 0) {
-                                        percent = (event.loaded / event.total) * 100;
-                                      }
-                                      onProgress(parseInt(percent, 10), event);
-                                    };
-                                  }
-                                  xhr.onerror = function error(e) {
-                                    onError(e);
-                                  };
-                                  xhr.onload = function onload() {
-                                    if (xhr.status < 200 || xhr.status >= 300) {
-                                    }
-                                    onSuccess(JSON.parse(xhr.responseText));
-                                  };
-                                  const formData = new FormData();
-                                  formData.append('up_file', file);
-                                  formData.append('module', 'drama');
-                                  xhr.open(
-                                    'post',
-                                    'https://gbs.toptian.com/system/upload/image',
-                                    true
-                                  );
-                                  xhr.setRequestHeader(
-                                    'Authorization',
-                                    localStorage.getItem('token')
-                                  );
-                                  xhr.send(formData);
-                                }}
-                                onPreview={(file) => {
-                                  Modal.info({
-                                    title: 'Preview',
-                                    content: (
-                                      <img
-                                        src={file.url || URL.createObjectURL(file.originFile)}
-                                        style={{ maxWidth: '100%' }}
-                                      />
-                                    ),
-                                  });
-                                }}
-                              />
-                            </Form.Item>
+                        <Row gutter={80}>
+                          <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+                            <div>
+                              <FormItem
+                                label="剧本概要"
+                                field="gb_text_brief"
+                                rules={[{ required: true, message: '请填写剧本概要' }]}
+                              >
+                                <Input.TextArea rows={7} placeholder="请填写剧本概要..." />
+                              </FormItem>
+                            </div>
                           </Col>
-                        </Row> */}
+                        </Row>
+
                         <Row gutter={80}>
                           <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
                             <div>
@@ -506,7 +446,7 @@ export default function DramaDetail({}) {
                                 field="gb_text_content"
                                 rules={[{ required: false, message: '请填写剧本描述' }]}
                               >
-                                <Input.TextArea rows={8} placeholder="请填写剧本描述..." />
+                                <Input.TextArea rows={7} placeholder="请填写剧本描述..." />
                               </FormItem>
                             </div>
                           </Col>
@@ -533,10 +473,20 @@ export default function DramaDetail({}) {
                                           const param = formRef.current.getFields();
                                           param.gb_cover = dramaCover;
                                           param.gb_star_lev = param.gb_star_lev * 2;
-                                          const data = await editDrama(param);
-                                          if (data.code === 200) {
-                                            Message.success('修改成功');
-                                            getInitFormData();
+                                          if (modalType === 'edit') {
+                                            const data = await editDrama(param);
+                                            if (data.code === 200) {
+                                              Message.success('修改成功');
+                                              getInitFormData();
+                                            }
+                                          }
+                                          if (modalType === 'add') {
+                                            delete param.gb_code;
+                                            const data = await addDrama(param);
+                                            if (data.code === 200) {
+                                              Message.success('添加成功');
+                                              closeModalAndReq();
+                                            }
                                           }
                                         } catch (_) {
                                           console.log(_);
@@ -572,12 +522,16 @@ export default function DramaDetail({}) {
               </Spin>
             </div>
           </TabPane>
-          <TabPane key="2" title="剧本角色">
-            <DramaRole getInitFormData={getInitFormData} role_array={role_array} />
-          </TabPane>
-          <TabPane key="3" title="剧本DM">
-            <DramaDm getInitFormData={getInitFormData} drama_dms={drama_dms} />
-          </TabPane>
+          {modalType === 'edit' && (
+            <TabPane key="2" title="剧本角色">
+              <DramaRole getInitFormData={getInitFormData} role_array={role_array} />
+            </TabPane>
+          )}
+          {modalType === 'edit' && (
+            <TabPane key="3" title="剧本DM">
+              <DramaDm getInitFormData={getInitFormData} drama_dms={drama_dms} />
+            </TabPane>
+          )}
         </Tabs>
       </div>
       <Divider />
