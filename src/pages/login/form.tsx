@@ -74,14 +74,10 @@ export default function LoginForm() {
       <div className={styles['login-form-error-msg']}>{errorMessage}</div>
       <Form className={styles['login-form']} layout="vertical" ref={formRef}>
         <Form.Item field="user_account" rules={[{ required: true, message: '用户名不能为空' }]}>
-          <Input prefix={<IconUser />} placeholder="用户名：admin" onPressEnter={onSubmitClick} />
+          <Input prefix={<IconUser />} placeholder="用户名" onPressEnter={onSubmitClick} />
         </Form.Item>
         <Form.Item field="user_password" rules={[{ required: true, message: '密码不能为空' }]}>
-          <Input.Password
-            prefix={<IconLock />}
-            placeholder="密码：admin"
-            onPressEnter={onSubmitClick}
-          />
+          <Input.Password prefix={<IconLock />} placeholder="密码" onPressEnter={onSubmitClick} />
         </Form.Item>
         <Space size={16} direction="vertical">
           <div className={styles['login-form-password-actions']}>

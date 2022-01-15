@@ -25,6 +25,7 @@ import AddForm from './form/index.jsx';
 
 function SearchTable({}) {
   const locale = useLocale();
+  const [modalType, setmodalType] = useState('');
   const [visitModal, setvisitModal] = useState(false);
   const [show, setshow] = useState(false);
   const [store_name, setstore_name] = useState('');
@@ -54,9 +55,9 @@ function SearchTable({}) {
     },
     {
       title: locale['searchTable.columns.operations'],
-      render: (col, data) => (
+      render: (_, data) => (
         <Space>
-          <Button
+          {/* <Button
             onClick={() => {
               console.log(col, data);
               setclickItem(data);
@@ -66,11 +67,12 @@ function SearchTable({}) {
             type="primary"
           >
             {locale['searchTable.columns.operations.update']}
-          </Button>
+          </Button> */}
           <Button
             onClick={() => {
               setshow(true);
               setstore_code(data);
+              setmodalType('edit');
             }}
             size="mini"
             type="primary"
@@ -134,10 +136,17 @@ function SearchTable({}) {
         footer={null}
         visible={show}
         title="店铺详情"
-        unmountOnExit
+        unmountOnExit={true}
         width="90vw"
       >
-        <StoreDetail store_code={store_code}></StoreDetail>
+        <StoreDetail
+          closeDrawer={() => {
+            setshow(false);
+            fetchData();
+          }}
+          modalType={modalType}
+          store_code={store_code}
+        ></StoreDetail>
       </Drawer>
       <Modal
         title={clickItem === null ? '添加门店' : '修改门店'}
@@ -166,11 +175,11 @@ function SearchTable({}) {
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <Button
               onClick={() => {
-                setvisitModal(true);
+                setshow(true);
                 setclickItem(null);
+                setmodalType('add');
               }}
               type="primary"
-              // style={{ marginRight: 20 }}
             >
               添加门店
             </Button>

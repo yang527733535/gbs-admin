@@ -227,3 +227,12 @@ export function DeleteRoom(data) {
 }
 
 
+
+
+export function reqBindStaff(data) {
+  return Service({
+    url: '/v1/store/add-user',
+    data,
+    method: 'post',
+  });
+}
