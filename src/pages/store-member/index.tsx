@@ -44,9 +44,16 @@ function SearchTable() {
       title: '会员类型',
       dataIndex: 'member_type',
     },
+    // {
+    //   title: '会员性别',
+    //   dataIndex: 'member_gender',
+    // },
     {
-      title: '会员性别',
-      dataIndex: 'member_gender',
+      title: '会员头像',
+      dataIndex: 'member_face',
+      render: (item) => {
+        return <img style={{ width: 50, borderRadius: 5, height: 50 }} src={item} alt="" />;
+      },
     },
     {
       title: '邮箱',

@@ -1,9 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react';
 
-import { Form, Input, Button, Message, Upload, Modal } from '@arco-design/web-react';
+import { Form, Select, Input, Button, Message, Upload, Modal } from '@arco-design/web-react';
 import { reqBindRoom, reqEditRoom } from '../../../../api/drama.js';
 const FormItem = Form.Item;
-
 const formItemLayout = {
   labelCol: {
     span: 5,
@@ -23,6 +22,18 @@ export default function RoomForm({ saveClickItem, store_code, modalType, closeMo
   console.log('saveClickItem: ', saveClickItem);
   const formRef = useRef();
   const [roomUrl, setroomUrl] = useState('');
+  const [app_room_styleList, setapp_room_styleList] = useState([]);
+
+  useEffect(() => {
+    let data = JSON.parse(localStorage.getItem('dicts'));
+    console.log('data: ', data);
+    data.forEach((element) => {
+      if (element.dict_code === 'app_room_style') {
+        console.log('element.dict_label', element.dict_label);
+        setapp_room_styleList(element.dict_label);
+      }
+    });
+  }, []);
 
   useEffect(() => {
     if (modalType === 'edit') {
@@ -42,14 +53,18 @@ export default function RoomForm({ saveClickItem, store_code, modalType, closeMo
           field="room_name"
           rules={[{ required: true, message: '请输入房间名称' }]}
         >
-          <Input placeholder="please enter..." />
+          <Input placeholder="请输入房间名称" />
         </FormItem>
         <FormItem
           label="房间风格"
           field="room_style"
-          rules={[{ required: true, message: '请输入房间风格' }]}
+          rules={[{ required: true, message: '请选择房间风格' }]}
         >
-          <Input placeholder="please enter..." />
+          <Select>
+            {app_room_styleList?.map(({ label_value, label_zh }) => {
+              return <Select.Option value={label_value}>{label_zh}</Select.Option>;
+            })}
+          </Select>
         </FormItem>
 
         <FormItem
@@ -57,22 +72,10 @@ export default function RoomForm({ saveClickItem, store_code, modalType, closeMo
           field="room_note"
           rules={[{ required: true, message: '请输入房间备注' }]}
         >
-          <Input placeholder="please enter..." />
+          <Input placeholder="请输入房间备注" />
         </FormItem>
 
-        <Form.Item
-          label="房间照片"
-          field="room_image"
-          triggerPropName="fileList"
-          // initialValue={[
-          //   {
-          //     uid: '-1',
-          //     url:
-          //       '//p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/e278888093bef8910e829486fb45dd69.png~tplv-uwbnlip3yd-webp.webp',
-          //     name: '20200717',
-          //   },
-          // ]}
-        >
+        <Form.Item label="房间照片" field="room_image" triggerPropName="fileList">
           <Upload
             limit={1}
             renderUploadList={() => null}

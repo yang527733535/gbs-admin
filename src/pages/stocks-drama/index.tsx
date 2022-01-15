@@ -35,6 +35,7 @@ function SearchTable() {
   const [visitModal, setvisitModal] = useState(false);
   const [DramaRoleModal, setDramaRoleModal] = useState(false);
   const [gb_typeMap, setgb_typeMap] = useState({});
+  const [gb_levelMap, setgb_levelMap] = useState({});
   const [gb_type_labels, setgb_type_labels] = useState([]);
   const [gb_app_gb_status_labels, setgb_app_gb_status_labels] = useState([]);
   const [gb_app_gb_text_tag_labels, setgb_app_gb_text_tag_labels] = useState([]);
@@ -109,6 +110,9 @@ function SearchTable() {
     {
       title: '剧本难度',
       dataIndex: 'gb_level',
+      render: (value) => {
+        return <span>{gb_levelMap[value]}</span>;
+      },
     },
     {
       title: '剧本时长',
@@ -186,6 +190,7 @@ function SearchTable() {
       }
     });
     const needdata = {};
+    const needdata2 = {};
     for (let index = 0; index < data.length; index++) {
       const element = data[index];
       if (element.dict_name === '剧本类型') {
@@ -195,8 +200,16 @@ function SearchTable() {
           needdata[item.label_value] = item.label_zh;
         }
       }
+      if (element.dict_name === '剧本难度') {
+        const myneeddata = element.dict_label;
+        for (let index = 0; index < myneeddata.length; index++) {
+          const item = myneeddata[index];
+          needdata2[item.label_value] = item.label_zh;
+        }
+      }
     }
     setgb_typeMap(needdata);
+    setgb_levelMap(needdata2);
     dispatch({ type: 'save-label', payload: { labelData: data } });
   };
 

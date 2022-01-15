@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import RoomFrom from './roomform';
-import { DeleteRoom } from '../../../../api/drama.js';
-import { Button, Card, Message, Modal, Popconfirm, Space } from '@arco-design/web-react';
-const { Meta } = Card;
+import { reqDeleteStaff } from '../../../../api/drama.js';
+import { Button, Card, Table, Message, Modal, Popconfirm } from '@arco-design/web-react';
 export default function RoomDetail({ store_code, getStoreDetail, storeDetailInfo }) {
-  const { store_room } = storeDetailInfo;
+  const { store_worker } = storeDetailInfo;
   const [showForm, setshowForm] = useState<boolean>(false);
   const [modalType, setmodalType] = useState<string>('');
   const [saveClickItem, setsaveClickItem] = useState<any>();
@@ -30,19 +29,11 @@ export default function RoomDetail({ store_code, getStoreDetail, storeDetailInfo
         ></RoomFrom>
       </Modal>
 
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <Card
-          style={{
-            width: 300,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: 318,
-            marginLeft: 20,
-            marginBottom: 20,
-          }}
-        >
+      <Card
+        title="员工列表"
+        extra={
           <Button
+            type="primary"
             onClick={() => {
               setshowForm(true);
               setmodalType('add');
@@ -50,74 +41,56 @@ export default function RoomDetail({ store_code, getStoreDetail, storeDetailInfo
           >
             添加员工
           </Button>
-        </Card>
-        {store_room.map((item) => {
-          return (
-            <Card
-              hoverable
-              style={{ width: 300, marginLeft: 20, marginBottom: 20 }}
-              cover={
-                <div
-                  style={{
-                    height: 204,
-                    overflow: 'hidden',
-                  }}
-                >
-                  <img
-                    style={{ width: '100%', transform: 'translateY(-20px)' }}
-                    alt="dessert"
-                    src={item.room_image}
-                  />
-                </div>
-              }
-            >
-              <Meta
-                title={item.room_name}
-                description={
-                  <>
-                    房间备注
-                    <Space style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-                      <Button
-                        onClick={() => {
-                          setmodalType('edit');
-                          setshowForm(true);
-                          setsaveClickItem(item);
-                        }}
-                        type="primary"
-                      >
-                        修改
-                      </Button>
-                      <Popconfirm
-                        title="确定删除该房间?"
-                        onOk={async () => {
-                          item.store_code = store_code;
-                          const res = await DeleteRoom(item);
-                          if (res.code === 200) {
-                            getStoreDetail();
-                            Message.info({ content: '删除成功' });
-                          }
-                        }}
-                        onCancel={() => {
-                          Message.error({ content: 'cancel' });
-                        }}
-                      >
-                        <Button
-                          onClick={() => {
-                            console.log('storeDetailInfo', storeDetailInfo);
-                          }}
-                          status="danger"
-                        >
-                          删除
-                        </Button>
-                      </Popconfirm>
-                    </Space>
-                  </>
-                }
-              />
-            </Card>
-          );
-        })}
-      </div>
+        }
+      >
+        <Table
+          size="mini"
+          data={store_worker}
+          columns={[
+            {
+              dataIndex: 'work_user',
+              title: '店员名称',
+            },
+            {
+              dataIndex: 'work_role',
+              title: '角色',
+            },
+            {
+              dataIndex: 'created_user',
+              title: '创建者',
+            },
+            {
+              dataIndex: 'created_time',
+              title: '创建时间',
+            },
+            {
+              title: '操作',
+              render: (_, data: any) => {
+                return (
+                  <Popconfirm
+                    title="确定删除店员?"
+                    onOk={async () => {
+                      let param = {
+                        store_code: store_code.store_code,
+                        user_account: data?.work_user,
+                      };
+                      const res = await reqDeleteStaff(param);
+                      if (res.code === 200) {
+                        Message.success('删除成功');
+                        getStoreDetail();
+                      }
+                    }}
+                  >
+                    <Button size="mini" status="danger">
+                      删除
+                    </Button>
+                  </Popconfirm>
+                );
+              },
+            },
+          ]}
+        ></Table>
+      </Card>
     </>
   );
 }

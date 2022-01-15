@@ -1,3 +1,4 @@
+
 import { Service } from '../service/request';
 
 // 数据字典
@@ -237,3 +238,11 @@ export function reqBindStaff(data) {
   });
 }
 
+
+export function reqDeleteStaff(data) {
+  return Service({
+    url: '/v1/store/del-user',
+    data,
+    method: 'post',
+  });
+}
