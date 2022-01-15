@@ -236,3 +236,4 @@ export function reqBindStaff(data) {
     method: 'post',
   });
 }
+

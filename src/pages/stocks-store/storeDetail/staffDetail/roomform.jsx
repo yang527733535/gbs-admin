@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { IconArrowRise, IconArrowFall, IconDelete } from '@arco-design/web-react/icon';
 import { Form, Input, Space, Button, Message, Upload, Modal, Select } from '@arco-design/web-react';
-import { reqBindRoom, getUserList, reqEditRoom } from '../../../../api/drama.js';
+import { reqBindStaff, getUserList, reqEditRoom } from '../../../../api/drama.js';
 const FormItem = Form.Item;
 
 const formItemLayout = {
@@ -75,8 +75,8 @@ export default function RoomForm({ store_code, modalType, closeModal }) {
                             noStyle
                           >
                             <Select placeholder="请选择角色编码...">
-                              {roleList?.map(({ label_en, label_value }) => {
-                                return <Select.Option key={label_value}>{label_en}</Select.Option>;
+                              {roleList?.map(({ label_zh, label_value }) => {
+                                return <Select.Option key={label_value}>{label_zh}</Select.Option>;
                               })}
                             </Select>
                           </Form.Item>
@@ -97,7 +97,7 @@ export default function RoomForm({ store_code, modalType, closeModal }) {
                       add();
                     }}
                   >
-                    Add User
+                    添加店员
                   </Button>
                 </Form.Item>
               </div>
@@ -161,19 +161,10 @@ export default function RoomForm({ store_code, modalType, closeModal }) {
                   let param = formRef.current.getFields();
                   param.store_code = store_code;
                   console.log(param);
-                  if (modalType === 'add') {
-                    const res = await reqBindRoom(param);
-                    if (res.code === 200) {
-                      Message.info('提交成功！');
-                      closeModal();
-                    }
-                  }
-                  if (modalType === 'edit') {
-                    const res = await reqEditRoom(param);
-                    if (res.code === 200) {
-                      Message.info('修改成功！');
-                      closeModal();
-                    }
+                  const res = await reqBindStaff(param);
+                  if (res.code === 200) {
+                    Message.info('修改成功！');
+                    closeModal();
                   }
                 } catch (_) {
                   console.log(_);
