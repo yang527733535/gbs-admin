@@ -1,7 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Input, Breadcrumb, Card, Space, Modal } from '@arco-design/web-react';
+import {
+  Table,
+  Button,
+  Drawer,
+  Input,
+  Breadcrumb,
+  Card,
+  Space,
+  Modal,
+} from '@arco-design/web-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { shopList } from '../../api/drama.js';
+import StoreDetail from './storeDetail/index';
 import {
   UPDATE_FORM_PARAMS,
   UPDATE_LIST,
@@ -16,12 +26,14 @@ import AddForm from './form/index.jsx';
 function SearchTable({}) {
   const locale = useLocale();
   const [visitModal, setvisitModal] = useState(false);
+  const [show, setshow] = useState(false);
   const [store_name, setstore_name] = useState('');
   const [store_type, setstore_type] = useState('');
   const [store_status, setstore_status] = useState('');
   const [store_level, setstore_level] = useState('');
   const [position_city, setposition_city] = useState('');
   const [clickItem, setclickItem] = useState(null);
+  const [store_code, setstore_code] = useState('');
   const columns = [
     {
       title: '店铺名称',
@@ -43,16 +55,29 @@ function SearchTable({}) {
     {
       title: locale['searchTable.columns.operations'],
       render: (col, data) => (
-        <Button
-          onClick={() => {
-            console.log(col, data);
-            setclickItem(data);
-            setvisitModal(true);
-          }}
-          size="small"
-        >
-          {locale['searchTable.columns.operations.update']}
-        </Button>
+        <Space>
+          <Button
+            onClick={() => {
+              console.log(col, data);
+              setclickItem(data);
+              setvisitModal(true);
+            }}
+            size="mini"
+            type="primary"
+          >
+            {locale['searchTable.columns.operations.update']}
+          </Button>
+          <Button
+            onClick={() => {
+              setshow(true);
+              setstore_code(data);
+            }}
+            size="mini"
+            type="primary"
+          >
+            店铺详情
+          </Button>
+        </Space>
       ),
     },
   ];
@@ -93,22 +118,6 @@ function SearchTable({}) {
       dispatch({ type: UPDATE_LOADING, payload: { loading: false } });
       dispatch({ type: UPDATE_FORM_PARAMS, payload: { params } });
     });
-    // data.then((res) => {
-    //   console.log('res: ', res);
-    // });
-
-    // dispatch({ type: UPDATE_LOADING, payload: { loading: false } });
-    // dispatch({ type: UPDATE_FORM_PARAMS, payload: { params } });
-    // axios
-    //   .get(`/api/policy`, {
-    //     params: {
-    //       page: current,
-    //       pageSize,
-    //       ...params,
-    //     },
-    //   })
-    //   .then((res) => {
-    //   });
   }
 
   function onChangeTable(pagination) {
@@ -116,20 +125,20 @@ function SearchTable({}) {
     fetchData(current, pageSize, formParams);
   }
 
-  // function onSearch(keyword) {
-  //   fetchData(1, pagination.pageSize, { keyword });
-  // }
-
-  // function onDateChange(date) {
-  //   const [start, end] = date;
-  //   fetchData(1, pagination.pageSize, {
-  //     createdTimeStart: start,
-  //     createdTimeEnd: end,
-  //   });
-  // }
-
   return (
     <div className={styles.container}>
+      <Drawer
+        onCancel={() => {
+          setshow(false);
+        }}
+        footer={null}
+        visible={show}
+        title="店铺详情"
+        unmountOnExit
+        width="90vw"
+      >
+        <StoreDetail store_code={store_code}></StoreDetail>
+      </Drawer>
       <Modal
         title={clickItem === null ? '添加门店' : '修改门店'}
         footer={null}

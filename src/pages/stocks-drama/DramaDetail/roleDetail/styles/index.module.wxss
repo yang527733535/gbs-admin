@@ -1,4 +1,11 @@
 .Meta :global .arco-card-body {
-  background-color: black;
-  color: white;
+  z-index: 199;
+}
+.myadd {
+  height: 421px;
+  width: 212px;
+  border: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

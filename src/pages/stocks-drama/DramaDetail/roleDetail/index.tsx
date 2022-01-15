@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import styles from './styles/index.module.less';
+import xiongshou from './styles/xiongshou.png';
 import {
   Form,
   Space,
@@ -15,7 +16,7 @@ import {
   Typography,
   Tooltip,
 } from '@arco-design/web-react';
-import { IconDelete } from '@arco-design/web-react/icon';
+import { IconDelete, IconUserAdd } from '@arco-design/web-react/icon';
 import { useSelector } from 'react-redux';
 import { reqBindrole, reqDeleteBindrole } from '../../../../api/drama.js';
 import { ReducerState } from '../../../../redux/index';
@@ -75,98 +76,116 @@ export default function DmForm({ getInitFormData, role_array }) {
           clickItem={clickItem}
         ></AddRoleDetailForm>
       </Modal>
-      <Button
-        onClick={() => {
-          setaddRoleToDramaModal(true);
-          setmodalType('add');
-        }}
-        type="primary"
-      >
-        添加角色
-      </Button>
+
       {role_array.length === 0 && <Result status="404" subTitle="该剧本还没有角色喔"></Result>}
 
       <Row gutter={40} style={{ display: 'flex', padding: 20 }}>
+        <div
+          onClick={() => {
+            setaddRoleToDramaModal(true);
+            setmodalType('add');
+          }}
+          style={{ marginRight: 20, marginBottom: 20 }}
+          className={styles.myadd}
+        >
+          <IconUserAdd style={{ fontSize: 50 }} type="primary">
+            添加角色
+          </IconUserAdd>
+          <div>添加角色</div>
+        </div>
         {role_array.map((item) => {
           return (
-            <Card
-              key={item.role_code}
-              className={styles.Meta}
-              hoverable
-              style={{ width: 212, maxHeight: 505, marginRight: 20, marginBottom: 20 }}
-              extra={
-                <Space>
-                  <Button
-                    onClick={() => {
-                      setmodalType('edit');
-                      setsaveEditItem(item);
-                      setaddRoleToDramaModal(true);
-                    }}
-                    size="mini"
-                    type="primary"
-                  >
-                    修改角色
-                  </Button>
-                  <Popconfirm
-                    title="确定删除这个角色?"
-                    onOk={async () => {
-                      let newrole_array = role_array.filter((item) => {
-                        return saveDeleteItem.role_code === item.role_code;
-                      });
-                      const param = {
-                        gb_code: clickItem.gb_code,
-                        role_array: newrole_array,
-                      };
-                      const data = await reqDeleteBindrole(param);
-                      if (data.code === 200) {
-                        Message.success('删除成功');
-                        getInitFormData();
-                      }
-                    }}
-                    onCancel={() => {}}
-                  >
-                    <Button
-                      size="mini"
-                      onClick={() => {
-                        setsaveDeleteItem(item);
-                      }}
-                      status="danger"
-                    >
-                      删除角色
-                    </Button>
-                  </Popconfirm>
-                </Space>
-              }
-              cover={
-                <div
-                  style={{
-                    height: 300,
-                  }}
-                >
+            <div style={{ position: 'relative' }}>
+              {item.is_murderer === '1' && (
+                <div>
                   <img
-                    style={{ width: '100%', height: '100%' }}
-                    alt="dessert"
-                    src={item.role_cover}
+                    style={{
+                      position: 'absolute',
+                      top: 8,
+                      left: 8,
+                      zIndex: 999,
+                      width: 30,
+                      height: 30,
+                    }}
+                    src={xiongshou}
+                    alt=""
                   />
                 </div>
-              }
-            >
-              <Meta
-                title={<span style={{ color: 'white' }}>{item.role_name}</span>}
-                description={
-                  <>
-                    <Tooltip content={item.role_brief}>
-                      <Typography.Paragraph
-                        ellipsis={true}
-                        style={{ width: '100%', color: 'white' }}
-                      >
-                        {item.role_brief}
-                      </Typography.Paragraph>
-                    </Tooltip>
-                  </>
+              )}
+              <Card
+                key={item.role_code}
+                className={styles.Meta}
+                hoverable
+                style={{ width: 212, maxHeight: 505, marginRight: 20, marginBottom: 20 }}
+                cover={
+                  <div
+                    style={{
+                      height: 300,
+                    }}
+                  >
+                    <img
+                      style={{ width: '100%', height: '100%' }}
+                      alt="dessert"
+                      src={item.role_cover}
+                    />
+                  </div>
                 }
-              />
-            </Card>
+              >
+                <Meta
+                  title={<span style={{}}>{item.role_name}</span>}
+                  description={
+                    <>
+                      <Tooltip content={item.role_brief}>
+                        <Typography.Paragraph ellipsis={true} style={{ width: '100%' }}>
+                          {item.role_brief}
+                        </Typography.Paragraph>
+                      </Tooltip>
+                      <Space style={{ marginLeft: 15 }}>
+                        <Button
+                          onClick={() => {
+                            setmodalType('edit');
+                            setsaveEditItem(item);
+                            setaddRoleToDramaModal(true);
+                          }}
+                          size="mini"
+                          type="primary"
+                        >
+                          修改角色
+                        </Button>
+                        <Popconfirm
+                          title="确定删除这个角色?"
+                          onOk={async () => {
+                            let newrole_array = role_array.filter((item) => {
+                              return saveDeleteItem.role_code === item.role_code;
+                            });
+                            const param = {
+                              gb_code: clickItem.gb_code,
+                              role_array: newrole_array,
+                            };
+                            const data = await reqDeleteBindrole(param);
+                            if (data.code === 200) {
+                              Message.success('删除成功');
+                              getInitFormData();
+                            }
+                          }}
+                          onCancel={() => {}}
+                        >
+                          <Button
+                            size="mini"
+                            onClick={() => {
+                              setsaveDeleteItem(item);
+                            }}
+                            status="danger"
+                          >
+                            删除角色
+                          </Button>
+                        </Popconfirm>
+                      </Space>
+                    </>
+                  }
+                />
+              </Card>
+            </div>
           );
         })}
       </Row>

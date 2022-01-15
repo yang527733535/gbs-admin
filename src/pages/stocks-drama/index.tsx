@@ -3,11 +3,13 @@ import {
   Table,
   Drawer,
   Button,
+  Badge,
   Input,
   Breadcrumb,
   Card,
   Space,
   Modal,
+  Select,
 } from '@arco-design/web-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { dramaList, labelsApi, getDmList } from '../../api/drama.js';
@@ -21,11 +23,10 @@ import {
 import useLocale from '../../utils/useLocale';
 import { ReducerState } from '../../redux';
 import styles from './style/index.module.less';
-import AddForm from './form/index';
 import DmForm from './dmform/index';
 import AddRoleForm from './addRoleForm/index';
 import DramaDetail from './DramaDetail/index';
-
+const Option = Select.Option;
 function SearchTable() {
   const locale = useLocale();
   const [dmlist, setdmlist] = useState([]);
@@ -34,30 +35,20 @@ function SearchTable() {
   const [visitModal, setvisitModal] = useState(false);
   const [DramaRoleModal, setDramaRoleModal] = useState(false);
   const [gb_typeMap, setgb_typeMap] = useState({});
-  const [gb_title, setgb_title] = useState('');
-  const [gb_people, setgb_people] = useState('');
-  const [gb_type, setgb_type] = useState('');
-  const [gb_area, setgb_area] = useState('');
-  const [gb_status, setgb_status] = useState('');
+  const [gb_type_labels, setgb_type_labels] = useState([]);
+  const [gb_app_gb_status_labels, setgb_app_gb_status_labels] = useState([]);
+  const [gb_app_gb_text_tag_labels, setgb_app_gb_text_tag_labels] = useState([]);
+  const [gb_app_level_labels, setgb_app_level_labels] = useState([]);
+  const [gb_title, setgb_title] = useState<any>();
+  const [gb_people, setgb_people] = useState<any>();
+  const [gb_type, setgb_type] = useState<any>();
+  const [gb_text_tag, setgb_text_tag] = useState<any>();
+  const [gb_level, setgb_level] = useState<any>();
+  const [gb_status, setgb_status] = useState<any>();
   const columns = [
-    {
-      title: '剧本ID',
-      dataIndex: 'gb_id',
-    },
     {
       title: '剧本标题',
       dataIndex: 'gb_title',
-    },
-    {
-      title: '剧本类型',
-      dataIndex: 'gb_type',
-      render: (value) => {
-        return <span>{gb_typeMap[value]}</span>;
-      },
-    },
-    {
-      title: '剧本区域',
-      dataIndex: 'gb_area',
     },
     {
       title: '剧本封面',
@@ -67,12 +58,73 @@ function SearchTable() {
       },
     },
     {
-      title: locale['searchTable.columns.createdTime'],
-      dataIndex: 'created_time',
+      title: '剧本类型',
+      dataIndex: 'gb_type',
+      render: (value) => {
+        return <span>{gb_typeMap[value]}</span>;
+      },
     },
     {
-      title: '更新时间',
-      dataIndex: 'updated_time',
+      title: '价格',
+      dataIndex: 'gb_price',
+    },
+    {
+      title: '是否启用',
+      dataIndex: 'is_enable',
+      render: (item) => {
+        if (parseInt(item) === 1) {
+          return <Badge status="success" text="启用中" />;
+        }
+        if (parseInt(item) === 0) {
+          return <Badge status="error" text="未启用" />;
+        }
+      },
+    },
+    {
+      title: '剧本标签',
+      dataIndex: 'gb_custom_tag',
+    },
+    {
+      title: '是否新本',
+      dataIndex: 'is_new',
+      render: (item) => {
+        if (parseInt(item) === 1) {
+          return '是';
+        } else {
+          return '否';
+        }
+      },
+    },
+    {
+      title: '是否热门',
+      dataIndex: 'is_hot',
+      render: (item) => {
+        if (parseInt(item) === 1) {
+          return '是';
+        } else {
+          return '否';
+        }
+      },
+    },
+    {
+      title: '剧本难度',
+      dataIndex: 'gb_level',
+    },
+    {
+      title: '剧本时长',
+      dataIndex: 'gb_hour',
+      render: (item) => {
+        return item + '小时';
+      },
+    },
+    {
+      title: '玩家人数',
+      dataIndex: 'gb_people',
+    },
+
+    {
+      title: '上架时间',
+      dataIndex: 'gb_add_time',
     },
     {
       title: locale['searchTable.columns.operations'],
@@ -84,6 +136,7 @@ function SearchTable() {
               type="primary"
               size="mini"
               onClick={() => {
+                setmodalType('edit');
                 dispatch({ type: 'toggle-show', payload: { show: true } });
                 dispatch({ type: 'save-item', payload: { clickItem: data } });
               }}
@@ -114,6 +167,24 @@ function SearchTable() {
   }, []);
   const getlabelsApi = async () => {
     const { data } = await labelsApi();
+    console.log('data: ', data);
+    data.forEach((element) => {
+      if (element.dict_code === 'app_gb_type') {
+        setgb_type_labels(element.dict_label);
+      }
+      if (element.dict_code === 'app_gb_text_tag') {
+        setgb_app_gb_text_tag_labels(element.dict_label);
+      }
+      if (element.dict_code === 'app_gb_status') {
+        setgb_app_gb_status_labels(element.dict_label);
+      }
+      if (element.dict_code === 'app_gb_status') {
+        setgb_app_gb_status_labels(element.dict_label);
+      }
+      if (element.dict_code === 'app_gb_level') {
+        setgb_app_level_labels(element.dict_label);
+      }
+    });
     const needdata = {};
     for (let index = 0; index < data.length; index++) {
       const element = data[index];
@@ -142,8 +213,9 @@ function SearchTable() {
       gb_title,
       gb_people,
       gb_type,
-      gb_area,
       gb_status,
+      gb_text_tag,
+      gb_level,
     });
     data.then((res) => {
       const { data, paginator } = res;
@@ -192,7 +264,7 @@ function SearchTable() {
         unmountOnExit
         width="90vw"
       >
-        <DramaDetail />
+        <DramaDetail closeModalAndReq={() => {}} modalType={modalType} />
       </Drawer>
 
       <Modal
@@ -230,7 +302,7 @@ function SearchTable() {
           clickItem={clickItem}
         />
       </Modal>
-      <Modal
+      <Drawer
         title="添加剧本"
         footer={null}
         onCancel={() => {
@@ -243,19 +315,26 @@ function SearchTable() {
             },
           });
         }}
-        unmountOnExit
+        unmountOnExit={true}
         style={{ width: '90vw' }}
         visible={visitModal}
       >
-        <AddForm
+        <DramaDetail
+          closeModalAndReq={() => {
+            setvisitModal(false);
+            fetchData();
+          }}
+          modalType={modalType}
+        />
+        {/* <AddForm
           closeModalAndRequest={() => {
             dispatch({ type: 'save-item', payload: { clickItem: null } });
             fetchData();
             setvisitModal(false);
           }}
           modalType={modalType}
-        />
-      </Modal>
+        /> */}
+      </Drawer>
       <Breadcrumb style={{ marginBottom: 20 }}>
         <Breadcrumb.Item>运营管理</Breadcrumb.Item>
         <Breadcrumb.Item>剧本管理</Breadcrumb.Item>
@@ -285,44 +364,89 @@ function SearchTable() {
                 />
                 <Input
                   onChange={(e) => {
-                    setgb_type(e);
-                  }}
-                  value={gb_type}
-                  placeholder="剧本类型"
-                  style={{ width: 200 }}
-                />
-                <Input
-                  onChange={(e) => {
-                    setgb_area(e);
-                  }}
-                  value={gb_area}
-                  placeholder="剧本区域"
-                  style={{ width: 200 }}
-                />
-                <Input
-                  onChange={(e) => {
                     setgb_people(e);
                   }}
                   value={gb_people}
                   placeholder="玩家人数"
                   style={{ width: 200 }}
                 />
-                <Input
+
+                <Select
+                  onChange={(e) => {
+                    setgb_type(e);
+                  }}
+                  value={gb_type}
+                  placeholder="剧本类型"
+                  style={{ width: 200 }}
+                >
+                  {gb_type_labels.map((item) => {
+                    return (
+                      <Option key={item.label_value} value={item.label_value}>
+                        {item.label_zh}
+                      </Option>
+                    );
+                  })}
+                </Select>
+                <Select
+                  onChange={(e) => {
+                    setgb_level(e);
+                  }}
+                  value={gb_level}
+                  placeholder="剧本难度"
+                  style={{ width: 200 }}
+                >
+                  {gb_app_level_labels.map((item) => {
+                    return (
+                      <Option key={item.label_value} value={item.label_value}>
+                        {item.label_zh}
+                      </Option>
+                    );
+                  })}
+                </Select>
+                {/* setgb_app_level_labels */}
+                <Select
+                  onChange={(e) => {
+                    setgb_text_tag(e);
+                  }}
+                  value={gb_text_tag}
+                  placeholder="剧本标签"
+                  style={{ width: 200 }}
+                >
+                  {gb_app_gb_text_tag_labels.map((item) => {
+                    console.log('item: ', item);
+                    return (
+                      <Option key={item.label_value} value={item.label_value}>
+                        {item.label_zh}
+                      </Option>
+                    );
+                  })}
+                </Select>
+
+                <Select
                   onChange={(e) => {
                     setgb_status(e);
                   }}
                   value={gb_status}
                   placeholder="剧本状态"
                   style={{ width: 200 }}
-                />
+                >
+                  {gb_app_gb_status_labels.map((item) => {
+                    return (
+                      <Option key={item.label_value} value={item.label_value}>
+                        {item.label_zh}
+                      </Option>
+                    );
+                  })}
+                </Select>
+
                 <Button
                   onClick={() => {
-                    setgb_title('');
-                    setgb_type('');
-                    setgb_area('');
-                    setgb_people('');
-                    setgb_status('');
-                    console.log('重置');
+                    setgb_title(null);
+                    setgb_type(null);
+                    setgb_text_tag(null);
+                    setgb_people(null);
+                    setgb_status(null);
+                    setgb_level(null);
                   }}
                 >
                   重置
