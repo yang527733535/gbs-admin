@@ -8,3 +8,40 @@ body {
   // font-family: "Helvetica Neue", -apple-system, BlinkMacSystemFont, PingFang SC, Roboto, Microsoft YaHei, Source Han Sans SC, Noto Sans CJK SC, Myriad Pro, Hiragino Sans GB, Lucida Grande, sans-serif;
   background-color: var(--color-bg-1);
 }
+
+.list-demo-actions-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  transition: all 0.1s;
+}
+
+.list-demo-actions-icon:hover {
+  background-color: var(--color-fill-3);
+}
+
+.list-demo-actions-button {
+  position: relative;
+  padding: 0 4px;
+  border-radius: 2px;
+  color: rgb(var(--arcoblue-6));
+  cursor: pointer;
+  transition: all 0.1s;
+}
+
+.list-demo-actions-button:hover {
+  background-color: var(--color-fill-3);
+}
+
+.list-demo-actions .arco-list-item-action li:not(:last-child) .list-demo-actions-button::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  right: -10px;
+  width: 1px;
+  height: 12px;
+  background-color: var(--color-fill-3);
+}

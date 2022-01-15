@@ -278,7 +278,7 @@ function DramaForm({ modalType = 'add', closeModalAndRequest }) {
                   field="gb_text_brief"
                   rules={[{ required: true, message: '请填写剧本概要' }]}
                 >
-                  <Input.TextArea placeholder="请填写剧本概要..." />
+                  <Input.TextArea rows={5} placeholder="请填写剧本概要..." />
                 </FormItem>
               </div>
             </Col>
@@ -289,7 +289,7 @@ function DramaForm({ modalType = 'add', closeModalAndRequest }) {
                   field="gb_text_content"
                   rules={[{ required: false, message: '请填写剧本描述' }]}
                 >
-                  <Input.TextArea placeholder="请填写剧本描述..." />
+                  <Input.TextArea rows={5} placeholder="请填写剧本描述..." />
                 </FormItem>
               </div>
             </Col>
@@ -299,13 +299,12 @@ function DramaForm({ modalType = 'add', closeModalAndRequest }) {
                 field="gb_producer"
                 rules={[{ required: true, message: '请填写版权信息' }]}
               >
-                <Input.TextArea placeholder="请填写版权信息..." />
+                <Input.TextArea rows={5} placeholder="请填写版权信息..." />
               </FormItem>
             </Col>
           </Row>
           <Row>
             <Col xs={24} sm={12} md={12} lg={8} xl={8} xxl={8}>
-              {' '}
               <FormItem
                 label="是否新本"
                 field="is_new"
@@ -349,7 +348,7 @@ function DramaForm({ modalType = 'add', closeModalAndRequest }) {
               >
                 <Upload
                   limit={1}
-                  listType="picture-card"
+                  // style={{ width: 200, height: 400 }}
                   name="gb_cover"
                   customRequest={(option) => {
                     const { onProgress, onError, onSuccess, file } = option;
@@ -419,6 +418,7 @@ function DramaForm({ modalType = 'add', closeModalAndRequest }) {
                               }
                               return;
                             }
+                            param.gb_star_lev = param.gb_star_lev * 2;
                             const data = await addDrama(param);
                             if (data.code === 200) {
                               Message.success('添加成功');

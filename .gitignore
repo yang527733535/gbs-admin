@@ -43,8 +43,6 @@ jspm_packages
 # stylelint
 .stylelintcache
 
-.wxss
-
 # my test
 /test
 

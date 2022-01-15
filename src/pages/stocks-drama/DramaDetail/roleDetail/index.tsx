@@ -1,13 +1,30 @@
-import React, { useRef, useEffect } from 'react';
-import { Form, Space, Select, Message, Input, Button, Grid } from '@arco-design/web-react';
+import React, { useRef, useState, useEffect } from 'react';
+import styles from './styles/index.module.less';
+import {
+  Form,
+  Space,
+  Modal,
+  Select,
+  Message,
+  Input,
+  Button,
+  Grid,
+  Card,
+  Result,
+  Popconfirm,
+  Typography,
+  Tooltip,
+} from '@arco-design/web-react';
 import { IconDelete } from '@arco-design/web-react/icon';
 import { useSelector } from 'react-redux';
-import { reqBindrole } from '../../../../api/drama.js';
+import { reqBindrole, reqDeleteBindrole } from '../../../../api/drama.js';
 import { ReducerState } from '../../../../redux/index';
 import { FormInstance } from '@arco-design/web-react/es/Form';
+import AddRoleDetailForm from './AddRoleDetailForm/index';
 const Row = Grid.Row;
 const Col = Grid.Col;
 const FormItem = Form.Item;
+const { Meta } = Card;
 
 const formItemLayout = {
   labelCol: {
@@ -18,58 +35,148 @@ const formItemLayout = {
   },
 };
 
-export default function DmForm({ role_array }) {
+export default function DmForm({ getInitFormData, role_array }) {
   const formRef = useRef<FormInstance>();
+
   const dramaInfoStore = useSelector((state: ReducerState) => {
     return state.myState;
   });
   useEffect(() => {
     formRef.current.setFieldsValue({ role_array });
   }, [role_array]);
-
+  const [saveDeleteItem, setsaveDeleteItem] = useState<any>();
+  const [saveEditItem, setsaveEditItem] = useState<any>();
+  const [modalType, setmodalType] = useState<string>('');
   const { clickItem } = dramaInfoStore;
   const onValuesChange = (changeValue, values) => {
     console.log('onValuesChange: ', changeValue, values);
   };
-  return (
-    <div>
-      <Form onValuesChange={onValuesChange} layout="vertical" ref={formRef} {...formItemLayout}>
-        <Row style={{ width: '100%' }}>
-          <Col span={24}>
-            <FormItem style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <Space>
-                <Button
-                  onClick={async () => {
-                    if (formRef.current) {
-                      try {
-                        await formRef.current.validate();
-                        const param = await formRef.current.validate();
-                        param.gb_code = clickItem.gb_code;
-                        const data = await reqBindrole(param);
-                        if (data.code === 200) {
-                          Message.info('提交成功！');
-                        }
-                      } catch (_) {
-                        // Message.error('校验失败，请检查字段！');
-                      }
-                    }
-                  }}
-                  type="primary"
-                >
-                  提交
-                </Button>
-                <Button
-                  onClick={() => {
-                    formRef.current.resetFields();
-                  }}
-                >
-                  重置
-                </Button>
-              </Space>
-            </FormItem>
-          </Col>
-        </Row>
+  const [addRoleToDramaModal, setaddRoleToDramaModal] = useState<boolean>(false);
 
+  return (
+    <>
+      <Modal
+        onCancel={() => {
+          setaddRoleToDramaModal(false);
+        }}
+        title={modalType === 'add' ? '添加角色' : '修改角色'}
+        visible={addRoleToDramaModal}
+        footer={null}
+        unmountOnExit
+      >
+        <AddRoleDetailForm
+          getInitFormData={getInitFormData}
+          saveEditItem={saveEditItem}
+          modalType={modalType}
+          closeModal={() => {
+            setaddRoleToDramaModal(false);
+          }}
+          role_array={role_array}
+          clickItem={clickItem}
+        ></AddRoleDetailForm>
+      </Modal>
+      <Button
+        onClick={() => {
+          setaddRoleToDramaModal(true);
+          setmodalType('add');
+        }}
+        type="primary"
+      >
+        添加角色
+      </Button>
+      {role_array.length === 0 && <Result status="404" subTitle="该剧本还没有角色喔"></Result>}
+
+      <Row gutter={40} style={{ display: 'flex', padding: 20 }}>
+        {role_array.map((item) => {
+          return (
+            <Card
+              key={item.role_code}
+              className={styles.Meta}
+              hoverable
+              style={{ width: 212, maxHeight: 505, marginRight: 20, marginBottom: 20 }}
+              extra={
+                <Space>
+                  <Button
+                    onClick={() => {
+                      setmodalType('edit');
+                      setsaveEditItem(item);
+                      setaddRoleToDramaModal(true);
+                    }}
+                    size="mini"
+                    type="primary"
+                  >
+                    修改角色
+                  </Button>
+                  <Popconfirm
+                    title="确定删除这个角色?"
+                    onOk={async () => {
+                      let newrole_array = role_array.filter((item) => {
+                        return saveDeleteItem.role_code === item.role_code;
+                      });
+                      const param = {
+                        gb_code: clickItem.gb_code,
+                        role_array: newrole_array,
+                      };
+                      const data = await reqDeleteBindrole(param);
+                      if (data.code === 200) {
+                        Message.success('删除成功');
+                        getInitFormData();
+                      }
+                    }}
+                    onCancel={() => {}}
+                  >
+                    <Button
+                      size="mini"
+                      onClick={() => {
+                        setsaveDeleteItem(item);
+                      }}
+                      status="danger"
+                    >
+                      删除角色
+                    </Button>
+                  </Popconfirm>
+                </Space>
+              }
+              cover={
+                <div
+                  style={{
+                    height: 300,
+                  }}
+                >
+                  <img
+                    style={{ width: '100%', height: '100%' }}
+                    alt="dessert"
+                    src={item.role_cover}
+                  />
+                </div>
+              }
+            >
+              <Meta
+                title={<span style={{ color: 'white' }}>{item.role_name}</span>}
+                description={
+                  <>
+                    <Tooltip content={item.role_brief}>
+                      <Typography.Paragraph
+                        ellipsis={true}
+                        style={{ width: '100%', color: 'white' }}
+                      >
+                        {item.role_brief}
+                      </Typography.Paragraph>
+                    </Tooltip>
+                  </>
+                }
+              />
+            </Card>
+          );
+        })}
+      </Row>
+      <Form
+        style={{ display: 'none' }}
+        onValuesChange={onValuesChange}
+        layout="vertical"
+        ref={formRef}
+        {...formItemLayout}
+      >
         <Form.List field="role_array">
           {(fields, { add, remove }) => {
             return (
@@ -163,6 +270,7 @@ export default function DmForm({ role_array }) {
                 })}
                 <Form.Item>
                   <Button
+                    type="primary"
                     onClick={() => {
                       add();
                     }}
@@ -174,7 +282,42 @@ export default function DmForm({ role_array }) {
             );
           }}
         </Form.List>
+        <Row style={{ width: '100%' }}>
+          <Col span={24}>
+            <FormItem style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Space>
+                <Button
+                  onClick={async () => {
+                    if (formRef.current) {
+                      try {
+                        await formRef.current.validate();
+                        const param = await formRef.current.validate();
+                        param.gb_code = clickItem.gb_code;
+                        const data = await reqBindrole(param);
+                        if (data.code === 200) {
+                          Message.info('提交成功！');
+                        }
+                      } catch (_) {
+                        // Message.error('校验失败，请检查字段！');
+                      }
+                    }
+                  }}
+                  type="primary"
+                >
+                  提交
+                </Button>
+                <Button
+                  onClick={() => {
+                    formRef.current.resetFields();
+                  }}
+                >
+                  重置
+                </Button>
+              </Space>
+            </FormItem>
+          </Col>
+        </Row>
       </Form>
-    </div>
+    </>
   );
 }

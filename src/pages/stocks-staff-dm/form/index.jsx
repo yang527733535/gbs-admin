@@ -61,7 +61,7 @@ function Index({ UserList, closeModalAndReqNewTableData }) {
           field="skilled_drama"
           label="擅长剧本"
         >
-          <Select allowCreate mode="multiple" placeholder="擅长剧本" allowClear></Select>
+          <Input allowCreate mode="multiple" placeholder="擅长剧本" allowClear></Input>
         </FormItem>
         <Form.Item
           rules={[{ required: true, message: '请上传DM相片' }]}
@@ -161,6 +161,7 @@ function Index({ UserList, closeModalAndReqNewTableData }) {
               param.user_photo =
                 param.user_photo[0].url || param.user_photo[0].response.data.file_url;
               console.log(param);
+
               const data = await bindDm(param);
               console.log('data: ', data);
               if (data.code === 200) {

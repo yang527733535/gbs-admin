@@ -2,8 +2,6 @@ import React, { useEffect } from 'react';
 import Footer from '../../components/Footer';
 import LoginForm from './form';
 import LoginBanner from './banner';
-import Logo from '../../assets/logo.svg';
-
 import styles from './style/index.module.less';
 
 export default () => {
@@ -13,7 +11,6 @@ export default () => {
   return (
     <div className={styles.container}>
       <div className={styles.logo}>
-        <Logo />
         <div className={styles['logo-text']}>梦墨剧本杀</div>
       </div>
       <div className={styles.banner}>

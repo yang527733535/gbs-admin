@@ -147,6 +147,14 @@ export function reqBindDm(data) {
   });
 }
 
+export function reqBindDeleteDm(data) {
+  return Service({
+    url: '/v1/drama/del-dm',
+    data,
+    method: 'post',
+  });
+}
+
 export function reqBindrole(data) {
   return Service({
     url: '/v1/drama/save-role',
@@ -154,6 +162,16 @@ export function reqBindrole(data) {
     method: 'post',
   });
 }
+
+export function reqDeleteBindrole(data) {
+  return Service({
+    url: '/v1/drama/del-role',
+    data,
+    method: 'post',
+  });
+}
+
+
 export function editDrama(data) {
   return Service({
     url: '/v1/drama/edit',

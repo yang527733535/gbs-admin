@@ -37,6 +37,8 @@ const noLabelLayout = {
   },
 };
 export default function DmForm({ clickItem, closeModalAndRequest, dmlist }) {
+  console.log('clickItem: ', clickItem);
+  console.log('dmlist: ', dmlist);
   const formRef = useRef();
   return (
     <div>
