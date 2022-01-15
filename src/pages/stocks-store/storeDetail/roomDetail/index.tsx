@@ -3,7 +3,7 @@ import RoomFrom from './roomform';
 import { DeleteRoom } from '../../../../api/drama.js';
 import { Button, Card, Message, Modal, Popconfirm, Space } from '@arco-design/web-react';
 const { Meta } = Card;
-export default function RoomDetail({ store_code, storeDetailInfo }) {
+export default function RoomDetail({ store_code, getStoreDetail, storeDetailInfo }) {
   console.log('storeDetailInfo: ', storeDetailInfo);
   const { store_room } = storeDetailInfo;
   const [showForm, setshowForm] = useState<boolean>(false);
@@ -24,6 +24,7 @@ export default function RoomDetail({ store_code, storeDetailInfo }) {
           modalType={modalType}
           closeModal={() => {
             setshowForm(false);
+            getStoreDetail();
           }}
           saveClickItem={saveClickItem}
           store_code={storeDetailInfo.store_code}
@@ -90,10 +91,10 @@ export default function RoomDetail({ store_code, storeDetailInfo }) {
                       <Popconfirm
                         title="确定删除该房间?"
                         onOk={async () => {
-                          console.log('item', item);
                           item.store_code = store_code;
                           const res = await DeleteRoom(item);
                           if (res.code === 200) {
+                            getStoreDetail();
                             Message.info({ content: '删除成功' });
                           }
                         }}

@@ -184,10 +184,11 @@ function PageLayout() {
           >
             <div className={styles.menuWrapper}>
               <Menu
+                defaultOpenKeys={['stocks']}
                 collapse={collapsed}
                 onClickMenuItem={onClickMenuItem}
                 selectedKeys={selectedKeys}
-                autoOpen={false}
+                // autoOpen={true}
               >
                 {renderRoutes(locale)}
               </Menu>

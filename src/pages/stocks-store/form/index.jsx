@@ -50,7 +50,6 @@ function Shop({ closeModalAndReqTable, clickItem }) {
     console.log('onValuesChange: ', changeValue, values);
   };
   useEffect(() => {
-    // formRef.current.setFieldsValue(clickItem);
     const regionsData = regionsList();
     regionsData.then((res) => {
       console.log('res: ', res);
@@ -116,10 +115,6 @@ function Shop({ closeModalAndReqTable, clickItem }) {
         ref={formRef}
         {...formItemLayout}
         size={size}
-        // initialValues={{
-        //   slider: 20,
-        //   'a.b[0].c': ['b'],
-        // }}
         onSubmit={(e) => {
           console.log(e);
         }}
@@ -133,7 +128,7 @@ function Shop({ closeModalAndReqTable, clickItem }) {
         >
           <Input placeholder="请填写店铺名称..." />
         </FormItem>
-        <FormItem field="Province" label="店铺地区">
+        <FormItem field="position_index" label="店铺地区">
           <Cascader
             showSearch
             placeholder="please select"
@@ -141,27 +136,7 @@ function Shop({ closeModalAndReqTable, clickItem }) {
             options={cascaderOptionsArr}
           />
         </FormItem>
-        {/* <FormItem
-          label="省份"
-          field="position_state"
-          rules={[{ required: false, message: '请填写省份' }]}
-        >
-          <Input placeholder="请填写省份..." />
-        </FormItem>
-        <FormItem
-          label="城市"
-          field="position_city"
-          rules={[{ required: false, message: '请填写城市' }]}
-        >
-          <Input placeholder="请填写城市..." />
-        </FormItem>
-        <FormItem
-          label="县区"
-          field="position_district"
-          rules={[{ required: false, message: '请填写县区' }]}
-        >
-          <Input placeholder="请填写县区..." />
-        </FormItem> */}
+
         <FormItem
           label="门店类型"
           field="store_type"
@@ -250,14 +225,6 @@ function Shop({ closeModalAndReqTable, clickItem }) {
           >
             Reset
           </Button>
-          {/* <Button
-            type="text"
-            onClick={() => {
-              Message.info(`fields: ${formRef.current.getTouchedFields().join(',')}`);
-            }}
-          >
-            Get touched fields
-          </Button> */}
         </FormItem>
       </Form>
     </div>

@@ -142,7 +142,6 @@ export default function RoomForm({ saveClickItem, store_code, modalType, closeMo
                       closeModal();
                     }
                   }
-
                   if (modalType === 'edit') {
                     const res = await reqEditRoom(param);
                     if (res.code === 200) {
