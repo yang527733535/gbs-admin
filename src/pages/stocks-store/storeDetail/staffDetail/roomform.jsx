@@ -64,7 +64,9 @@ export default function RoomForm({ store_code, modalType, closeModal }) {
                             <Select placeholder="请选择账号">
                               {userList?.map(({ user_account, user_name }) => {
                                 return (
-                                  <Select.Option key={user_account}>{user_name}</Select.Option>
+                                  <Select.Option value={user_account} key={user_account}>
+                                    {user_name}
+                                  </Select.Option>
                                 );
                               })}
                             </Select>
@@ -76,7 +78,11 @@ export default function RoomForm({ store_code, modalType, closeModal }) {
                           >
                             <Select placeholder="请选择角色编码...">
                               {roleList?.map(({ label_zh, label_value }) => {
-                                return <Select.Option key={label_value}>{label_zh}</Select.Option>;
+                                return (
+                                  <Select.Option value={label_value} key={label_value}>
+                                    {label_zh}
+                                  </Select.Option>
+                                );
                               })}
                             </Select>
                           </Form.Item>

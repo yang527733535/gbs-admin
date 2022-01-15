@@ -19,6 +19,15 @@ export function userList(data) {
     data,
   });
 }
+
+// 会员列表
+export function memberList(data) {
+  return Service({
+    url: '/v1/member/list ',
+    data,
+  });
+}
+
 export function dmList(data) {
   return Service({
     url: '/system/worker/dm-list',
