@@ -171,7 +171,6 @@ function SearchTable() {
   }, []);
   const getlabelsApi = async () => {
     const { data } = await labelsApi();
-    console.log('data: ', data);
     data.forEach((element) => {
       if (element.dict_code === 'app_gb_type') {
         setgb_type_labels(element.dict_label);
@@ -383,7 +382,6 @@ function SearchTable() {
                   placeholder="玩家人数"
                   style={{ width: 200 }}
                 />
-
                 <Select
                   onChange={(e) => {
                     setgb_type(e);
@@ -416,7 +414,6 @@ function SearchTable() {
                     );
                   })}
                 </Select>
-                {/* setgb_app_level_labels */}
                 <Select
                   onChange={(e) => {
                     setgb_text_tag(e);
@@ -434,7 +431,6 @@ function SearchTable() {
                     );
                   })}
                 </Select>
-
                 <Select
                   onChange={(e) => {
                     setgb_status(e);
@@ -451,7 +447,6 @@ function SearchTable() {
                     );
                   })}
                 </Select>
-
                 <Button
                   onClick={() => {
                     setgb_title(null);

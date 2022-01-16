@@ -1,9 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { Typography, Button, Table, Badge, Message, Popconfirm } from '@arco-design/web-react';
+import {
+  Typography,
+  Select,
+  Button,
+  Table,
+  Badge,
+  Message,
+  Popconfirm,
+  Input,
+  Space,
+} from '@arco-design/web-react';
 import { dramaList, reqStoreBindDrama, reqDeleteStoreDrama } from '../../../../api/drama.js';
 import { getDictsByName } from '../../../../utils/getdicts.js';
+
+let Option = Select.Option;
 export default function StoreDrama({ store_code, getStoreDetail, storeDetailInfo }) {
   const { store_drama } = storeDetailInfo;
+  // const [SelectedRowKeys, setSelectedRowKeys] = useState([]);
   const [tableData, settableData] = useState([]);
   const [tableloading, settableloading] = useState(false);
   const [pagination, setpagination] = useState({
@@ -13,7 +26,16 @@ export default function StoreDrama({ store_code, getStoreDetail, storeDetailInfo
   });
   const [nowDramaListTableData, setnowDramaListTableData] = useState(store_drama);
   const [gb_typeMap, setgb_typeMap] = useState({});
-
+  const [gb_type_labels, setgb_type_labels] = useState([]);
+  const [gb_app_gb_status_labels, setgb_app_gb_status_labels] = useState([]);
+  const [gb_app_gb_text_tag_labels, setgb_app_gb_text_tag_labels] = useState([]);
+  const [gb_app_level_labels, setgb_app_level_labels] = useState([]);
+  const [gb_title, setgb_title] = useState<any>();
+  const [gb_people, setgb_people] = useState<any>();
+  const [gb_type, setgb_type] = useState<any>();
+  const [gb_text_tag, setgb_text_tag] = useState<any>();
+  const [gb_level, setgb_level] = useState<any>();
+  const [gb_status, setgb_status] = useState<any>();
   useEffect(() => {
     const data = getDictsByName('app_gb_type');
     let newMap = new Object();
@@ -22,6 +44,28 @@ export default function StoreDrama({ store_code, getStoreDetail, storeDetailInfo
     });
     setgb_typeMap(newMap);
   }, []);
+
+  useEffect(() => {
+    let data = JSON.parse(localStorage.getItem('dicts'));
+    data.forEach((element) => {
+      if (element.dict_code === 'app_gb_type') {
+        setgb_type_labels(element.dict_label);
+      }
+      if (element.dict_code === 'app_gb_text_tag') {
+        setgb_app_gb_text_tag_labels(element.dict_label);
+      }
+      if (element.dict_code === 'app_gb_status') {
+        setgb_app_gb_status_labels(element.dict_label);
+      }
+      if (element.dict_code === 'app_gb_status') {
+        setgb_app_gb_status_labels(element.dict_label);
+      }
+      if (element.dict_code === 'app_gb_level') {
+        setgb_app_level_labels(element.dict_label);
+      }
+    });
+  }, []);
+
   useEffect(() => {
     const { store_drama } = storeDetailInfo;
     setnowDramaListTableData(store_drama);
@@ -202,6 +246,12 @@ export default function StoreDrama({ store_code, getStoreDetail, storeDetailInfo
     const data = dramaList({
       page: current,
       page_size: pageSize,
+      gb_title,
+      gb_people,
+      gb_type,
+      gb_status,
+      gb_text_tag,
+      gb_level,
     });
     settableloading(true);
     data.then((res) => {
@@ -228,27 +278,125 @@ export default function StoreDrama({ store_code, getStoreDetail, storeDetailInfo
       </div>
       <div>
         <Typography.Title heading={4}>剧本库</Typography.Title>
+        <div
+          style={{ width: '100%', marginBottom: 10, display: 'flex', justifyContent: 'flex-ends' }}
+        >
+          <Space style={{ flex: 1 }} wrap>
+            <Input
+              value={gb_title}
+              onChange={(e) => {
+                setgb_title(e);
+              }}
+              placeholder="请输入剧本标题"
+              style={{ width: 200 }}
+            />
+            <Input
+              onChange={(e) => {
+                setgb_people(e);
+              }}
+              value={gb_people}
+              placeholder="玩家人数"
+              style={{ width: 200 }}
+            />
+            <Select
+              onChange={(e) => {
+                setgb_type(e);
+              }}
+              value={gb_type}
+              placeholder="剧本类型"
+              style={{ width: 200 }}
+            >
+              {gb_type_labels.map((item) => {
+                return (
+                  <Option key={item.label_value} value={item.label_value}>
+                    {item.label_zh}
+                  </Option>
+                );
+              })}
+            </Select>
+            <Select
+              onChange={(e) => {
+                setgb_level(e);
+              }}
+              value={gb_level}
+              placeholder="剧本难度"
+              style={{ width: 200 }}
+            >
+              {gb_app_level_labels.map((item) => {
+                return (
+                  <Option key={item.label_value} value={item.label_value}>
+                    {item.label_zh}
+                  </Option>
+                );
+              })}
+            </Select>
+            <Select
+              onChange={(e) => {
+                setgb_text_tag(e);
+              }}
+              value={gb_text_tag}
+              placeholder="剧本标签"
+              style={{ width: 200 }}
+            >
+              {gb_app_gb_text_tag_labels.map((item) => {
+                return (
+                  <Option key={item.label_value} value={item.label_value}>
+                    {item.label_zh}
+                  </Option>
+                );
+              })}
+            </Select>
+            <Select
+              onChange={(e) => {
+                setgb_status(e);
+              }}
+              value={gb_status}
+              placeholder="剧本状态"
+              style={{ width: 200 }}
+            >
+              {gb_app_gb_status_labels.map((item) => {
+                return (
+                  <Option key={item.label_value} value={item.label_value}>
+                    {item.label_zh}
+                  </Option>
+                );
+              })}
+            </Select>
+            <Button
+              onClick={() => {
+                setgb_title(null);
+                setgb_type(null);
+                setgb_text_tag(null);
+                setgb_people(null);
+                setgb_status(null);
+                setgb_level(null);
+              }}
+            >
+              重置
+            </Button>
+            <Button
+              onClick={() => {
+                fetchData();
+              }}
+              type="primary"
+            >
+              搜索
+            </Button>
+          </Space>
+        </div>
         <Table
           loading={tableloading}
           onChange={onChangeTable}
-          key="store_id"
+          rowKey="store_id"
           size="mini"
-          //   rowSelection={{
-          //     type: 'checkbox',
-          //     selectedRowKeys,
-          //     onChange: (_, selectedRows) => {
-          //       console.log('selectedRows: ', selectedRows);
-          //       setSelectedRowKeys(selectedRowKeys);
-          //     },
-          //     onSelect: (selected, record, selectedRows) => {
-          //       console.log('onSelect:', selected, record, selectedRows);
-          //     },
-          //     checkboxProps: (record) => {
-          //       return {
-          //         disabled: record.id === '4',
-          //       };
-          //     },
-          //   }}
+          // rowSelection={{
+          //   type: 'checkbox',
+          //   selectedRowKeys: SelectedRowKeys,
+          //   onChange: (selectedRowKeys, selectedRows) => {},
+          //   onSelect: (selected, record, selectedRows) => {
+          //     console.log('onSelect:', selected, record, selectedRows);
+          //   },
+          // }}
           pagination={pagination}
           data={tableData}
           columns={columns}
