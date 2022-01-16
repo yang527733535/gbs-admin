@@ -11,7 +11,7 @@ export default function Welcome() {
       <div className={styles.content}>
         <Alert
           type="success"
-          content="欢迎使用 梦墨Admin v1.0.1!"
+          content="欢迎使用 梦墨Admin v1.0.2!"
           // content={locale['welcome.invite']}
         />
       </div>
