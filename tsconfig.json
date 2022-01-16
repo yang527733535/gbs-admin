@@ -15,6 +15,6 @@
     "types": ["node", "jest"],
     "resolveJsonModule": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/utils/getdicts.js"],
   "exclude": ["node_modules"]
 }

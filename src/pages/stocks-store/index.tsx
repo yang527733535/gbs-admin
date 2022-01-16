@@ -135,6 +135,7 @@ function SearchTable({}) {
         }}
         footer={null}
         visible={show}
+    
         title="店铺详情"
         unmountOnExit={true}
         width="90vw"

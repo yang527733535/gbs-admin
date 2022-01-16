@@ -1,4 +1,3 @@
-
 import { Service } from '../service/request';
 
 // 数据字典
@@ -172,7 +171,6 @@ export function reqDeleteBindrole(data) {
   });
 }
 
-
 export function editDrama(data) {
   return Service({
     url: '/v1/drama/edit',
@@ -227,9 +225,6 @@ export function DeleteRoom(data) {
   });
 }
 
-
-
-
 export function reqBindStaff(data) {
   return Service({
     url: '/v1/store/add-user',
@@ -238,7 +233,6 @@ export function reqBindStaff(data) {
   });
 }
 
-
 export function reqDeleteStaff(data) {
   return Service({
     url: '/v1/store/del-user',
@@ -246,3 +240,20 @@ export function reqDeleteStaff(data) {
     method: 'post',
   });
 }
+
+export function reqStoreBindDrama(data) {
+  return Service({
+    url: '/v1/store/add-drama',
+    data,
+    method: 'post',
+  });
+}
+
+export function reqDeleteStoreDrama(data) {
+  return Service({
+    url: '/v1/store/del-drama',
+    data,
+    method: 'post',
+  });
+}
+

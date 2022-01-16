@@ -1,12 +1,21 @@
-import React, { useState } from 'react';
-import RoomFrom from './roomform';
+import React, { useState, useEffect } from 'react';
+import StaffForm from './staffform';
 import { reqDeleteStaff } from '../../../../api/drama.js';
 import { Button, Card, Table, Message, Modal, Popconfirm } from '@arco-design/web-react';
+import { getDictsByName } from '../../../../utils/getdicts.js';
 export default function RoomDetail({ store_code, getStoreDetail, storeDetailInfo }) {
   const { store_worker } = storeDetailInfo;
   const [showForm, setshowForm] = useState<boolean>(false);
   const [modalType, setmodalType] = useState<string>('');
-  const [saveClickItem, setsaveClickItem] = useState<any>();
+  const [user_roleMap, setuser_roleMap] = useState<any>({});
+  useEffect(() => {
+    let mydata = getDictsByName('store_user_role');
+    let obj = new Object();
+    mydata.forEach((element) => {
+      obj[element.label_value] = element.label_zh;
+    });
+    setuser_roleMap(obj);
+  }, []);
   return (
     <>
       <Modal
@@ -18,15 +27,14 @@ export default function RoomDetail({ store_code, getStoreDetail, storeDetailInfo
         style={{ width: 700 }}
         visible={showForm}
       >
-        <RoomFrom
+        <StaffForm
           modalType={modalType}
           closeModal={() => {
             setshowForm(false);
             getStoreDetail();
           }}
-          saveClickItem={saveClickItem}
           store_code={storeDetailInfo.store_code}
-        ></RoomFrom>
+        ></StaffForm>
       </Modal>
 
       <Card
@@ -54,6 +62,7 @@ export default function RoomDetail({ store_code, getStoreDetail, storeDetailInfo
             {
               dataIndex: 'work_role',
               title: '角色',
+              render: (item) => user_roleMap[item],
             },
             {
               dataIndex: 'created_user',

@@ -44,10 +44,6 @@ function SearchTable() {
       title: '会员类型',
       dataIndex: 'member_type',
     },
-    // {
-    //   title: '会员性别',
-    //   dataIndex: 'member_gender',
-    // },
     {
       title: '会员头像',
       dataIndex: 'member_face',
@@ -114,7 +110,6 @@ function SearchTable() {
   useEffect(() => {}, []);
 
   function fetchData(current = 1, pageSize = 10, params = {}) {
-    // const data = dispatch({ type: UPDATE_LOADING, payload: { loading: true } });
     const data = memberList({
       page: current,
       page_size: pageSize,
@@ -141,22 +136,6 @@ function SearchTable() {
       dispatch({ type: UPDATE_LOADING, payload: { loading: false } });
       dispatch({ type: UPDATE_FORM_PARAMS, payload: { params } });
     });
-    // data.then((res) => {
-    //   console.log('res: ', res);
-    // });
-
-    // dispatch({ type: UPDATE_LOADING, payload: { loading: false } });
-    // dispatch({ type: UPDATE_FORM_PARAMS, payload: { params } });
-    // axios
-    //   .get(`/api/policy`, {
-    //     params: {
-    //       page: current,
-    //       pageSize,
-    //       ...params,
-    //     },
-    //   })
-    //   .then((res) => {
-    //   });
   }
 
   function onChangeTable(pagination) {

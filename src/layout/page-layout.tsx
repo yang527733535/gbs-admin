@@ -184,7 +184,7 @@ function PageLayout() {
           >
             <div className={styles.menuWrapper}>
               <Menu
-                defaultOpenKeys={['stocks']}
+                defaultOpenKeys={['stocks', 'store']}
                 collapse={collapsed}
                 onClickMenuItem={onClickMenuItem}
                 selectedKeys={selectedKeys}

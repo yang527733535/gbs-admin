@@ -9,23 +9,33 @@ export default function BaseDetail({ storeDetailInfo, closeDrawer, modalType }) 
   const formRef = useRef<FormInstance>();
   const [cascaderOptionsArr, setcascaderOptionsArr] = useState([]);
   useEffect(() => {
-    const regionsData = regionsList();
-    regionsData.then((res) => {
-      const { data } = res;
-      const mapTree = (org) => {
-        const haveChildren = Array.isArray(org.region_children) && org.region_children.length > 0;
-        return {
-          key: String(org.region_id),
-          value: String(org.region_id),
-          label: org.region_name,
-          children: haveChildren ? org.region_children.map((i) => mapTree(i)) : [],
-        };
-      };
-      let arr = [];
-      arr = data.map((org) => mapTree(org));
-      setcascaderOptionsArr(arr);
-    });
+    // 这里做个缓存
+    reqRionsData();
   }, []);
+
+  const reqRionsData = async () => {
+    // 先判断缓存里有没有
+    let data = [];
+    if (localStorage.getItem('regions') === null) {
+      const res = await regionsList();
+      data = res.data;
+      localStorage.setItem('regions', JSON.stringify(data));
+    } else {
+      data = JSON.parse(localStorage.getItem('regions'));
+    }
+    const mapTree = (org) => {
+      const haveChildren = Array.isArray(org.region_children) && org.region_children.length > 0;
+      return {
+        key: String(org.region_id),
+        value: String(org.region_id),
+        label: org.region_name,
+        children: haveChildren ? org.region_children.map((i) => mapTree(i)) : [],
+      };
+    };
+    let arr = [];
+    arr = data.map((org) => mapTree(org));
+    setcascaderOptionsArr(arr);
+  };
 
   useEffect(() => {
     if (modalType === 'edit') {
@@ -49,7 +59,7 @@ export default function BaseDetail({ storeDetailInfo, closeDrawer, modalType }) 
             <FormItem field="position_index" label="店铺地区">
               <Cascader
                 showSearch
-                placeholder="please select"
+                placeholder="请选择店铺地区"
                 allowClear
                 options={cascaderOptionsArr}
               />
