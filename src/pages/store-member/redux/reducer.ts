@@ -26,6 +26,7 @@ export interface SearchTableState {
 }
 
 export default function(state = initialState, action) {
+  // console.log('action: ', action);
   switch (action.type) {
     case UPDATE_LIST: {
       const { data } = action.payload;

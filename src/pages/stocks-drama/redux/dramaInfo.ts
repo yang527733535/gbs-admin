@@ -10,7 +10,7 @@ interface ClickItem {
 
 const initialState: MyState = {
   show: false,
-  clickItem: {},
+  clickItem: null,
   labelData: [],
 };
 

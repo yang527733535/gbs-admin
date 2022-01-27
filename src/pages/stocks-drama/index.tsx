@@ -423,7 +423,6 @@ function SearchTable() {
                   style={{ width: 200 }}
                 >
                   {gb_app_gb_text_tag_labels.map((item) => {
-                    console.log('item: ', item);
                     return (
                       <Option key={item.label_value} value={item.label_value}>
                         {item.label_zh}

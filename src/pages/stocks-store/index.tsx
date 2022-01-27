@@ -135,7 +135,6 @@ function SearchTable({}) {
         }}
         footer={null}
         visible={show}
-    
         title="店铺详情"
         unmountOnExit={true}
         width="90vw"
@@ -168,8 +167,8 @@ function SearchTable({}) {
         />
       </Modal>
       <Breadcrumb style={{ marginBottom: 20 }}>
-        <Breadcrumb.Item>{locale['menu.list']}</Breadcrumb.Item>
-        <Breadcrumb.Item>{locale['menu.list.searchTable']}</Breadcrumb.Item>
+        <Breadcrumb.Item>运营管理</Breadcrumb.Item>
+        <Breadcrumb.Item>门店管理</Breadcrumb.Item>
       </Breadcrumb>
       <div>
         <Card style={{ marginBottom: 20 }}>

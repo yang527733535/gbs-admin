@@ -10,6 +10,7 @@ import { labelsApi } from '../../api/drama.js';
 export default function LoginForm() {
   const formRef = useRef<FormInstance>();
   const [errorMessage, setErrorMessage] = useState('');
+  const [loginType, setloginType] = useState<string>('password');
   const [loading, setLoading] = useState(false);
   const [rememberPassword, setRememberPassword] = useState(false);
 
@@ -69,31 +70,62 @@ export default function LoginForm() {
 
   return (
     <div className={styles['login-form-wrapper']}>
-      <div className={styles['login-form-title']}>登录 梦墨剧本杀</div>
-      <div className={styles['login-form-sub-title']}>登录 梦墨剧本杀</div>
+      <div className={styles['login-form-title']}>登录 </div>
+      {loginType === 'password' && (
+        <div className={styles['login-form-sub-title']}>梦墨·绘梦馆剧本杀 后台管理</div>
+      )}
+      {loginType === 'code' && (
+        <div className={styles['login-form-sub-title']}>请使用微信扫描二维码登录</div>
+      )}
+
       <div className={styles['login-form-error-msg']}>{errorMessage}</div>
-      <Form className={styles['login-form']} layout="vertical" ref={formRef}>
-        <Form.Item field="user_account" rules={[{ required: true, message: '用户名不能为空' }]}>
-          <Input prefix={<IconUser />} placeholder="用户名" onPressEnter={onSubmitClick} />
-        </Form.Item>
-        <Form.Item field="user_password" rules={[{ required: true, message: '密码不能为空' }]}>
-          <Input.Password prefix={<IconLock />} placeholder="密码" onPressEnter={onSubmitClick} />
-        </Form.Item>
-        <Space size={16} direction="vertical">
-          <div className={styles['login-form-password-actions']}>
-            <Checkbox checked={rememberPassword} onChange={setRememberPassword}>
-              记住密码
-            </Checkbox>
-            <Link>忘记密码？</Link>
-          </div>
-          <Button type="primary" long onClick={onSubmitClick} loading={loading}>
-            登录
-          </Button>
-          <Button type="text" long className={styles['login-form-register-btn']}>
-            注册账号
-          </Button>
-        </Space>
-      </Form>
+      <div
+        style={{ display: loginType === 'code' ? 'block' : 'none' }}
+        className={styles['mycodeform']}
+      >
+        扫码登录
+      </div>
+      <div style={{ display: loginType === 'password' ? 'block' : 'none' }}>
+        <Form className={styles['login-form']} layout="vertical" ref={formRef}>
+          <Form.Item field="user_account" rules={[{ required: true, message: '用户名不能为空' }]}>
+            <Input prefix={<IconUser />} placeholder="用户名" onPressEnter={onSubmitClick} />
+          </Form.Item>
+          <Form.Item field="user_password" rules={[{ required: true, message: '密码不能为空' }]}>
+            <Input.Password prefix={<IconLock />} placeholder="密码" onPressEnter={onSubmitClick} />
+          </Form.Item>
+          <Space size={16} direction="vertical">
+            <div className={styles['login-form-password-actions']}>
+              <Checkbox checked={rememberPassword} onChange={setRememberPassword}>
+                记住密码
+              </Checkbox>
+              <Link>忘记密码？</Link>
+            </div>
+            <Button type="primary" long onClick={onSubmitClick} loading={loading}>
+              登录
+            </Button>
+            <Button
+              onClick={() => {
+                setloginType('code');
+              }}
+              long
+              className={styles['login-form-register-btn']}
+            >
+              扫码登录
+            </Button>
+          </Space>
+        </Form>
+      </div>
+      {loginType === 'code' && (
+        <Button
+          onClick={() => {
+            setloginType('password');
+          }}
+          className={styles['login-form-register-btn']}
+          long
+        >
+          密码登录
+        </Button>
+      )}
     </div>
   );
 }

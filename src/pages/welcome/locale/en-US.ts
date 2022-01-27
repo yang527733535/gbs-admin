@@ -13,6 +13,6 @@ export default {
     'After getting the package name, you can install the material through the following command.',
   'welcome.step.content.result': 'Then, you get a workplace page easily.',
   'welcome.title.material': 'For more materials, please check the following link',
-  'welcome.link.material-pro': '梦墨剧本杀 material collection',
+  'welcome.link.material-pro': '梦墨·绘梦馆 material collection',
   'welcome.link.material-all': 'All materials',
 };

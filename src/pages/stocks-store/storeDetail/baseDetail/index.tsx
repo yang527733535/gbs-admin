@@ -56,7 +56,11 @@ export default function BaseDetail({ storeDetailInfo, closeDrawer, modalType }) 
             </FormItem>
           </Grid.Col>
           <Grid.Col span={6}>
-            <FormItem field="position_index" label="店铺地区">
+            <FormItem
+              rules={[{ required: true, message: '请填写店铺地区' }]}
+              field="position_index"
+              label="店铺地区"
+            >
               <Cascader
                 showSearch
                 placeholder="请选择店铺地区"
@@ -65,13 +69,32 @@ export default function BaseDetail({ storeDetailInfo, closeDrawer, modalType }) 
               />
             </FormItem>
           </Grid.Col>
+
           <Grid.Col span={6}>
             <FormItem
-              label="门店类型"
-              field="store_type"
-              rules={[{ required: false, message: '请填写门店类型' }]}
+              label="详细地址"
+              field="position_address"
+              rules={[{ required: true, message: '请填写详细地址' }]}
             >
-              <Input placeholder="请填写门店类型..." />
+              <Input placeholder="请填写详细地址..." />
+            </FormItem>
+          </Grid.Col>
+          <Grid.Col span={6}>
+            <FormItem
+              label="手机号码"
+              field="store_mobile"
+              rules={[{ required: true, message: '请填写店铺手机号码' }]}
+            >
+              <Input placeholder="请填写店铺手机号码..." />
+            </FormItem>
+          </Grid.Col>
+          <Grid.Col span={6}>
+            <FormItem
+              label="电话号码"
+              field="store_phone"
+              rules={[{ required: false, message: '请填写店铺电话号码' }]}
+            >
+              <Input placeholder="请填写店铺电话号码..." />
             </FormItem>
           </Grid.Col>
           <Grid.Col span={6}>
@@ -83,8 +106,6 @@ export default function BaseDetail({ storeDetailInfo, closeDrawer, modalType }) 
               <Input placeholder="请填写门店级别..." />
             </FormItem>
           </Grid.Col>
-        </Grid.Row>
-        <Grid.Row gutter={80}>
           <Grid.Col span={6}>
             <FormItem
               label="开业日期"
@@ -101,18 +122,20 @@ export default function BaseDetail({ storeDetailInfo, closeDrawer, modalType }) 
           </Grid.Col>
           <Grid.Col span={6}>
             <FormItem
-              label="详细地址"
-              field="position_address"
-              rules={[{ required: true, message: '请填写详细地址' }]}
+              label="门店类型"
+              field="store_type"
+              rules={[{ required: false, message: '请填写门店类型' }]}
             >
-              <Input placeholder="请填写详细地址..." />
+              <Input placeholder="请填写门店类型..." />
             </FormItem>
           </Grid.Col>
+        </Grid.Row>
+        <Grid.Row gutter={80}>
           <Grid.Col span={6}>
             <FormItem
               label="经度坐标"
               field="position_x"
-              rules={[{ required: false, message: '请填写经度坐标' }]}
+              rules={[{ required: true, message: '请填写经度坐标' }]}
             >
               <Input placeholder="请填写经度坐标..." />
             </FormItem>
@@ -121,7 +144,7 @@ export default function BaseDetail({ storeDetailInfo, closeDrawer, modalType }) 
             <FormItem
               label="纬度坐标"
               field="position_y"
-              rules={[{ required: false, message: '请填写纬度坐标' }]}
+              rules={[{ required: true, message: '请填写纬度坐标' }]}
             >
               <Input placeholder="请填写纬度坐标..." />
             </FormItem>

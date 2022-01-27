@@ -9,7 +9,7 @@
     "noUnusedLocals": true,
     "module": "es2020",
     "target": "es5",
-    "declaration": true,
+    "declaration": false,
     "outDir": "es",
     "lib": ["es5", "dom"],
     "types": ["node", "jest"],

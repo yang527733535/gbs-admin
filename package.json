@@ -4,8 +4,9 @@
   "description": "梦墨绘梦馆",
   "scripts": {
     "prepublishOnly": "npm run build",
-    "dev": "arco-scripts dev:site --port 9090",
+    "dev": "arco-scripts dev:site --port 8005",
     "build": "arco-scripts build:site",
+    "addfeat":"git add .&& git commit -m '💥 feat(模块):新增功能' && git push origin",
     "eslint": "eslint src/ --fix --cache --quiet --ext .js,.jsx,.ts,.tsx",
     "stylelint": "stylelint 'components/**/*.less' --fix --cache"
   },

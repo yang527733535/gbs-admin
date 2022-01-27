@@ -11,7 +11,7 @@ export default () => {
   return (
     <div className={styles.container}>
       <div className={styles.logo}>
-        <div className={styles['logo-text']}>梦墨剧本杀</div>
+        <div className={styles['logo-text']}>梦墨·绘梦馆</div>
       </div>
       <div className={styles.banner}>
         <div className={styles['banner-inner']}>

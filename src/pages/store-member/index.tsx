@@ -9,6 +9,7 @@ import {
   Modal,
   Tabs,
   Typography,
+  Image,
 } from '@arco-design/web-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { memberList } from '../../api/user.js';
@@ -19,7 +20,7 @@ import {
   UPDATE_PAGINATION,
 } from './redux/actionTypes';
 import AddForm from './form/index.jsx';
-import { ReducerState } from '../../redux';
+import { ReducerState } from './redux';
 import styles from './style/index.module.less';
 
 const TabPane = Tabs.TabPane;
@@ -48,7 +49,15 @@ function SearchTable() {
       title: '会员头像',
       dataIndex: 'member_face',
       render: (item) => {
-        return <img style={{ width: 50, borderRadius: 5, height: 50 }} src={item} alt="" />;
+        return (
+          <Image
+            width={50}
+            height={50}
+            style={{ width: 50, borderRadius: 5, height: 50 }}
+            src={item}
+            alt=""
+          />
+        );
       },
     },
     {
@@ -107,8 +116,6 @@ function SearchTable() {
     fetchData();
   }, []);
 
-  useEffect(() => {}, []);
-
   function fetchData(current = 1, pageSize = 10, params = {}) {
     const data = memberList({
       page: current,
@@ -118,6 +125,7 @@ function SearchTable() {
       user_name,
       user_status,
     });
+    dispatch({ type: UPDATE_LOADING, payload: { loading: true } });
     data.then((res) => {
       console.log(res);
       const { data, paginator } = res;
@@ -167,6 +175,7 @@ function SearchTable() {
               onClick={() => {
                 // setvisitModal(true);
               }}
+              disabled={true}
               type="primary"
             >
               添加会员

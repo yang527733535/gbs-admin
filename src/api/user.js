@@ -64,3 +64,12 @@ export function RoleTreeApi() {
     method: 'GET',
   });
 }
+
+// 修改密码
+export function reqEditPwd(data) {
+  return Service({
+    url: '/system/worker/set-password',
+    data,
+    method: 'POST',
+  });
+}

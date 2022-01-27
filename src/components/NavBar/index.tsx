@@ -8,7 +8,8 @@ import {
   Dropdown,
   Menu,
   Space,
-  Image
+  Image,
+  Modal,
 } from '@arco-design/web-react';
 import { IconSunFill, IconMoonFill } from '@arco-design/web-react/icon';
 import { useSelector, useDispatch } from 'react-redux';
@@ -19,13 +20,13 @@ import { resLogout } from '../../api/user.js';
 import MessageBox from '../MessageBox';
 
 import styles from './style/index.module.less';
-
+import PwdForm from './PwdForm';
 function Navbar() {
   const locale = useLocale();
   const theme = useSelector((state: ReducerState) => state.global.theme);
   const dispatch = useDispatch();
   const [userInfo, setuserInfo] = useState(null);
-
+  const [showPwdModal, setshowPwdModal] = useState<boolean>(false);
   useEffect(() => {
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
     if (userInfo) {
@@ -47,19 +48,34 @@ function Navbar() {
     if (key === 'logout') {
       logout();
     }
+    if (key === 'editpwd') {
+      setshowPwdModal(true);
+    }
   }
-
+  const closeModal = () => {
+    setshowPwdModal(false);
+  };
   return (
     <div className={styles.navbar}>
+      <Modal
+        unmountOnExit
+        onCancel={() => {
+          setshowPwdModal(false);
+        }}
+        footer={null}
+        visible={showPwdModal}
+        title="修改密码"
+      >
+        <PwdForm closeModal={closeModal}></PwdForm>
+      </Modal>
       <div className={styles.left}>
         <Space size={8}>
-          {/* <Logo /> */}
           <Image
-          src='https://gbs.toptian.com/image/show?file=drama_I00111-1642061758.png'
-           width={50}
+            src="https://gbs.toptian.com/image/show?file=drama_I00111-1642061758.png"
+            width={50}
           ></Image>
           <Typography.Title style={{ margin: 0, fontSize: 18 }} heading={5}>
-          梦墨剧本杀
+            梦墨·绘梦馆
           </Typography.Title>
         </Space>
       </div>
@@ -122,7 +138,9 @@ function Navbar() {
               trigger="click"
               droplist={
                 <Menu onClickMenuItem={onMenuItemClick}>
-                  <Menu.Item key="logout">登出</Menu.Item>
+                  <Menu.Item key="info">个人信息</Menu.Item>
+                  <Menu.Item key="editpwd">修改密码</Menu.Item>
+                  <Menu.Item key="logout">退出登录</Menu.Item>
                 </Menu>
               }
             >
