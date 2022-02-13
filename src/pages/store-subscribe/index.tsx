@@ -7,27 +7,22 @@ import {
   Card,
   Space,
   Modal,
-  Tabs,
   Typography,
 } from '@arco-design/web-react';
 import { useSelector, useDispatch } from 'react-redux';
-import { userList } from '../../api/user.js';
+import { subscribeSList } from '../../api/user.js';
 import {
   UPDATE_FORM_PARAMS,
   UPDATE_LIST,
   UPDATE_LOADING,
   UPDATE_PAGINATION,
 } from './redux/actionTypes';
-import AddForm from './form';
-import useLocale from '../../utils/useLocale';
-import { ReducerState } from '../../redux';
+import AddForm from './form/index.jsx';
+import { ReducerState } from './redux';
 import styles from './style/index.module.less';
 
-const TabPane = Tabs.TabPane;
 
 function SearchTable() {
-  const locale = useLocale();
-  const [tabkey, settabkey] = useState('user');
   const [visitModal, setvisitModal] = useState(false);
   const [user_account, setuser_account] = useState('');
   const [user_mobile, setuser_mobile] = useState('');
@@ -35,47 +30,58 @@ function SearchTable() {
   const [user_status, setuser_status] = useState('');
   const columns = [
     {
-      title: '用户名称',
-      dataIndex: 'user_name',
+      title: '预定ID',
+      dataIndex: 'subscribe_id',
     },
     {
-      title: '账号',
-      dataIndex: 'user_account',
+      title: '剧本',
+      dataIndex: 'gb_code',
     },
     {
-      title: '邮箱',
-      dataIndex: 'user_email',
-      render: (value) => <Typography.Text copyable>{value}</Typography.Text>,
+      title: '人数',
+      dataIndex: 'subscribe_people',
     },
     {
-      title: '手机号码',
-      dataIndex: 'user_mobile',
+      title: 'peddle_is',
+      dataIndex: 'peddle_is',
     },
     {
-      title: locale['searchTable.columns.createdTime'],
-      dataIndex: 'created_time',
+      title: 'peddle_text',
+      dataIndex: 'peddle_text',
     },
     {
-      // title: locale['searchTable.columns.deadline'],
-      title: '更新时间',
-      dataIndex: 'updated_time',
+      title: 'room_code',
+      dataIndex: 'room_code',
     },
     {
-      title: locale['searchTable.columns.operations'],
-      dataIndex: 'operations',
-      render: () => (
-        <div className={styles.operations}>
-          <Button type="text" size="small">
-            {locale['searchTable.columns.operations.view']}
-          </Button>
-          <Button type="text" size="small">
-            {locale['searchTable.columns.operations.update']}
-          </Button>
-          <Button type="text" status="danger" size="small">
-            {locale['searchTable.columns.operations.delete']}
-          </Button>
-        </div>
-      ),
+      title: 'subscribe_dm',
+      dataIndex: 'subscribe_dm',
+    },
+    {
+      title: '开始时间',
+      dataIndex: 'subscribe_start',
+    },
+    {
+      title: '结束时间',
+      dataIndex: 'subscribe_end',
+    },
+
+    {
+      title: '预定member',
+      dataIndex: 'subscribe_member',
+    },
+    {
+      title: 'subscribe_note',
+      dataIndex: 'subscribe_note',
+    },
+
+    {
+      title: 'subscribe_remarks',
+      dataIndex: 'subscribe_remarks',
+    },
+    {
+      title: '状态',
+      dataIndex: 'subscribe_status',
     },
   ];
 
@@ -87,11 +93,8 @@ function SearchTable() {
     fetchData();
   }, []);
 
-  useEffect(() => {}, []);
-
   function fetchData(current = 1, pageSize = 10, params = {}) {
-    // const data = dispatch({ type: UPDATE_LOADING, payload: { loading: true } });
-    const data = userList({
+    const data = subscribeSList({
       page: current,
       page_size: pageSize,
       user_account,
@@ -99,6 +102,7 @@ function SearchTable() {
       user_name,
       user_status,
     });
+    dispatch({ type: UPDATE_LOADING, payload: { loading: true } });
     data.then((res) => {
       console.log(res);
       const { data, paginator } = res;
@@ -117,22 +121,6 @@ function SearchTable() {
       dispatch({ type: UPDATE_LOADING, payload: { loading: false } });
       dispatch({ type: UPDATE_FORM_PARAMS, payload: { params } });
     });
-    // data.then((res) => {
-    //   console.log('res: ', res);
-    // });
-
-    // dispatch({ type: UPDATE_LOADING, payload: { loading: false } });
-    // dispatch({ type: UPDATE_FORM_PARAMS, payload: { params } });
-    // axios
-    //   .get(`/api/policy`, {
-    //     params: {
-    //       page: current,
-    //       pageSize,
-    //       ...params,
-    //     },
-    //   })
-    //   .then((res) => {
-    //   });
   }
 
   function onChangeTable(pagination) {
@@ -143,7 +131,7 @@ function SearchTable() {
   return (
     <div className={styles.container}>
       <Modal
-        title="添加员工"
+        title="添加会员"
         footer={null}
         onCancel={() => {
           setvisitModal(false);
@@ -155,26 +143,27 @@ function SearchTable() {
       </Modal>
       <Breadcrumb style={{ marginBottom: 20 }}>
         <Breadcrumb.Item>运营管理</Breadcrumb.Item>
-        <Breadcrumb.Item>人员管理</Breadcrumb.Item>
+        <Breadcrumb.Item>预约组局</Breadcrumb.Item>
       </Breadcrumb>
       <div>
         <Card style={{ marginBottom: 20 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Button
+            {/* <Button
               onClick={() => {
-                setvisitModal(true);
+                // setvisitModal(true);
               }}
+              disabled={true}
               type="primary"
             >
-              添加用户
-            </Button>
+              添加会员
+            </Button> */}
             <div>
               <Space>
                 <Input
                   onChange={(e) => {
                     setuser_account(e);
                   }}
-                  placeholder="请输入账号"
+                  placeholder="请输入店铺"
                   style={{ width: 200 }}
                 />
                 <Input
@@ -222,38 +211,16 @@ function SearchTable() {
         </Card>
       </div>
       <Card bordered={false}>
-        <Tabs
-          onClickTab={(key: any) => {
-            console.log('key: ', key);
-            settabkey(key);
-          }}
-          activeTab={tabkey}
-        >
-          <TabPane key="user" title="普通员工">
-            <Typography.Paragraph>
-              <Table
-                rowKey="user_account"
-                loading={loading}
-                onChange={onChangeTable}
-                pagination={pagination}
-                columns={columns}
-                data={data}
-              />
-            </Typography.Paragraph>
-          </TabPane>
-          {/* <TabPane key="worker" title="职员">
-            <Typography.Paragraph>
-              <Table
-                rowKey="user_account"
-                loading={loading}
-                onChange={onChangeTable}
-                pagination={pagination}
-                columns={columns}
-                data={data}
-              />
-            </Typography.Paragraph>
-          </TabPane> */}
-        </Tabs>
+        <Typography.Paragraph>
+          <Table
+            rowKey="subscribe_id"
+            loading={loading}
+            onChange={onChangeTable}
+            pagination={pagination}
+            columns={columns}
+            data={data}
+          />
+        </Typography.Paragraph>
       </Card>
     </div>
   );

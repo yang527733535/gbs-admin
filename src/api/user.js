@@ -28,6 +28,14 @@ export function memberList(data) {
   });
 }
 
+// 预约组局列表
+export function subscribeSList(data) {
+  return Service({
+    url: '/v1/subscribe/list',
+    data,
+  });
+}
+
 export function dmList(data) {
   return Service({
     url: '/system/worker/dm-list',
@@ -52,7 +60,7 @@ export function resLogout() {
 
 export function registerApi(data) {
   return Service({
-    url: '/system/user/register',
+    url: '/system/user/worker-add',
     data,
   });
 }
