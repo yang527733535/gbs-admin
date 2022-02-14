@@ -17,76 +17,104 @@ import {
   UPDATE_LOADING,
   UPDATE_PAGINATION,
 } from './redux/actionTypes';
-import AddForm from './form/index.jsx';
+import EditForm from './form/index.jsx';
+import CancelForm from './cancelform/index.jsx';
 import { ReducerState } from './redux';
 import styles from './style/index.module.less';
 
-
 function SearchTable() {
-  const [visitModal, setvisitModal] = useState(false);
-  const [user_account, setuser_account] = useState('');
-  const [user_mobile, setuser_mobile] = useState('');
-  const [user_name, setuser_name] = useState('');
-  const [user_status, setuser_status] = useState('');
+  const [store_code, setstore_code] = useState('');
+  const [gb_code, setgb_code] = useState('');
+  const [subscribe_dm, setsubscribe_dm] = useState('');
+  const [subscribe_member, setsubscribe_member] = useState('');
+  const [editFormModal, seteditFormModal] = useState(false);
+  const [cancelFormModal, setcancelFormModal] = useState(false);
+  const [clickItem, setclickItem] = useState('');
   const columns = [
     {
       title: '预定ID',
       dataIndex: 'subscribe_id',
     },
     {
-      title: '剧本',
+      title: '剧本编码',
       dataIndex: 'gb_code',
-    },
-    {
-      title: '人数',
-      dataIndex: 'subscribe_people',
-    },
-    {
-      title: 'peddle_is',
-      dataIndex: 'peddle_is',
-    },
-    {
-      title: 'peddle_text',
-      dataIndex: 'peddle_text',
-    },
-    {
-      title: 'room_code',
-      dataIndex: 'room_code',
-    },
-    {
-      title: 'subscribe_dm',
-      dataIndex: 'subscribe_dm',
     },
     {
       title: '开始时间',
       dataIndex: 'subscribe_start',
     },
+    // {
+    //   title: '结束时间',
+    //   dataIndex: 'subscribe_end',
+    // },
     {
-      title: '结束时间',
-      dataIndex: 'subscribe_end',
-    },
-
-    {
-      title: '预定member',
+      title: '会员账号',
       dataIndex: 'subscribe_member',
     },
     {
-      title: 'subscribe_note',
-      dataIndex: 'subscribe_note',
-    },
-
-    {
-      title: 'subscribe_remarks',
-      dataIndex: 'subscribe_remarks',
+      title: '预约人数',
+      dataIndex: 'subscribe_people',
     },
     {
-      title: '状态',
+      title: '首页推荐',
+      dataIndex: 'peddle_is',
+    },
+    {
+      title: '推荐文本',
+      dataIndex: 'peddle_text',
+    },
+    {
+      title: '房间',
+      dataIndex: 'room_code',
+    },
+    {
+      title: '预约状态',
       dataIndex: 'subscribe_status',
     },
+    {
+      title: '预约DM',
+      dataIndex: 'subscribe_dm',
+    },
+    {
+      title: '操作',
+      render: (_, item) => {
+        return (
+          <Space>
+            <Button
+              onClick={async () => {
+                seteditFormModal(true);
+                setclickItem(item);
+              }}
+              size="mini"
+              type="primary"
+            >
+              修改
+            </Button>
+            <Button
+              onClick={async () => {
+                setcancelFormModal(true);
+                setclickItem(item);
+              }}
+              status="danger"
+              size="mini"
+              type="primary"
+            >
+              取消
+            </Button>
+          </Space>
+        );
+      },
+    },
+    // {
+    //   title: '会员备注',
+    //   dataIndex: 'subscribe_note',
+    // },
+    // {
+    //   title: '店家备注',
+    //   dataIndex: 'subscribe_remarks',
+    // },
   ];
-
   const searchTableState = useSelector((state: ReducerState) => state.searchTable);
-
   const { data, pagination, loading, formParams } = searchTableState;
   const dispatch = useDispatch();
   useEffect(() => {
@@ -97,10 +125,10 @@ function SearchTable() {
     const data = subscribeSList({
       page: current,
       page_size: pageSize,
-      user_account,
-      user_mobile,
-      user_name,
-      user_status,
+      store_code,
+      gb_code,
+      subscribe_dm,
+      subscribe_member,
     });
     dispatch({ type: UPDATE_LOADING, payload: { loading: true } });
     data.then((res) => {
@@ -131,15 +159,38 @@ function SearchTable() {
   return (
     <div className={styles.container}>
       <Modal
-        title="添加会员"
+        title="取消预约"
         footer={null}
         onCancel={() => {
-          setvisitModal(false);
+          setcancelFormModal(false);
         }}
         style={{ width: 600 }}
-        visible={visitModal}
+        visible={cancelFormModal}
       >
-        <AddForm name="XIXI" />
+        <CancelForm
+          closeModalAndReqData={() => {
+            setcancelFormModal(false);
+            fetchData();
+          }}
+          clickitem={clickItem}
+        ></CancelForm>
+      </Modal>
+      <Modal
+        title="修改预约"
+        footer={null}
+        onCancel={() => {
+          seteditFormModal(false);
+        }}
+        style={{ width: 600 }}
+        visible={editFormModal}
+      >
+        <EditForm
+          closeModalAndReqData={() => {
+            seteditFormModal(false);
+            fetchData();
+          }}
+          clickitem={clickItem}
+        ></EditForm>
       </Modal>
       <Breadcrumb style={{ marginBottom: 20 }}>
         <Breadcrumb.Item>运营管理</Breadcrumb.Item>
@@ -161,38 +212,38 @@ function SearchTable() {
               <Space>
                 <Input
                   onChange={(e) => {
-                    setuser_account(e);
+                    setstore_code(e);
                   }}
                   placeholder="请输入店铺"
                   style={{ width: 200 }}
                 />
                 <Input
                   onChange={(e) => {
-                    setuser_mobile(e);
+                    setgb_code(e);
                   }}
-                  placeholder="请输入手机号码"
+                  placeholder="请输入剧本编码"
                   style={{ width: 200 }}
                 />
                 <Input
                   onChange={(e) => {
-                    setuser_name(e);
+                    setsubscribe_dm(e);
                   }}
-                  placeholder="请输入用户名"
+                  placeholder="请输入预约DM"
                   style={{ width: 200 }}
                 />
                 <Input
                   onChange={(e) => {
-                    setuser_status(e);
+                    setsubscribe_member(e);
                   }}
-                  placeholder="用户状态"
+                  placeholder="预定账号"
                   style={{ width: 200 }}
                 />
                 <Button
                   onClick={() => {
-                    setuser_account('');
-                    setuser_mobile('');
-                    setuser_name('');
-                    setuser_status('');
+                    setstore_code('');
+                    setgb_code('');
+                    setsubscribe_dm('');
+                    setsubscribe_member('');
                   }}
                 >
                   重置

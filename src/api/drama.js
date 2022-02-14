@@ -257,3 +257,20 @@ export function reqDeleteStoreDrama(data) {
   });
 }
 
+// 修改预约
+export function reqUpdateDesc(data) {
+  return Service({
+    url: '/v1/subscribe/edit',
+    data,
+    method: 'post',
+  });
+}
+
+// 取消预约
+export function reqCancelDesc(data) {
+  return Service({
+    url: '/v1/subscribe/cancel',
+    data,
+    method: 'post',
+  });
+}
