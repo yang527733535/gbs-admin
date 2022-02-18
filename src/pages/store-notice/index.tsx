@@ -1,84 +1,102 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Table,
-  Button,
-  Input,
-  Breadcrumb,
-  Card,
-  Space,
-  Modal,
-  InputNumber,
-} from '@arco-design/web-react';
+import { Table, Button, Input, Breadcrumb, Card, Space, Modal } from '@arco-design/web-react';
 import { useSelector, useDispatch } from 'react-redux';
-import { CarList } from '../../api/drama.js';
+import { getUserList } from '../../api/user.js';
+import { noticeList } from '../../api/drama.js';
 import {
   UPDATE_FORM_PARAMS,
   UPDATE_LIST,
   UPDATE_LOADING,
   UPDATE_PAGINATION,
 } from './redux/actionTypes';
+import AddForm from './form/index.jsx';
 import useLocale from '../../utils/useLocale';
 import { ReducerState } from '../../redux';
-
 import styles from './style/index.module.less';
-import AddForm from './form/index.jsx';
 
 function SearchTable({}) {
   const locale = useLocale();
-  const [visitModal, setvisitModal] = useState(false);
+  const [UserList, setUserList] = useState<any[]>([]);
+  const [visitModal, setvisitModal] = useState<boolean>();
+  const [notice_title, setnotice_title] = useState<string>('');
+  const [store_code, setstore_code] = useState<string>('');
+  const [notice_type, setnotice_type] = useState<string>('');
   const [clickItem, setclickItem] = useState(null);
-  const [store_code, setstore_code] = useState(null);
-  const [gb_code, setgb_code] = useState(null);
-  const [game_people, setgame_people] = useState(null);
   const columns = [
     {
-      title: '店铺名称',
-      dataIndex: 'store_name',
+      title: '公告名称',
+      dataIndex: 'notice_title',
     },
-
     {
-      title: '店铺地址',
-      dataIndex: 'position_address',
+      title: '店铺编码',
+      dataIndex: 'store_code',
+    },
+    {
+      title: '公告日期',
+      dataIndex: 'notice_date',
+    },
+    {
+      title: '公告类型',
+      dataIndex: 'notice_type',
+      render: (item) => {
+        if (item === 'notice_system') {
+          return '系统公告';
+        }
+        if (item === 'notice_store') {
+          return '店铺公告';
+        }
+      },
     },
     {
       title: locale['searchTable.columns.createdTime'],
-      dataIndex: 'created_time',
+      dataIndex: 'create_time',
     },
     {
       title: '更新时间',
-      dataIndex: 'updated_time',
+      dataIndex: 'update_time',
     },
     {
-      title: locale['searchTable.columns.operations'],
-      render: (col, data) => (
-        <Button
-          onClick={() => {
-            console.log(col, data);
-            setclickItem(data);
-            setvisitModal(true);
-          }}
-          size="small"
-        >
-          {locale['searchTable.columns.operations.update']}
-        </Button>
-      ),
+      title: '操作',
+      render: (_, item) => {
+        return (
+          <Button
+            onClick={() => {
+              setclickItem(item);
+              setvisitModal(true);
+            }}
+            type="primary"
+            size="mini"
+          >
+            修改
+          </Button>
+        );
+      },
     },
   ];
 
   const searchTableState = useSelector((state: ReducerState) => state.searchTable);
-  const { data, pagination, loading, formParams } = searchTableState;
+
+  const { pagination, loading, data, formParams } = searchTableState;
   const dispatch = useDispatch();
   useEffect(() => {
     fetchData();
   }, []);
+  useEffect(() => {
+    getUserListApi();
+  }, []);
+
+  const getUserListApi = async () => {
+    const data = await getUserList();
+    setUserList(data.data);
+  };
 
   function fetchData(current = 1, pageSize = 10, params = {}) {
-    const data = CarList({
+    const data = noticeList({
       page: current,
       page_size: pageSize,
+      notice_type,
+      notice_title,
       store_code,
-      gb_code,
-      game_people,
     });
     data.then((res) => {
       const { data, paginator } = res;
@@ -107,26 +125,31 @@ function SearchTable({}) {
   return (
     <div className={styles.container}>
       <Modal
-        title={clickItem === null ? '添加组局' : '修改组局'}
+        title="添加公告"
         footer={null}
+        unmountOnExit
         onCancel={() => {
           setvisitModal(false);
         }}
-        unmountOnExit
-        style={{ width: 900, minWidth: 900 }}
+        afterClose={() => {
+          setclickItem(null);
+        }}
+        style={{ width: 600 }}
         visible={visitModal}
       >
         <AddForm
-          clickItem={clickItem}
-          closeModalAndReqTable={() => {
+          fetchData={fetchData}
+          closeModalAndReqNewTableData={() => {
             setvisitModal(false);
             fetchData();
           }}
+          UserList={UserList}
+          clickItem={clickItem}
         />
       </Modal>
       <Breadcrumb style={{ marginBottom: 20 }}>
-        <Breadcrumb.Item>店铺运营</Breadcrumb.Item>
-        <Breadcrumb.Item>店铺组局</Breadcrumb.Item>
+        <Breadcrumb.Item>运营管理</Breadcrumb.Item>
+        <Breadcrumb.Item>人员管理</Breadcrumb.Item>
       </Breadcrumb>
       <div>
         <Card style={{ marginBottom: 20 }}>
@@ -134,42 +157,45 @@ function SearchTable({}) {
             <Button
               onClick={() => {
                 setvisitModal(true);
-                setclickItem(null);
               }}
               type="primary"
-              // style={{ marginRight: 20 }}
             >
-              添加组局
+              添加公告
             </Button>
             <div>
-              <Space style={{ marginLeft: 20 }} wrap>
+              <Space>
                 <Input
-                  value={store_code}
+                  onChange={(e) => {
+                    setnotice_title(e);
+                  }}
+                  value={notice_title}
+                  placeholder="请输入公告标题"
+                  style={{ width: 200 }}
+                />
+                <Input
                   onChange={(e) => {
                     setstore_code(e);
                   }}
+                  value={store_code}
                   placeholder="请输入店铺编码"
                   style={{ width: 200 }}
                 />
                 <Input
-                  value={gb_code}
                   onChange={(e) => {
-                    setgb_code(e);
+                    setnotice_type(e);
                   }}
-                  placeholder="请输入剧本编码"
+                  placeholder="请输入公告类型"
                   style={{ width: 200 }}
                 />
-                <InputNumber
-                  min={1}
-                  value={game_people}
-                  onChange={(e) => {
-                    setgame_people(e);
+                <Button
+                  onClick={() => {
+                    setnotice_title('');
+                    setstore_code('');
+                    setnotice_type('');
                   }}
-                  placeholder="请输入玩家人数"
-                  style={{ width: 200 }}
-                />
-
-                <Button onClick={() => {}}>重置</Button>
+                >
+                  重置
+                </Button>
                 <Button
                   onClick={() => {
                     fetchData();
@@ -185,12 +211,12 @@ function SearchTable({}) {
       </div>
       <Card bordered={false}>
         <Table
-          rowKey="user_account"
+          rowKey="notice_title"
           loading={loading}
+          data={data}
           onChange={onChangeTable}
           pagination={pagination}
           columns={columns}
-          data={data}
         />
       </Card>
     </div>

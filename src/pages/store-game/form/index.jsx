@@ -1,35 +1,17 @@
 import React, { useRef, useEffect, useCallback, useState } from 'react';
 import {
   Form,
-  AutoComplete,
   Spin,
   Input,
   Space,
   Select,
-  TreeSelect,
   Button,
-  Checkbox,
-  Switch,
-  Radio,
-  Cascader,
   Message,
   Avatar,
   InputNumber,
-  Rate,
-  Slider,
-  Upload,
-  DatePicker,
-  Modal,
 } from '@arco-design/web-react';
 import { IconDelete } from '@arco-design/web-react/icon';
-import {
-  addDrama,
-  shopList,
-  addGame,
-  updateShop,
-  regionsList,
-  dramaList,
-} from '../../../api/drama.js';
+import { shopList, addGame, updateShop, regionsList, dramaList } from '../../../api/drama.js';
 import { dmList, memberList } from '../../../api/user.js';
 import debounce from 'lodash/debounce';
 
@@ -60,10 +42,10 @@ function Shop({ closeModalAndReqTable, clickItem }) {
 
   // 剧本列表
   const [options, setOptions] = useState([]);
-  // 主持人列表
-  const [dmListOption, setdmListOption] = useState([]);
   // 剧本的fetching
   const [fetching, setFetching] = useState(false);
+  // 主持人列表
+  const [dmListOption, setdmListOption] = useState([]);
   // 主持人的fetching
   const [dmfetching, setdmfetching] = useState(false);
 
@@ -140,7 +122,7 @@ function Shop({ closeModalAndReqTable, clickItem }) {
   const debouncedFetchDM = useCallback(
     debounce((inputValue) => {
       refFetchId.current = Date.now();
-      setFetching(true);
+      setdmfetching(true);
       setOptions([]);
       const param = { user_nick: inputValue };
       const res = dmList(param);
@@ -156,7 +138,7 @@ function Shop({ closeModalAndReqTable, clickItem }) {
           ),
           value: dm.user_account,
         }));
-        setFetching(false);
+        setdmfetching(false);
         setdmListOption(options);
       });
     }, 500),
@@ -272,7 +254,7 @@ function Shop({ closeModalAndReqTable, clickItem }) {
               return option.children.props.children[1];
             }}
             notFoundContent={
-              fetching ? (
+              dmfetching ? (
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Spin style={{ margin: 12 }} />
                 </div>

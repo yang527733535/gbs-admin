@@ -173,7 +173,7 @@ function SearchTable() {
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <Button
               onClick={() => {
-                // setvisitModal(true);
+                setvisitModal(true);
               }}
               disabled={true}
               type="primary"

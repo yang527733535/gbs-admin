@@ -274,3 +274,25 @@ export function reqCancelDesc(data) {
     method: 'post',
   });
 }
+
+export function noticeList(data) {
+  return Service({
+    url: '/v1/notice/list',
+    data,
+    method: 'post',
+  });
+}
+export function Addnotice(data) {
+  return Service({
+    url: '/v1/notice/add',
+    data,
+    method: 'post',
+  });
+}
+export function Editnotice(data) {
+  return Service({
+    url: '/v1/notice/edit',
+    data,
+    method: 'post',
+  });
+}
