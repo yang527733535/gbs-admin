@@ -10,7 +10,7 @@ import {
   InputNumber,
 } from '@arco-design/web-react';
 import { useSelector, useDispatch } from 'react-redux';
-import { CarList } from '../../api/drama.js';
+import { CarList, shopList } from '../../api/drama.js';
 import {
   UPDATE_FORM_PARAMS,
   UPDATE_LIST,
@@ -66,7 +66,6 @@ function SearchTable({}) {
   ];
 
   const searchTableState = useSelector((state: ReducerState) => state.searchTable);
-
   const { data, pagination, loading, formParams } = searchTableState;
   const dispatch = useDispatch();
   useEffect(() => {
@@ -104,6 +103,15 @@ function SearchTable({}) {
     const { current, pageSize } = pagination;
     fetchData(current, pageSize, formParams);
   }
+
+  useEffect(() => {
+    GetAllSelectData();
+  }, []);
+
+  const GetAllSelectData = async () => {
+    const data = await Promise.all([shopList()]);
+    console.log('data: ', data);
+  };
 
   return (
     <div className={styles.container}>

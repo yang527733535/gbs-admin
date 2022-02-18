@@ -1,7 +1,8 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useCallback, useState } from 'react';
 import {
   Form,
   AutoComplete,
+  Spin,
   Input,
   Space,
   Select,
@@ -12,6 +13,7 @@ import {
   Radio,
   Cascader,
   Message,
+  Avatar,
   InputNumber,
   Rate,
   Slider,
@@ -19,8 +21,17 @@ import {
   DatePicker,
   Modal,
 } from '@arco-design/web-react';
-import { IconArrowRise, IconArrowFall, IconDelete } from '@arco-design/web-react/icon';
-import { addDrama, addGame, updateShop, regionsList } from '../../../api/drama.js';
+import { IconDelete } from '@arco-design/web-react/icon';
+import {
+  addDrama,
+  shopList,
+  addGame,
+  updateShop,
+  regionsList,
+  dramaList,
+} from '../../../api/drama.js';
+import { dmList, memberList } from '../../../api/user.js';
+import debounce from 'lodash/debounce';
 
 const FormItem = Form.Item;
 
@@ -41,9 +52,27 @@ const noLabelLayout = {
 
 function Shop({ closeModalAndReqTable, clickItem }) {
   const formRef = useRef();
-  const [size, setSize] = useState('default');
+  const size = 'default';
+  const [shopListOption, setshopListOption] = useState([]);
+  const [shopListLoading, setshopListLoading] = useState(true);
+
   const [cascaderOptionsArr, setcascaderOptionsArr] = useState([]);
-  console.log(clickItem);
+
+  // 剧本列表
+  const [options, setOptions] = useState([]);
+  // 主持人列表
+  const [dmListOption, setdmListOption] = useState([]);
+  // 剧本的fetching
+  const [fetching, setFetching] = useState(false);
+  // 主持人的fetching
+  const [dmfetching, setdmfetching] = useState(false);
+
+  //  玩家的列表
+  const [VipListOption, setVipListOption] = useState([]);
+  // 主持人的fetching
+  const [vipfetching, setvipfetching] = useState(false);
+
+  const refFetchId = useRef(null);
   useEffect(() => {
     formRef.current.setFieldsValue(clickItem);
   }, []);
@@ -54,7 +83,6 @@ function Shop({ closeModalAndReqTable, clickItem }) {
   useEffect(() => {
     const regionsData = regionsList();
     regionsData.then((res) => {
-      console.log('res: ', res);
       const { data } = res;
       const mapTree = (org) => {
         const haveChildren = Array.isArray(org.region_children) && org.region_children.length > 0;
@@ -67,11 +95,107 @@ function Shop({ closeModalAndReqTable, clickItem }) {
       };
       let arr = [];
       arr = data.map((org) => mapTree(org));
-      console.log(arr);
       setcascaderOptionsArr(arr);
     });
   }, []);
+
+  const getShopList = async () => {
+    const { data } = await shopList();
+    setshopListLoading(false);
+    setshopListOption(data);
+  };
+  useEffect(() => {
+    getShopList();
+  }, []);
+  // shopList
   // regionsList
+
+  // debouncedFetchVip
+
+  const debouncedFetchDrama = useCallback(
+    debounce((inputValue) => {
+      refFetchId.current = Date.now();
+      setFetching(true);
+      setOptions([]);
+      const param = { gb_title: inputValue };
+      const res = dramaList(param);
+      res.then((data) => {
+        const options = data.data.map((drama) => ({
+          label: (
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <Avatar shape="square" size={24} style={{ marginLeft: 6, marginRight: 12 }}>
+                <img alt="avatar" src={drama.gb_cover} />
+              </Avatar>
+              {`${drama.gb_title}`}
+            </div>
+          ),
+          value: drama.gb_code,
+        }));
+        setFetching(false);
+        setOptions(options);
+      });
+    }, 500),
+    []
+  );
+  const debouncedFetchDM = useCallback(
+    debounce((inputValue) => {
+      refFetchId.current = Date.now();
+      setFetching(true);
+      setOptions([]);
+      const param = { user_nick: inputValue };
+      const res = dmList(param);
+      res.then((data) => {
+        const options = data.data.map((dm) => ({
+          label: (
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <Avatar size={24} style={{ marginLeft: 6, marginRight: 12 }}>
+                <img alt="avatar" src={dm.user_photo} />
+              </Avatar>
+              {`${dm.user_nick}`}
+            </div>
+          ),
+          value: dm.user_account,
+        }));
+        setFetching(false);
+        setdmListOption(options);
+      });
+    }, 500),
+    []
+  );
+  const debouncedFetchVip = useCallback(
+    debounce((inputValue) => {
+      refFetchId.current = Date.now();
+      setFetching(true);
+      setOptions([]);
+      const param = { member_name: inputValue };
+      const res = memberList(param);
+      res.then((data) => {
+        console.log('data: ', data);
+        const options = data.data.map((vip) => ({
+          label: (
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <Avatar size={24} style={{ marginLeft: 6, marginRight: 12 }}>
+                <img alt="avatar" src={vip.member_face} />
+              </Avatar>
+              {`${vip.member_name}`}
+            </div>
+          ),
+          value: vip.member_account,
+        }));
+        setvipfetching(false);
+        console.log('options', options);
+        setVipListOption(options);
+      });
+    }, 500),
+    []
+  );
+  // debouncedFetchVip
+
+  useEffect(() => {
+    debouncedFetchDrama();
+    debouncedFetchVip();
+    debouncedFetchDM();
+  }, []);
 
   return (
     <div style={{ maxWidth: 650 }}>
@@ -79,10 +203,6 @@ function Shop({ closeModalAndReqTable, clickItem }) {
         ref={formRef}
         {...formItemLayout}
         size={size}
-        // initialValues={{
-        //   slider: 20,
-        //   'a.b[0].c': ['b'],
-        // }}
         onSubmit={(e) => {
           console.log(e);
         }}
@@ -90,18 +210,39 @@ function Shop({ closeModalAndReqTable, clickItem }) {
         scrollToFirstError
       >
         <FormItem
-          label="店铺编码"
+          label="选择店铺"
           field="store_code"
           rules={[{ required: true, message: '请填写店铺编码' }]}
         >
-          <Input placeholder="请填写店铺编码..." />
+          <Select loading={shopListLoading} placeholder="请选择店铺">
+            {shopListOption?.map((item) => {
+              return (
+                <Select.Option key={item.store_code} value={item.store_code}>
+                  {item.store_name}
+                </Select.Option>
+              );
+            })}
+          </Select>
         </FormItem>
-        <FormItem
-          label="剧本编码"
-          field="gb_code"
-          rules={[{ required: true, message: '请填写剧本编码' }]}
-        >
-          <Input placeholder="请填写剧本编码..." />
+        <FormItem label="剧本" field="gb_code" rules={[{ required: true, message: '请选择剧本' }]}>
+          <Select
+            style={{ width: 345 }}
+            options={options}
+            placeholder="请输入要搜索的剧本"
+            filterOption={false}
+            renderFormat={(option) => {
+              return option.children.props.children[1];
+            }}
+            notFoundContent={
+              fetching ? (
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Spin style={{ margin: 12 }} />
+                </div>
+              ) : null
+            }
+            showSearch
+            onSearch={debouncedFetchDrama}
+          />
         </FormItem>
         <FormItem
           label="剧本价格"
@@ -122,7 +263,24 @@ function Shop({ closeModalAndReqTable, clickItem }) {
           field="dm_user"
           rules={[{ required: true, message: '请填写主持人' }]}
         >
-          <Input min={2} placeholder="请填写主持人..." />
+          <Select
+            style={{ width: 345 }}
+            options={dmListOption}
+            placeholder="请选择主持人"
+            filterOption={false}
+            renderFormat={(option) => {
+              return option.children.props.children[1];
+            }}
+            notFoundContent={
+              fetching ? (
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Spin style={{ margin: 12 }} />
+                </div>
+              ) : null
+            }
+            showSearch
+            onSearch={debouncedFetchDM}
+          />
         </FormItem>
 
         <Form.List field="game_player">
@@ -139,7 +297,30 @@ function Shop({ closeModalAndReqTable, clickItem }) {
                             rules={[{ required: true }]}
                             noStyle
                           >
-                            <Input placeholder="玩家账号" />
+                            <Select
+                              style={{ width: 145 }}
+                              options={VipListOption}
+                              placeholder="请选择玩家"
+                              filterOption={false}
+                              renderFormat={(option) => {
+                                return option.children.props.children[1];
+                              }}
+                              notFoundContent={
+                                vipfetching ? (
+                                  <div
+                                    style={{
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'center',
+                                    }}
+                                  >
+                                    <Spin style={{ margin: 12 }} />
+                                  </div>
+                                ) : null
+                              }
+                              showSearch
+                              onSearch={debouncedFetchVip}
+                            />
                           </Form.Item>
                           <Form.Item
                             field={`${item.field}.player_type`}
