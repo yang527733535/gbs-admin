@@ -10,7 +10,7 @@ import {
   InputNumber,
 } from '@arco-design/web-react';
 import { useSelector, useDispatch } from 'react-redux';
-import { CarList } from '../../api/drama.js';
+import { CarList, shopList } from '../../api/drama.js';
 import {
   UPDATE_FORM_PARAMS,
   UPDATE_LIST,
@@ -64,6 +64,17 @@ function SearchTable({}) {
       ),
     },
   ];
+
+  // 获取店铺列表
+  useEffect(() => {
+    getShopList();
+  }, []);
+  const getShopList = async () => {
+    const data = await shopList();
+    console.log('data: ', data);
+  };
+
+  // shopList
 
   const searchTableState = useSelector((state: ReducerState) => state.searchTable);
   const { data, pagination, loading, formParams } = searchTableState;
@@ -137,7 +148,6 @@ function SearchTable({}) {
                 setclickItem(null);
               }}
               type="primary"
-              // style={{ marginRight: 20 }}
             >
               添加组局
             </Button>
