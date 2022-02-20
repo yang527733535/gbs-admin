@@ -22,68 +22,83 @@ import { ReducerState } from '../../redux';
 
 import styles from './style/index.module.less';
 import AddForm from './form/index.jsx';
+import StartGameForm from './stargameform/index.jsx';
 
 function SearchTable({}) {
   const locale = useLocale();
   const [visitModal, setvisitModal] = useState(false);
+  const [gamevisitModal, setgamevisitModal] = useState(false);
   const [clickItem, setclickItem] = useState(null);
   const [store_code, setstore_code] = useState(null);
   const [gb_code, setgb_code] = useState(null);
   const [game_people, setgame_people] = useState(null);
   const columns = [
-      {
-          title: '剧本名称',
-          dataIndex: 'gb_title',
-      },
-      {
-          title: '玩家人数',
-          dataIndex: 'game_people',
-      },
-      {
-          title: '状态',
-          dataIndex: 'game_status',
-      },
-      {
-          title: '主持人',
-          dataIndex: 'dm_user',
-      },
-      {
-          title: '开局时间',
-          dataIndex: 'start_time',
-      },
-      {
-          title: '房间',
-          dataIndex: 'room_code',
-      },
-      {
-          title: '店铺名称',
-          dataIndex: 'store_name',
-      },
-      {
-          title: '店铺地址',
-          dataIndex: 'position_address',
-      },
-      {
-          title: locale['searchTable.columns.createdTime'],
-          dataIndex: 'created_time',
-      },
-      {
-          title: '更新时间',
-          dataIndex: 'updated_time',
-      },
+    {
+      title: '剧本名称',
+      dataIndex: 'gb_title',
+    },
+    {
+      title: '玩家人数',
+      dataIndex: 'game_people',
+    },
+    {
+      title: '状态',
+      dataIndex: 'game_status',
+    },
+    {
+      title: '主持人',
+      dataIndex: 'dm_user',
+    },
+    {
+      title: '开局时间',
+      dataIndex: 'start_time',
+    },
+    {
+      title: '房间',
+      dataIndex: 'room_code',
+    },
+    {
+      title: '店铺名称',
+      dataIndex: 'store_name',
+    },
+    {
+      title: '店铺地址',
+      dataIndex: 'position_address',
+    },
+    {
+      title: locale['searchTable.columns.createdTime'],
+      dataIndex: 'created_time',
+    },
+    {
+      title: '更新时间',
+      dataIndex: 'updated_time',
+    },
     {
       title: locale['searchTable.columns.operations'],
-      render: (col, data) => (
-        <Button
-          onClick={() => {
-            console.log(col, data);
-            setclickItem(data);
-            setvisitModal(true);
-          }}
-          size="small"
-        >
-          {locale['searchTable.columns.operations.update']}
-        </Button>
+      render: (_, data) => (
+        <Space>
+          <Button
+            onClick={() => {
+              console.log(data);
+              setclickItem(data);
+              setvisitModal(true);
+            }}
+            size="mini"
+            type="primary"
+          >
+            修改
+          </Button>
+          <Button
+            onClick={() => {
+              setclickItem(data);
+              setgamevisitModal(true);
+            }}
+            size="mini"
+            type="primary"
+          >
+            开始游戏
+          </Button>
+        </Space>
       ),
     },
   ];
@@ -158,6 +173,27 @@ function SearchTable({}) {
           }}
         />
       </Modal>
+
+      <Modal
+        // title={clickItem === null ? '添加组局' : '修改组局'}
+        title="开始游戏"
+        footer={null}
+        onCancel={() => {
+          setgamevisitModal(false);
+        }}
+        unmountOnExit
+        style={{ width: 900, minWidth: 900 }}
+        visible={gamevisitModal}
+      >
+        <StartGameForm
+          clickItem={clickItem}
+          closeModalAndReqTable={() => {
+            setgamevisitModal(false);
+            fetchData();
+          }}
+        />
+      </Modal>
+      {/* StartGameForm */}
       <Breadcrumb style={{ marginBottom: 20 }}>
         <Breadcrumb.Item>店铺运营</Breadcrumb.Item>
         <Breadcrumb.Item>店铺组局</Breadcrumb.Item>

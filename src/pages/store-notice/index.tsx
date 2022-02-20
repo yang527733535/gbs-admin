@@ -48,14 +48,14 @@ function SearchTable({}) {
     {
       title: '公告类型',
       dataIndex: 'notice_type',
-      // render: (item) => {
-      //   if (item === 'notice_system') {
-      //     return '系统公告';
-      //   }
-      //   if (item === 'notice_store') {
-      //     return '店铺公告';
-      //   }
-      // },
+      render: (item) => {
+        if (item === 'notice_system') {
+          return '系统公告';
+        }
+        if (item === 'notice_store') {
+          return '店铺公告';
+        }
+      },
     },
     {
       title: locale['searchTable.columns.createdTime'],

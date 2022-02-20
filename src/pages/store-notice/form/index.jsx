@@ -41,8 +41,8 @@ function Index({ UserList, clickItem, closeModalAndReqNewTableData }) {
           label="公告类型"
         >
           <Select placeholder="请选择公告类型">
-            <Select.Option key="notice_system">系统公告</Select.Option>
-            <Select.Option key="notice_store">店铺公告</Select.Option>
+            <Select.Option value="notice_system">系统公告</Select.Option>
+            <Select.Option value="notice_store">店铺公告</Select.Option>
           </Select>
         </FormItem>
         <FormItem

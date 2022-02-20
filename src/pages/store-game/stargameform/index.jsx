@@ -64,8 +64,13 @@ function Shop({ closeModalAndReqTable, clickItem }) {
 
   const refFetchId = useRef(null);
   useEffect(() => {
-    console.log('clickItem', clickItem);
-    // formRef.current.setFieldsValue(clickItem);
+    console.log('clickItem2222', clickItem);
+    reqStoreSelectOptions(clickItem.store_code);
+    formRef.current.setFieldsValue({
+      store_code: clickItem.store_code,
+      room_code: clickItem.room_code,
+      // gb_code: clickItem.gb_code,
+    });
   }, []);
 
   const onValuesChange = (changeValue, values) => {
@@ -181,12 +186,20 @@ function Shop({ closeModalAndReqTable, clickItem }) {
     []
   );
   // debouncedFetchVip
-
   useEffect(() => {
     debouncedFetchDrama();
     debouncedFetchVip();
     debouncedFetchDM();
   }, []);
+
+  const reqStoreSelectOptions = async (e) => {
+    const parma = {
+      store_code: e,
+    };
+    const data = await StoreDetailApi(parma);
+    const { store_room } = data.data;
+    setroomListOpions(store_room);
+  };
 
   return (
     <div style={{ maxWidth: 650 }}>
@@ -201,19 +214,14 @@ function Shop({ closeModalAndReqTable, clickItem }) {
         scrollToFirstError
       >
         <FormItem
-          label="选择店铺"
+          label="当前店铺"
           field="store_code"
-          rules={[{ required: true, message: '请填写店铺编码' }]}
+          rules={[{ required: false, message: '请填写店铺编码' }]}
         >
           <Select
+            disabled
             onChange={async (e) => {
-              const parma = {
-                store_code: e,
-              };
-              const data = await StoreDetailApi(parma);
-              const { store_room } = data.data;
-              console.log('store_room: ', store_room);
-              setroomListOpions(store_room);
+              reqStoreSelectOptions(e);
             }}
             loading={shopListLoading}
             placeholder="请选择店铺"
@@ -230,9 +238,9 @@ function Shop({ closeModalAndReqTable, clickItem }) {
         <FormItem
           label="选择房间"
           field="room_code"
-          rules={[{ required: true, message: '请填写店铺编码' }]}
+          rules={[{ required: false, message: '请填写店铺编码' }]}
         >
-          <Select placeholder="请选择房间">
+          <Select disabled placeholder="请选择房间">
             {roomListOpions.map((item) => {
               return (
                 <Select.Option key={item.room_code} value={item.room_code}>
@@ -243,40 +251,17 @@ function Shop({ closeModalAndReqTable, clickItem }) {
           </Select>
         </FormItem>
 
-        <FormItem label="剧本" field="gb_code" rules={[{ required: true, message: '请选择剧本' }]}>
-          <Select
-            style={{ width: 345 }}
-            options={options}
-            placeholder="请输入要搜索的剧本"
-            filterOption={false}
-            renderFormat={(option) => {
-              return option.children.props.children[1];
-            }}
-            notFoundContent={
-              fetching ? (
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Spin style={{ margin: 12 }} />
-                </div>
-              ) : null
-            }
-            showSearch
-            onSearch={debouncedFetchDrama}
-          />
+        <FormItem label="剧本" field="gb_code" rules={[{ required: false, message: '请选择剧本' }]}>
+          <span>{clickItem.gb_code}</span>
         </FormItem>
         <FormItem
-          label="剧本价格"
-          field="gb_price"
-          rules={[{ required: true, message: '请填写剧本价格' }]}
+          label="游戏编码"
+          field="game_code"
+          rules={[{ required: false, message: '请选择剧本' }]}
         >
-          <InputNumber min={0} placeholder="请填写剧本价格..." />
+          <span>{clickItem.game_code}</span>
         </FormItem>
-        <FormItem
-          label="玩家人数"
-          field="game_people"
-          rules={[{ required: true, message: '请填写玩家人数' }]}
-        >
-          <InputNumber min={2} placeholder="请填写玩家人数..." />
-        </FormItem>
+
         <FormItem
           label="主持人"
           field="dm_user"
@@ -302,127 +287,15 @@ function Shop({ closeModalAndReqTable, clickItem }) {
           />
         </FormItem>
 
-        <Form.List field="game_player">
-          {(fields, { add, remove, move }) => {
-            return (
-              <div>
-                {fields.map((item, index) => {
-                  return (
-                    <div key={item.key}>
-                      <Form.Item label={`玩家${1 + index}`}>
-                        <Space>
-                          <Form.Item
-                            field={`${item.field}.player_user`}
-                            rules={[{ required: true }]}
-                            noStyle
-                          >
-                            <Select
-                              style={{ width: 145 }}
-                              options={VipListOption}
-                              placeholder="请选择玩家"
-                              filterOption={false}
-                              renderFormat={(option) => {
-                                return option.children.props.children[1];
-                              }}
-                              notFoundContent={
-                                vipfetching ? (
-                                  <div
-                                    style={{
-                                      display: 'flex',
-                                      alignItems: 'center',
-                                      justifyContent: 'center',
-                                    }}
-                                  >
-                                    <Spin style={{ margin: 12 }} />
-                                  </div>
-                                ) : null
-                              }
-                              showSearch
-                              onSearch={debouncedFetchVip}
-                            />
-                          </Form.Item>
-                          <Form.Item
-                            field={`${item.field}.player_type`}
-                            rules={[{ required: true }]}
-                            noStyle
-                          >
-                            <Select placeholder="玩家类型">
-                              <Select.Option value="player">player</Select.Option>
-                              <Select.Option value="worker">worker</Select.Option>
-                            </Select>
-                          </Form.Item>
-
-                          <Form.Item
-                            field={`${item.field}.player_name`}
-                            rules={[{ required: true }]}
-                            noStyle
-                          >
-                            <Input placeholder="玩家名称" />
-                          </Form.Item>
-                          <Form.Item
-                            field={`${item.field}.player_note`}
-                            rules={[{ required: true }]}
-                            noStyle
-                          >
-                            <Input placeholder="玩家备注" />
-                          </Form.Item>
-                          <Button
-                            icon={<IconDelete />}
-                            shape="circle"
-                            status="danger"
-                            onClick={() => remove(index)}
-                          />
-                        </Space>
-                      </Form.Item>
-                    </div>
-                  );
-                })}
-                <Form.Item {...noLabelLayout}>
-                  <Button
-                    onClick={() => {
-                      add();
-                    }}
-                  >
-                    添加玩家
-                  </Button>
-                </Form.Item>
-              </div>
-            );
-          }}
-        </Form.List>
-
-        {/* <FormItem
-          label="开业日期"
-          field="open_date"
-          rules={[
-            {
-              required: true,
-              message: '请填写开业日期',
-            },
-          ]}
-        >
-          <DatePicker showTime />
-        </FormItem> */}
-
         <FormItem {...noLabelLayout}>
           <Button
             onClick={async () => {
               if (formRef.current) {
                 try {
-                  await formRef.current.validate();
-                  if (clickItem === null) {
-                    const param = formRef.current.getFields();
-                    if (param.game_player === null || param.game_player === undefined) {
-                      param.game_player = [];
-                    }
-                    var data = await addGame(param);
-                  } else {
-                    const param = formRef.current.getFields();
-                    console.log('param: ', param);
-                    param.store_code = clickItem.store_code;
-                    var data = await updateShop(param);
-                  }
+                  const param = await formRef.current.validate();
+                  console.log('param: ', param);
 
+                  return;
                   if (data.code === 200) {
                     Message.success('添加成功');
                     closeModalAndReqTable();
@@ -437,15 +310,15 @@ function Shop({ closeModalAndReqTable, clickItem }) {
             type="primary"
             style={{ marginRight: 24 }}
           >
-            提交
+            开始游戏
           </Button>
-          <Button
+          {/* <Button
             onClick={() => {
               formRef.current.resetFields();
             }}
           >
             重置
-          </Button>
+          </Button> */}
         </FormItem>
       </Form>
     </div>
