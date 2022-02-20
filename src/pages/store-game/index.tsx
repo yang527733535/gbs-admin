@@ -31,23 +31,46 @@ function SearchTable({}) {
   const [gb_code, setgb_code] = useState(null);
   const [game_people, setgame_people] = useState(null);
   const columns = [
-    {
-      title: '店铺名称',
-      dataIndex: 'store_name',
-    },
-
-    {
-      title: '店铺地址',
-      dataIndex: 'position_address',
-    },
-    {
-      title: locale['searchTable.columns.createdTime'],
-      dataIndex: 'created_time',
-    },
-    {
-      title: '更新时间',
-      dataIndex: 'updated_time',
-    },
+      {
+          title: '剧本名称',
+          dataIndex: 'gb_title',
+      },
+      {
+          title: '玩家人数',
+          dataIndex: 'game_people',
+      },
+      {
+          title: '状态',
+          dataIndex: 'game_status',
+      },
+      {
+          title: '主持人',
+          dataIndex: 'dm_user',
+      },
+      {
+          title: '开局时间',
+          dataIndex: 'start_time',
+      },
+      {
+          title: '房间',
+          dataIndex: 'room_code',
+      },
+      {
+          title: '店铺名称',
+          dataIndex: 'store_name',
+      },
+      {
+          title: '店铺地址',
+          dataIndex: 'position_address',
+      },
+      {
+          title: locale['searchTable.columns.createdTime'],
+          dataIndex: 'created_time',
+      },
+      {
+          title: '更新时间',
+          dataIndex: 'updated_time',
+      },
     {
       title: locale['searchTable.columns.operations'],
       render: (col, data) => (
