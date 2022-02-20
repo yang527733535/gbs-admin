@@ -18,8 +18,9 @@ import {
   regionsList,
   dramaList,
   StoreDetailApi,
+  starGame,
 } from '../../../api/drama.js';
-import { dmList, memberList } from '../../../api/user.js';
+import { dmList, memberList, reqGameDetail } from '../../../api/user.js';
 import debounce from 'lodash/debounce';
 
 const FormItem = Form.Item;
@@ -42,6 +43,7 @@ const noLabelLayout = {
 function Shop({ closeModalAndReqTable, clickItem }) {
   const formRef = useRef();
   const size = 'default';
+  const [gameDetail, setgameDetail] = useState(false);
   const [shopListOption, setshopListOption] = useState([]);
   const [shopListLoading, setshopListLoading] = useState(true);
 
@@ -66,10 +68,16 @@ function Shop({ closeModalAndReqTable, clickItem }) {
   useEffect(() => {
     console.log('clickItem2222', clickItem);
     reqStoreSelectOptions(clickItem.store_code);
+    // formRef.current.setFieldsValue({
+    //   store_code: clickItem.store_code,
+    //   room_code: clickItem.room_code,
+    //   // dm _user: clickItem.dm_user,
+    // });
+    // debouncedFetchDM();
     formRef.current.setFieldsValue({
       store_code: clickItem.store_code,
       room_code: clickItem.room_code,
-      // gb_code: clickItem.gb_code,
+      dm_user: 'demo',
     });
   }, []);
 
@@ -103,10 +111,21 @@ function Shop({ closeModalAndReqTable, clickItem }) {
   useEffect(() => {
     getShopList();
   }, []);
-  // shopList
-  // regionsList
 
-  // debouncedFetchVip
+  const getGameDetail = async () => {
+    const param = {
+      store_code: clickItem.store_code,
+      room_code: clickItem.room_code,
+      game_code: clickItem.game_code,
+    };
+    const { data } = await reqGameDetail(param);
+
+    // formRef.current.setFieldsValue(...data);
+    setgameDetail(data);
+  };
+  useEffect(() => {
+    getGameDetail();
+  }, []);
 
   const debouncedFetchDrama = useCallback(
     debounce((inputValue) => {
@@ -236,7 +255,7 @@ function Shop({ closeModalAndReqTable, clickItem }) {
           </Select>
         </FormItem>
         <FormItem
-          label="选择房间"
+          label="房间"
           field="room_code"
           rules={[{ required: false, message: '请填写店铺编码' }]}
         >
@@ -252,15 +271,15 @@ function Shop({ closeModalAndReqTable, clickItem }) {
         </FormItem>
 
         <FormItem label="剧本" field="gb_code" rules={[{ required: false, message: '请选择剧本' }]}>
-          <span>{clickItem.gb_code}</span>
+          <span>{gameDetail.gb_title}</span>
         </FormItem>
-        <FormItem
+        {/* <FormItem
           label="游戏编码"
           field="game_code"
           rules={[{ required: false, message: '请选择剧本' }]}
         >
           <span>{clickItem.game_code}</span>
-        </FormItem>
+        </FormItem> */}
 
         <FormItem
           label="主持人"
@@ -273,6 +292,9 @@ function Shop({ closeModalAndReqTable, clickItem }) {
             placeholder="请选择主持人"
             filterOption={false}
             renderFormat={(option) => {
+              if (option === null) {
+                return null;
+              }
               return option.children.props.children[1];
             }}
             notFoundContent={
@@ -294,14 +316,16 @@ function Shop({ closeModalAndReqTable, clickItem }) {
                 try {
                   const param = await formRef.current.validate();
                   console.log('param: ', param);
+                  param.gb_code = clickItem.gb_code;
+                  param.dm_user = param.gb_code;
+                  param.game_code = gameDetail.game_code;
+                  const res = await starGame(param);
 
-                  return;
-                  if (data.code === 200) {
+                  if (res.code === 200) {
                     Message.success('添加成功');
                     closeModalAndReqTable();
                   }
                 } catch (_) {
-                  console.log(_);
                   console.log(formRef.current.getFieldsError());
                   Message.error('校验失败，请检查字段！');
                 }

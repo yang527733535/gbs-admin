@@ -296,3 +296,20 @@ export function Editnotice(data) {
     method: 'post',
   });
 }
+
+export function starGame(data) {
+  return Service({
+    url: '/v1/game/start',
+    data,
+    method: 'post',
+  });
+}
+
+
+export function reqCreateQRcode(data) {
+  return Service({
+    url: '/v1/store/room-qrcode',
+    data,
+    method: 'post',
+  });
+}

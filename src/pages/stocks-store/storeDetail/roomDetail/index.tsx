@@ -1,10 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import RoomFrom from './roomform';
-import { DeleteRoom } from '../../../../api/drama.js';
-import { Button, Card, Message, Modal, Popconfirm, Space } from '@arco-design/web-react';
+import { DeleteRoom, reqCreateQRcode } from '../../../../api/drama.js';
+import { Button, Card, Image, Message, Modal, Popconfirm, Space } from '@arco-design/web-react';
 const { Meta } = Card;
 export default function RoomDetail({ store_code, getStoreDetail, storeDetailInfo }) {
-  console.log('storeDetailInfo: ', storeDetailInfo);
+  useEffect(() => {
+    console.log('storeDetailInfo', storeDetailInfo);
+    let param = {
+      store_code: storeDetailInfo.store_code,
+      room_code: storeDetailInfo.room_code,
+      is_edit: 0,
+    };
+    console.log(param);
+  }, []);
+
   const { store_room } = storeDetailInfo;
   const [showForm, setshowForm] = useState<boolean>(false);
   const [modalType, setmodalType] = useState<string>('');
@@ -38,7 +47,7 @@ export default function RoomDetail({ store_code, getStoreDetail, storeDetailInfo
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            height: 318,
+            height: 328,
             marginLeft: 20,
             marginBottom: 20,
           }}
@@ -65,6 +74,7 @@ export default function RoomDetail({ store_code, getStoreDetail, storeDetailInfo
                   }}
                 >
                   <img
+                    referrer-policy="no-referrer"
                     style={{ width: '100%', transform: 'translateY(-20px)' }}
                     alt="dessert"
                     src={item.room_image}
@@ -73,10 +83,20 @@ export default function RoomDetail({ store_code, getStoreDetail, storeDetailInfo
               }
             >
               <Meta
-                title={item.room_name}
                 description={
                   <>
-                    房间备注
+                    <div
+                      style={{
+                        display: 'flex',
+                        fontSize: 16,
+                        fontWeight: 700,
+                        justifyContent: 'space-between',
+                        marginBottom: 15,
+                      }}
+                    >
+                      <div>{item.room_name}</div>
+                      <Image width={80} height={80} src={item.room_qr_code} alt="" />
+                    </div>
                     <Space style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
                       <Button
                         onClick={() => {
@@ -111,6 +131,24 @@ export default function RoomDetail({ store_code, getStoreDetail, storeDetailInfo
                           删除
                         </Button>
                       </Popconfirm>
+                      <Button
+                        onClick={async () => {
+                          console.log('生成二维码');
+                          const param = {
+                            store_code: storeDetailInfo.store_code,
+                            room_code: item.room_code,
+                            is_edit: 0,
+                          };
+                          console.log('paramitem', param);
+                          const resdata = await reqCreateQRcode(param);
+                          if (resdata.code === 200) {
+                            getStoreDetail();
+                            Message.info({ content: '删除成功' });
+                          }
+                        }}
+                      >
+                        生成二维码
+                      </Button>
                     </Space>
                   </>
                 }

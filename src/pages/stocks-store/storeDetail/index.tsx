@@ -47,7 +47,7 @@ export default function StoreDetail({ store_code, closeDrawer, modalType }) {
             {modalType === 'edit' && (
               <TabPane key="3" title="店铺剧本信息">
                 <StoreDramas
-                getStoreDetail={getStoreDetail}
+                  getStoreDetail={getStoreDetail}
                   storeDetailInfo={storeDetailInfo}
                   store_code={store_code}
                 ></StoreDramas>

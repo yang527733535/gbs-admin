@@ -81,3 +81,11 @@ export function reqEditPwd(data) {
     method: 'POST',
   });
 }
+
+export function reqGameDetail(data) {
+  return Service({
+    url: '/v1/game/view',
+    data,
+    method: 'POST',
+  });
+}
