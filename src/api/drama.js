@@ -282,6 +282,15 @@ export function noticeList(data) {
     method: 'post',
   });
 }
+
+// 订单管理
+export function OrderList(data) {
+  return Service({
+    url: '/v1/order/list',
+    data,
+    method: 'post',
+  });
+}
 export function Addnotice(data) {
   return Service({
     url: '/v1/notice/add',
@@ -304,7 +313,6 @@ export function starGame(data) {
     method: 'post',
   });
 }
-
 
 export function reqCreateQRcode(data) {
   return Service({

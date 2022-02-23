@@ -6,6 +6,7 @@ import {
   Table,
   Badge,
   Message,
+  Tag,
   Modal,
   Popconfirm,
   Input,
@@ -15,7 +16,8 @@ import {
 } from '@arco-design/web-react';
 import { dramaList, reqStoreBindDrama, reqDeleteStoreDrama } from '../../../../api/drama.js';
 import { getDictsByName } from '../../../../utils/getdicts.js';
-
+// let useEffect
+let AllMaP = JSON.parse(localStorage.getItem('AllMaP'));
 let Option = Select.Option;
 export default function StoreDrama({ store_code, getStoreDetail, storeDetailInfo }) {
   const { store_drama } = storeDetailInfo;
@@ -160,6 +162,9 @@ export default function StoreDrama({ store_code, getStoreDetail, storeDetailInfo
     {
       title: '剧本难度',
       dataIndex: 'gb_level',
+      render: (item) => {
+        return AllMaP['app_gb_level'][item];
+      },
     },
     {
       title: '剧本时长',
@@ -240,6 +245,16 @@ export default function StoreDrama({ store_code, getStoreDetail, storeDetailInfo
     {
       title: '剧本标签',
       dataIndex: 'gb_text_tag',
+      render: (item) => {
+        let Arr = item.split(',');
+        return (
+          <Space>
+            {Arr.map((element) => {
+              return <Tag>{AllMaP['app_gb_text_tag'][element]}</Tag>;
+            })}
+          </Space>
+        );
+      },
     },
     {
       title: '操作',

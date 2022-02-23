@@ -15,7 +15,7 @@ import './style/index.less';
 import './mock';
 import Login from './pages/login';
 import checkLogin from './utils/checkLogin';
-
+import { labelsApi } from './api/drama.js';
 const store = createStore(rootReducer);
 
 function Index() {
@@ -42,22 +42,28 @@ function Index() {
     }
   }
 
-  // function fetchUserInfo() {
-  //   axios.get('/api/user/userInfo').then((res) => {
-  //     store.dispatch({
-  //       type: 'update-userInfo',
-  //       payload: { userInfo: res.data },
-  //     });
-  //   });
-  // }
-
   useEffect(() => {
     fetchLocale();
   }, []);
+  useEffect(() => {
+    fetchDicts();
+  }, []);
+  const fetchDicts = async () => {
+    const { data } = await labelsApi();
+
+    const AllMaP = {};
+    data.forEach((element) => {
+      let param = {};
+      element.dict_label.forEach((item) => {
+        param[item.label_value] = item.label_zh;
+      });
+      AllMaP[element.dict_code] = param;
+    });
+    localStorage.setItem('AllMaP', JSON.stringify(AllMaP));
+  };
 
   useEffect(() => {
     if (checkLogin()) {
-      // Message.info('宝,我进来啦!');
     } else {
       history.push('/user/login');
     }
