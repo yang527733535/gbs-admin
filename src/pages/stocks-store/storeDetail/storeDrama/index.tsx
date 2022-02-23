@@ -6,9 +6,12 @@ import {
   Table,
   Badge,
   Message,
+  Modal,
   Popconfirm,
   Input,
   Space,
+  InputNumber,
+  Form,
 } from '@arco-design/web-react';
 import { dramaList, reqStoreBindDrama, reqDeleteStoreDrama } from '../../../../api/drama.js';
 import { getDictsByName } from '../../../../utils/getdicts.js';
@@ -16,6 +19,12 @@ import { getDictsByName } from '../../../../utils/getdicts.js';
 let Option = Select.Option;
 export default function StoreDrama({ store_code, getStoreDetail, storeDetailInfo }) {
   const { store_drama } = storeDetailInfo;
+
+  const [inputNum, setinputNum] = useState(null);
+  const [inputNum2, setinputNum2] = useState(null);
+  const [saveClick, setsaveClick] = useState(null);
+  const [Parma, setParma] = useState(null);
+  const [inputNumvisible, setinputNumvisible] = useState(false);
   // const [SelectedRowKeys, setSelectedRowKeys] = useState([]);
   const [tableData, settableData] = useState([]);
   const [tableloading, settableloading] = useState(false);
@@ -103,8 +112,12 @@ export default function StoreDrama({ store_code, getStoreDetail, storeDetailInfo
       },
     },
     {
-      title: '价格',
+      title: '工作日价格',
       dataIndex: 'gb_price',
+    },
+    {
+      title: '周末价格',
+      dataIndex: 'gb_price2',
     },
     {
       title: '是否启用',
@@ -172,13 +185,20 @@ export default function StoreDrama({ store_code, getStoreDetail, storeDetailInfo
             onClick={async () => {
               let param: any = new Object();
               param.store_code = store_code.store_code;
-              param.drama_array = [{ gb_code: item.gb_code, gb_price: item.gb_price }];
-              let res = await reqStoreBindDrama(param);
-              console.log('res: ', res);
-              if (res.code === 200) {
-                getStoreDetail();
-                Message.success('添加成功');
-              }
+              // 这里价格需要设置
+              param.drama_array = [
+                {
+                  gb_code: item.gb_code,
+                  gb_price: inputNum || item.gb_price,
+                  gb_price2: inputNum2 || item.gb_price2,
+                },
+              ];
+              setinputNum(item.gb_price);
+              setinputNum2(item.gb_price2);
+              console.log('item', item);
+              setsaveClick(item);
+              setinputNumvisible(true);
+              setParma(param);
             }}
             size="mini"
             type="primary"
@@ -194,6 +214,14 @@ export default function StoreDrama({ store_code, getStoreDetail, storeDetailInfo
     {
       title: '剧本标题',
       dataIndex: 'gb_title',
+    },
+    {
+      title: '工作日价格',
+      dataIndex: 'gb_price',
+    },
+    {
+      title: '周末价格',
+      dataIndex: 'gb_price2',
     },
     // {
     //   title: '剧本封面',
@@ -272,6 +300,47 @@ export default function StoreDrama({ store_code, getStoreDetail, storeDetailInfo
   }
   return (
     <div>
+      <Modal
+        title={saveClick?.gb_title}
+        visible={inputNumvisible}
+        onOk={async () => {
+          Parma['drama_array'][0]['gb_price'] = inputNum;
+          Parma['drama_array'][0]['gb_price2'] = inputNum2;
+          let res = await reqStoreBindDrama(Parma);
+          console.log('res: ', res);
+          if (res.code === 200) {
+            getStoreDetail();
+            Message.success('添加成功');
+            setinputNumvisible(false);
+          }
+        }}
+        unmountOnExit
+        onCancel={() => setinputNumvisible(false)}
+        autoFocus={false}
+        focusLock={true}
+      >
+        <Form>
+          <Form.Item label="工作日价格">
+            <InputNumber
+              value={inputNum}
+              placeholder="工作日价格"
+              onChange={(e) => {
+                setinputNum(e);
+              }}
+            ></InputNumber>
+          </Form.Item>
+          <Form.Item label="周末价格">
+            <InputNumber
+              style={{ marginTop: 10 }}
+              value={inputNum2}
+              placeholder="周末价格"
+              onChange={(e) => {
+                setinputNum2(e);
+              }}
+            ></InputNumber>
+          </Form.Item>
+        </Form>
+      </Modal>
       <div>
         <Typography.Title heading={4}>已添加的剧本</Typography.Title>
         <Table size="small" columns={columns2} data={nowDramaListTableData}></Table>
