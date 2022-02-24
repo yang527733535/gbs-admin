@@ -10,9 +10,11 @@ import {
   Space,
   Modal,
   InputNumber,
+  Popconfirm,
+  Message,
 } from '@arco-design/web-react';
 import { useSelector, useDispatch } from 'react-redux';
-import { CarList, shopList } from '../../api/drama.js';
+import { CarList, shopList, reqcompletegame } from '../../api/drama.js';
 import {
   UPDATE_FORM_PARAMS,
   UPDATE_LIST,
@@ -99,7 +101,6 @@ function SearchTable({}) {
         <Space>
           <Button
             onClick={() => {
-              console.log(data);
               setclickItem(data);
               setvisitModal(true);
             }}
@@ -108,16 +109,44 @@ function SearchTable({}) {
           >
             修改
           </Button>
-          <Button
-            onClick={() => {
-              setclickItem(data);
-              setgamevisitModal(true);
-            }}
-            size="mini"
-            type="primary"
-          >
-            开始游戏
-          </Button>
+          {data.game_status === '1' && (
+            <Button
+              onClick={() => {
+                setclickItem(data);
+                setgamevisitModal(true);
+              }}
+              size="mini"
+              type="primary"
+            >
+              开始游戏
+            </Button>
+          )}
+
+          {data.game_status === '2' && (
+            <Popconfirm
+              title="确定结束游戏?"
+              onOk={async () => {
+                const { game_code, store_code } = data;
+                const param = {
+                  game_code,
+                  store_code,
+                };
+                console.log('param', param);
+                let resdata = await reqcompletegame(param);
+                if (resdata.code === 200) {
+                  Message.info({ content: 'ok' });
+                  fetchData();
+                }
+              }}
+              onCancel={() => {
+                Message.error({ content: '取消' });
+              }}
+            >
+              <Button size="mini" type="primary" status="warning">
+                结束游戏
+              </Button>
+            </Popconfirm>
+          )}
         </Space>
       ),
     },
@@ -139,7 +168,7 @@ function SearchTable({}) {
   const dispatch = useDispatch();
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [store_code]);
 
   function fetchData(current = 1, pageSize = 10, params = {}) {
     const data = CarList({

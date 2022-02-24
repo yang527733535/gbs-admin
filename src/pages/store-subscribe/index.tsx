@@ -38,6 +38,7 @@ function SearchTable() {
     {
       title: '剧本编码',
       dataIndex: 'gb_code',
+      fixed: 'left' as 'left',
     },
     {
       title: '开始时间',

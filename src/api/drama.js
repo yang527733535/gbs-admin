@@ -346,3 +346,11 @@ export function getdramaprice(data) {
     method: 'post',
   });
 }
+
+export function reqcompletegame(data) {
+  return Service({
+    url: '/v1/game/complete',
+    data,
+    method: 'post',
+  });
+}
