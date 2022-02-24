@@ -61,16 +61,18 @@ function SearchTable({}) {
       dataIndex: 'start_time',
     },
     {
+      title: '店铺',
+      dataIndex: 'store_code',
+      render: (item) => {
+        return JSON.parse(localStorage.getItem('SMap'))[item];
+      },
+    },
+    {
       title: '房间',
       dataIndex: 'room_code',
-    },
-    {
-      title: '店铺名称',
-      dataIndex: 'store_name',
-    },
-    {
-      title: '店铺地址',
-      dataIndex: 'position_address',
+      render: (item) => {
+        return JSON.parse(localStorage.getItem('SMap'))[item];
+      },
     },
     {
       title: locale['searchTable.columns.createdTime'],
@@ -159,9 +161,9 @@ function SearchTable({}) {
     const { current, pageSize } = pagination;
     fetchData(current, pageSize, formParams);
   }
-  useEffect(()=>{
-    setstore_code(localStorage.getItem('nowshop'))
-  },[])
+  useEffect(() => {
+    setstore_code(localStorage.getItem('nowshop'));
+  }, []);
   return (
     <div className={styles.container}>
       <Modal

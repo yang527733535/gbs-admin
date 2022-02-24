@@ -38,8 +38,11 @@ function SearchTable({}) {
       dataIndex: 'notice_title',
     },
     {
-      title: '店铺编码',
+      title: '店铺',
       dataIndex: 'store_code',
+      render: (item) => {
+        return JSON.parse(localStorage.getItem('SMap'))[item];
+      },
     },
     {
       title: '公告日期',

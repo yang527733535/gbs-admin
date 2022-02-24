@@ -32,96 +32,87 @@ function SearchTable({}) {
   const [clickItem, setclickItem] = useState(null);
   const columns = [
     {
-      title: '创建用户',
-      dataIndex: 'create_user',
-    },
-    {
-      title: '折扣',
-      dataIndex: 'discount_rate',
-    },
-    {
-      title: '剧本编码',
-      dataIndex: 'gb_code',
-    },
-    {
-      title: '游戏编码',
-      dataIndex: 'game_code',
-    },
-
-    {
-      title: '会员账号',
-      dataIndex: 'member_account',
-    },
-    {
-      title: '会员名称',
-      dataIndex: 'member_name',
-    },
-    {
-      title: '订单金额',
-      dataIndex: 'order_amount',
-    },
-    {
-      title: '订单编码',
+      title: '订单号',
       dataIndex: 'order_code',
-    },
-    {
-      title: 'order_currency',
-      dataIndex: 'order_currency',
-    },
-    {
-      title: '订单ID',
-      dataIndex: 'order_id',
-    },
-    {
-      title: '订单备注',
-      dataIndex: 'order_remarks',
-    },
-    {
-      title: '订单状态',
-      dataIndex: 'order_status',
+      fixed: 'left' as 'left',
+      width: 200,
     },
     {
       title: '订单类型',
       dataIndex: 'order_type',
     },
     {
-      title: '支付账号',
-      dataIndex: 'pay_account',
+      title: '店铺',
+      dataIndex: 'store_code',
+      render: (item) => {
+        return JSON.parse(localStorage.getItem('SMap'))[item];
+      },
+    },
+    {
+      title: '剧本',
+      dataIndex: 'gb_code',
+    },
+    {
+      title: '订单金额',
+      dataIndex: 'order_amount',
+    },
+    {
+      title: '币种',
+      dataIndex: 'order_currency',
+    },
+    {
+      title: '订单状态',
+      dataIndex: 'order_status',
+    },
+    {
+      title: '玩家账号',
+      dataIndex: 'member_account',
+    },
+    {
+      title: '玩家昵称',
+      dataIndex: 'member_name',
+    },
+    {
+      title: '交易号',
+      dataIndex: 'out_trade_no',
+    },
+    {
+      title: '折扣',
+      dataIndex: 'discount_rate',
     },
     {
       title: '支付金额',
       dataIndex: 'pay_amount',
     },
     {
-      title: '支付状态',
-      dataIndex: 'pay_status',
+      title: '支付账号',
+      dataIndex: 'pay_account',
     },
     {
       title: '支付时间',
       dataIndex: 'pay_time',
     },
     {
-      title: '支付类型',
-      dataIndex: 'pay_type',
+      title: '支付状态',
+      dataIndex: 'pay_status',
+      render: (item) => {
+        return JSON.parse(localStorage.getItem('AllMaP'))['sys_pay_status'][item] || item;
+      },
     },
     {
-      title: '店铺编码',
-      dataIndex: 'store_code',
+      title: '支付类型',
+      dataIndex: 'pay_type',
+      render: (item) => {
+        return JSON.parse(localStorage.getItem('AllMaP'))['sys_amount_type'][item] || item;
+      },
     },
     {
       title: '更新时间',
       dataIndex: 'update_time',
     },
-    {
-      title: '创建时间',
-      dataIndex: 'create_time',
-    },
-    {
-      title: '操作用户',
-      dataIndex: 'update_user',
-    },
 
     {
+      fixed: 'right' as 'right',
       title: '操作',
       render: (_, item) => {
         return (
@@ -305,7 +296,7 @@ function SearchTable({}) {
           rowKey="order_id"
           loading={loading}
           data={data}
-          scroll={{ x: 2800 }}
+          scroll={{ x: 3800 }}
           onChange={onChangeTable}
           pagination={pagination}
           columns={columns}

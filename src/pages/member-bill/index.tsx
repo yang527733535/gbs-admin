@@ -52,6 +52,9 @@ function SearchTable({}) {
     {
       title: '交易类型',
       dataIndex: 'amount_type',
+      render: (item) => {
+        return JSON.parse(localStorage.getItem('AllMaP'))['sys_amount_type'][item] || item;
+      },
     },
     {
       title: '门店',
@@ -292,7 +295,7 @@ function SearchTable({}) {
           rowKey="order_id"
           loading={loading}
           data={data}
-          scroll={{ x: 3200 }}
+          scroll={{ x: 3800 }}
           onChange={onChangeTable}
           pagination={pagination}
           columns={columns}
