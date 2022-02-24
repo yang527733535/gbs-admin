@@ -32,93 +32,84 @@ function SearchTable({}) {
   const [clickItem, setclickItem] = useState(null);
   const columns = [
     {
-      title: '金额',
-      dataIndex: 'amount_fill',
+      title: '订单号',
+      dataIndex: 'reference_code',
+      fixed: 'left' as 'left',
+      width: 190,
     },
     {
-      title: '币种',
-      dataIndex: 'amount_currency',
-    },
-    {
-      title: 'amount_gift',
-      dataIndex: 'amount_gift',
-    },
-    {
-      title: 'amount_id',
-      dataIndex: 'amount_id',
-    },
-    {
-      title: '会员',
+      title: '会员昵称',
       dataIndex: 'member_name',
     },
     {
-      title: 'amount_remarks',
-      dataIndex: 'amount_remarks',
-    },
-    {
-      title: 'amount_remarks',
-      dataIndex: 'amount_remarks',
-    },
-    {
-      title: 'amount_type',
-      dataIndex: 'amount_type',
-    },
-    {
-      title: 'created_time',
-      dataIndex: 'created_time',
-    },
-    {
-      title: 'discount_rate',
-      dataIndex: 'discount_rate',
-    },
-    {
-      title: 'gb_code',
-      dataIndex: 'gb_code',
-    },
-    {
-      title: 'is_first',
-      dataIndex: 'is_first',
-    },
-    {
-      title: 'member_account',
+      title: '会员账号',
       dataIndex: 'member_account',
     },
     {
-      title: 'member_mobile',
+      title: '手机号',
       dataIndex: 'member_mobile',
     },
-
     {
-      title: 'operate_user',
-      dataIndex: 'operate_user',
+      title: '交易类型',
+      dataIndex: 'amount_type',
     },
     {
-      title: 'out_trade_no',
-      dataIndex: 'out_trade_no',
-    },
-    {
-      title: 'reference_code',
-      dataIndex: 'reference_code',
-    },
-    {
-      title: 'store_code',
+      title: '门店',
       dataIndex: 'store_code',
     },
     {
-      title: 'transaction_date',
-      dataIndex: 'transaction_date',
+      title: '剧本',
+      dataIndex: 'gb_code',
     },
     {
-      title: 'transaction_id',
-      dataIndex: 'transaction_id',
-    },
-    {
-      title: 'updated_time',
-      dataIndex: 'updated_time',
+      title: '交易单号',
+      dataIndex: 'out_trade_no',
     },
 
     {
+      title: '交易ID',
+      dataIndex: 'transaction_id',
+    },
+    {
+      title: '交易时间',
+      dataIndex: 'transaction_date',
+    },
+    {
+      title: '交易金额',
+      dataIndex: 'amount_fill',
+    },
+    {
+      title: '赠送金额',
+      dataIndex: 'amount_gift',
+    },
+    {
+      title: '交易币种',
+      dataIndex: 'amount_currency',
+    },
+    {
+      title: '折扣',
+      dataIndex: 'discount_rate',
+    },
+    {
+      title: '是否首充',
+      dataIndex: 'is_first',
+    },
+    {
+      title: '操作人',
+      dataIndex: 'operate_user',
+    },
+    {
+      title: '创建时间',
+      dataIndex: 'created_time',
+    },
+    {
+      title: '更新时间',
+      dataIndex: 'updated_time',
+    },
+    {
       title: '操作',
+      fixed: 'right' as 'right',
+      width: 100,
       render: (_, item) => {
         return (
           <Button
@@ -301,7 +292,7 @@ function SearchTable({}) {
           rowKey="order_id"
           loading={loading}
           data={data}
-          scroll={{ x: 2800 }}
+          scroll={{ x: 3200 }}
           onChange={onChangeTable}
           pagination={pagination}
           columns={columns}
