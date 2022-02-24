@@ -338,3 +338,11 @@ export function reqgetShopAndStoreApi(data) {
     method: 'post',
   });
 }
+
+export function getdramaprice(data) {
+  return Service({
+    url: '/v1/drama/price',
+    data,
+    method: 'post',
+  });
+}

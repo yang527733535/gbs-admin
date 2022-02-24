@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import {
   Form,
   Divider,
+  Image,
   Tabs,
   Grid,
   Input,
@@ -116,7 +117,9 @@ export default function DramaDetail({ modalType, closeModalAndReq }) {
                     <span style={{ fontSize: 14, marginBottom: 8, color: '#4E5969' }}>
                       剧本封面
                     </span>
-                    <img
+                    <Image
+                      height={405}
+                      width="100%"
                       style={{ width: '100%', height: 405, marginTop: 8 }}
                       src={dramaCover}
                       alt=""

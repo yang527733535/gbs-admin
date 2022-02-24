@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Input, Breadcrumb, Card, Space, Modal } from '@arco-design/web-react';
+import {
+  Table,
+  Image,
+  Button,
+  Input,
+  Breadcrumb,
+  Card,
+  Space,
+  Modal,
+} from '@arco-design/web-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { dmList, getUserList } from '../../api/user.js';
 import {
@@ -23,18 +32,18 @@ function SearchTable({}) {
   const [user_status, setuser_status] = useState<string>('');
   const columns = [
     {
+      title: '账号',
+      dataIndex: 'user_account',
+    },
+    {
       title: '用户名称',
       dataIndex: 'user_nick',
     },
     {
       title: '账号',
-      dataIndex: 'user_account',
-    },
-    {
-      title: '账号',
       dataIndex: 'user_photo',
       render: (item) => {
-        return <img src={item} style={{ width: 100, height: 100 }} alt="" />;
+        return <Image src={item} width={100} height={100} alt="" />;
       },
     },
 
@@ -45,6 +54,20 @@ function SearchTable({}) {
     {
       title: '更新时间',
       dataIndex: 'update_time',
+    },
+    {
+      title: '操作',
+      render: (_, item) => (
+        <Button
+          type="primary"
+          size="mini"
+          onClick={() => {
+            console.log(item);
+          }}
+        >
+          修改
+        </Button>
+      ),
     },
   ];
 

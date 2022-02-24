@@ -18,6 +18,7 @@ import {
   regionsList,
   dramaList,
   StoreDetailApi,
+  getdramaprice,
 } from '../../../api/drama.js';
 import { dmList, memberList } from '../../../api/user.js';
 import debounce from 'lodash/debounce';
@@ -48,6 +49,7 @@ function Shop({ closeModalAndReqTable, clickItem }) {
   const [cascaderOptionsArr, setcascaderOptionsArr] = useState([]);
   const [roomListOpions, setroomListOpions] = useState([]);
 
+  const [nowstore_code, setnowstore_code] = useState(localStorage.getItem('nowshop'));
   // 剧本列表
   const [options, setOptions] = useState([]);
   // 剧本的fetching
@@ -56,7 +58,8 @@ function Shop({ closeModalAndReqTable, clickItem }) {
   const [dmListOption, setdmListOption] = useState([]);
   // 主持人的fetching
   const [dmfetching, setdmfetching] = useState(false);
-
+  const [price1, setprice1] = useState('');
+  const [price2, setprice2] = useState('');
   //  玩家的列表
   const [VipListOption, setVipListOption] = useState([]);
   // 主持人的fetching
@@ -98,10 +101,11 @@ function Shop({ closeModalAndReqTable, clickItem }) {
   useEffect(() => {
     getShopList();
   }, []);
-  // shopList
-  // regionsList
-
-  // debouncedFetchVip
+  useEffect(() => {
+    formRef.current.setFieldsValue({
+      store_code: localStorage.getItem('nowshop'),
+    });
+  }, []);
 
   const debouncedFetchDrama = useCallback(
     debounce((inputValue) => {
@@ -188,6 +192,18 @@ function Shop({ closeModalAndReqTable, clickItem }) {
     debouncedFetchDM();
   }, []);
 
+  const getroomListOpions = async () => {
+    const parma = {
+      store_code: nowstore_code,
+    };
+    const data = await StoreDetailApi(parma);
+    const { store_room } = data.data;
+    setroomListOpions(store_room);
+  };
+  useEffect(() => {
+    getroomListOpions();
+  }, [nowstore_code]);
+
   return (
     <div style={{ maxWidth: 650 }}>
       <Form
@@ -207,13 +223,7 @@ function Shop({ closeModalAndReqTable, clickItem }) {
         >
           <Select
             onChange={async (e) => {
-              const parma = {
-                store_code: e,
-              };
-              const data = await StoreDetailApi(parma);
-              const { store_room } = data.data;
-              console.log('store_room: ', store_room);
-              setroomListOpions(store_room);
+              setnowstore_code(e);
             }}
             loading={shopListLoading}
             placeholder="请选择店铺"
@@ -245,6 +255,25 @@ function Shop({ closeModalAndReqTable, clickItem }) {
 
         <FormItem label="剧本" field="gb_code" rules={[{ required: true, message: '请选择剧本' }]}>
           <Select
+            onChange={async (e) => {
+              const param = {
+                gb_code: e,
+                store_code: nowstore_code,
+              };
+              let { data } = await getdramaprice(param);
+              const { gb_price, gb_price2 } = data;
+              setprice1(gb_price);
+              setprice2(gb_price2);
+              formRef.current.setFieldsValue({
+                gb_price: data.is_leisure === 0 ? data.gb_price : data.gb_price2,
+              });
+              console.log('data: ', data);
+
+              // const data =  getPriceApi(param)
+              // console.log('data: ', data);
+              // // let data = await getPriceApi(param)
+              // console.log('data: ', data);
+            }}
             style={{ width: 345 }}
             options={options}
             placeholder="请输入要搜索的剧本"
@@ -263,6 +292,13 @@ function Shop({ closeModalAndReqTable, clickItem }) {
             onSearch={debouncedFetchDrama}
           />
         </FormItem>
+        {price1 && (
+          <FormItem label="参考价格">
+            <span>工作日:¥{price1}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+            <span>周末:¥{price2}</span>
+          </FormItem>
+        )}
+
         <FormItem
           label="剧本价格"
           field="gb_price"
@@ -270,6 +306,7 @@ function Shop({ closeModalAndReqTable, clickItem }) {
         >
           <InputNumber min={0} placeholder="请填写剧本价格..." />
         </FormItem>
+
         <FormItem
           label="玩家人数"
           field="game_people"

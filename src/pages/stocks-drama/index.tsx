@@ -3,6 +3,7 @@ import {
   Table,
   Drawer,
   Button,
+  Image,
   Badge,
   Input,
   Breadcrumb,
@@ -55,7 +56,7 @@ function SearchTable() {
       title: '剧本封面',
       dataIndex: 'gb_cover',
       render: (_, element) => {
-        return <img style={{ width: 60, height: 90 }} src={element.gb_cover} />;
+        return <Image width={60} height={90} src={element.gb_cover} />;
       },
     },
     {

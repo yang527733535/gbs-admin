@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   Table,
   Button,
+  Badge,
   Input,
   Breadcrumb,
   Card,
@@ -45,22 +46,6 @@ function SearchTable({}) {
       dataIndex: 'gb_title',
     },
     {
-      title: '玩家人数',
-      dataIndex: 'game_people',
-    },
-    {
-      title: '状态',
-      dataIndex: 'game_status',
-    },
-    {
-      title: '主持人',
-      dataIndex: 'dm_user',
-    },
-    {
-      title: '开局时间',
-      dataIndex: 'start_time',
-    },
-    {
       title: '店铺',
       dataIndex: 'store_code',
       render: (item) => {
@@ -75,6 +60,31 @@ function SearchTable({}) {
       },
     },
     {
+      title: '玩家人数',
+      dataIndex: 'game_people',
+    },
+    {
+      title: '状态',
+      dataIndex: 'game_status',
+      render: (item) => {
+        return (
+          <Space>
+            <Badge status="default" />
+            {JSON.parse(localStorage.getItem('AllMaP'))['sys_game_status'][item] || item}
+          </Space>
+        );
+      },
+    },
+    {
+      title: '主持人',
+      dataIndex: 'dm_user',
+    },
+    {
+      title: '开局时间',
+      dataIndex: 'start_time',
+    },
+
+    {
       title: locale['searchTable.columns.createdTime'],
       dataIndex: 'created_time',
     },
@@ -84,6 +94,7 @@ function SearchTable({}) {
     },
     {
       title: locale['searchTable.columns.operations'],
+      fixed: 'right' as 'right',
       render: (_, data) => (
         <Space>
           <Button
@@ -279,6 +290,7 @@ function SearchTable({}) {
           onChange={onChangeTable}
           pagination={pagination}
           columns={columns}
+          scroll={{ x: 2000 }}
           data={data}
         />
       </Card>
