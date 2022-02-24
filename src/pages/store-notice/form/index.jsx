@@ -25,6 +25,13 @@ function Index({ UserList, clickItem, closeModalAndReqNewTableData }) {
       editForm();
     }
   }, []);
+  useEffect(() => {
+    if (localStorage.getItem('nowshop')) {
+      form.setFieldsValue({ store_code: localStorage.getItem('nowshop') });
+    }
+  }, []);
+
+  // form.setFieldsValue(clickItem);
 
   // console.log('clickItem', clickItem);
   return (

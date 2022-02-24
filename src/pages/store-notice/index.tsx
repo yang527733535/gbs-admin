@@ -98,7 +98,7 @@ function SearchTable({}) {
   };
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [store_code]);
   useEffect(() => {
     getUserListApi();
   }, []);
@@ -139,6 +139,12 @@ function SearchTable({}) {
     const { current, pageSize } = pagination;
     fetchData(current, pageSize, formParams);
   }
+
+  useEffect(() => {
+    // 初始化店铺公告
+    console.log('localStorage.getItem()', localStorage.getItem('nowshop'));
+    setstore_code(localStorage.getItem('nowshop'));
+  }, []);
 
   return (
     <div className={styles.container}>
@@ -191,11 +197,12 @@ function SearchTable({}) {
                   style={{ width: 200 }}
                 />
                 <Select
+                  value={store_code}
                   style={{ width: 200 }}
                   onChange={(e) => {
                     setstore_code(e);
                   }}
-                  placeholder="请选择店铺编码"
+                  placeholder="请选择店铺"
                 >
                   <Select.Option value="">全选</Select.Option>
                   {storeListOption.map((item) => {
@@ -207,14 +214,6 @@ function SearchTable({}) {
                   })}
                 </Select>
 
-                {/* <Input
-                  onChange={(e) => {
-                    setstore_code(e);
-                  }}
-                  value={store_code}
-                  placeholder="请输入店铺编码"
-                  style={{ width: 200 }}
-                /> */}
                 <Input
                   onChange={(e) => {
                     setnotice_type(e);

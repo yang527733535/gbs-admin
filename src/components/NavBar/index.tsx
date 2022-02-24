@@ -34,6 +34,11 @@ function Navbar() {
     }
   }, []);
 
+  useEffect(() => {
+    let data = localStorage.getItem('nowshop');
+    console.log('localStoragedata: ', data);
+  }, [localStorage.getItem('nowshop')]);
+
   async function logout() {
     localStorage.setItem('userStatus', 'logout');
     const data = await resLogout();
@@ -80,13 +85,48 @@ function Navbar() {
         </Space>
       </div>
       <ul className={styles.right}>
+        <li>{/* <MessageBox /> */}</li>
         <li>
           <MessageBox />
         </li>
-        {/* <li>
-          <a>{locale['navbar.docs']}</a>
-        </li> */}
         <li>
+          <Select
+            options={[
+              {
+                value: 'ZS220100009',
+                label: '梦墨绘梦馆·南山店',
+              },
+              {
+                value: 'ZS220100010',
+                label: '梦墨绘梦馆·福田店',
+              },
+              {
+                value: 'ZS220100011',
+                label: '梦墨绘梦馆·讯美店',
+              },
+              {
+                value: 'ZS220100012',
+                label: '梦墨绘梦馆·西丽店',
+              },
+              {
+                value: 'ZS220100013',
+                label: '梦墨剧本杀·深大店',
+              },
+            ]}
+            value={localStorage.getItem('nowshop')}
+            bordered={false}
+            triggerProps={{
+              autoAlignPopupWidth: false,
+              autoAlignPopupMinWidth: true,
+              position: 'bl',
+            }}
+            onChange={(value) => {
+              localStorage.setItem('nowshop', value);
+              window.location.reload();
+            }}
+          />
+        </li>
+        {/* <li>
           <Select
             options={[
               { label: '中文', value: 'zh-CN' },
@@ -104,7 +144,7 @@ function Navbar() {
               window.location.reload();
             }}
           />
-        </li>
+        </li> */}
         <li>
           <Tooltip
             content={

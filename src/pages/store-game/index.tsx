@@ -5,6 +5,7 @@ import {
   Input,
   Breadcrumb,
   Card,
+  Select,
   Space,
   Modal,
   InputNumber,
@@ -32,6 +33,12 @@ function SearchTable({}) {
   const [store_code, setstore_code] = useState(null);
   const [gb_code, setgb_code] = useState(null);
   const [game_people, setgame_people] = useState(null);
+  const [storeOptions, setstoreOptions] = useState([]);
+
+  useEffect(() => {
+    setstoreOptions(JSON.parse(localStorage.getItem('Allshop'))['store_code']);
+  }, []);
+
   const columns = [
     {
       title: '剧本名称',
@@ -152,7 +159,9 @@ function SearchTable({}) {
     const { current, pageSize } = pagination;
     fetchData(current, pageSize, formParams);
   }
-
+  useEffect(()=>{
+    setstore_code(localStorage.getItem('nowshop'))
+  },[])
   return (
     <div className={styles.container}>
       <Modal
@@ -212,14 +221,23 @@ function SearchTable({}) {
             </Button>
             <div>
               <Space style={{ marginLeft: 20 }} wrap>
-                <Input
+                <Select
                   value={store_code}
                   onChange={(e) => {
                     setstore_code(e);
                   }}
-                  placeholder="请输入店铺编码"
                   style={{ width: 200 }}
-                />
+                  placeholder="请选择店铺"
+                >
+                  {storeOptions.map((item) => {
+                    return (
+                      <Select.Option key={item.code} value={item.code}>
+                        {item.name}
+                      </Select.Option>
+                    );
+                  })}
+                </Select>
+
                 <Input
                   value={gb_code}
                   onChange={(e) => {

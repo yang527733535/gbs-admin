@@ -13,7 +13,6 @@ export default function LoginForm() {
   const [loginType, setloginType] = useState<string>('password');
   const [loading, setLoading] = useState(false);
   const [rememberPassword, setRememberPassword] = useState(false);
-
   function afterLoginSuccess(params) {
     // 记住密码
     if (rememberPassword) {
@@ -34,7 +33,7 @@ export default function LoginForm() {
   async function login(params) {
     setErrorMessage('');
     setLoading(true);
-
+    //  在这里选择店铺
     const res = await loginApi(params);
     console.log('res: ', res);
     if (res.code === 200) {

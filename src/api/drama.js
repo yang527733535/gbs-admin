@@ -291,6 +291,15 @@ export function OrderList(data) {
     method: 'post',
   });
 }
+
+// 会员账单
+export function BillList(data) {
+  return Service({
+    url: '/v1/member-bill/list',
+    data,
+    method: 'post',
+  });
+}
 export function Addnotice(data) {
   return Service({
     url: '/v1/notice/add',
@@ -317,6 +326,14 @@ export function starGame(data) {
 export function reqCreateQRcode(data) {
   return Service({
     url: '/v1/store/room-qrcode',
+    data,
+    method: 'post',
+  });
+}
+
+export function reqgetShopAndStoreApi(data) {
+  return Service({
+    url: '/system/basic/data',
     data,
     method: 'post',
   });
