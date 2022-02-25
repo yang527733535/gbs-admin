@@ -107,7 +107,7 @@ export default function BaseDetail({ clickItem }) {
                 field="gb_price"
                 rules={[{ required: false, message: '请填写详细地址' }]}
               >
-                <span>{storeDetailInfo?.gb_price}</span>
+                <span>¥{storeDetailInfo?.gb_price}</span>
               </FormItem>
             </Grid.Col>
             <Grid.Col span={6}>
@@ -116,7 +116,11 @@ export default function BaseDetail({ clickItem }) {
                 field="game_status"
                 rules={[{ required: false, message: '请填写店铺手机号码' }]}
               >
-                <span>{storeDetailInfo?.game_status}</span>
+                <span>
+                  {JSON.parse(localStorage.getItem('AllMaP'))['sys_game_status'][
+                    storeDetailInfo?.game_status
+                  ] || storeDetailInfo?.game_status}
+                </span>
               </FormItem>
             </Grid.Col>
             <Grid.Col span={6}>

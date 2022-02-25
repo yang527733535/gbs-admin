@@ -36,6 +36,9 @@ function SearchTable({}) {
     {
       title: '订单类型',
       dataIndex: 'order_type',
+      render:(item)=>{
+        return JSON.parse(localStorage.getItem('AllMaP'))['sys_order_type'][item]
+      }
     },
     {
       title: '店铺',
