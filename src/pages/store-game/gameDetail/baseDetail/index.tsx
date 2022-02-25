@@ -1,65 +1,66 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Form, Spin, Grid, Table } from '@arco-design/web-react';
+import { Form, Spin, Grid, Table, Button, Modal, Select } from '@arco-design/web-react';
 import styles from './style/index.module.less';
 import { FormInstance } from '@arco-design/web-react/es/Form';
-import { reqGameDetail } from '../../../../api/drama.js';
+import { reqGameDetail, reqOrderdeduct } from '../../../../api/drama.js';
 
 const columns = [
   {
-    title: 'game_code',
+    title: '游戏编码',
     dataIndex: 'game_code',
   },
   {
-    title: 'gb_code',
+    title: '剧本编码',
     dataIndex: 'gb_code',
   },
   {
-    title: 'is_pay',
+    title: '是否支付',
     dataIndex: 'is_pay',
+    render: (item) => {
+      return JSON.parse(localStorage.getItem('AllMaP'))['sys_pay_status'][item];
+    },
   },
   {
-    title: 'order_code',
+    title: '订单编号',
     dataIndex: 'order_code',
   },
   {
-    title: 'player_id',
+    title: '玩家id',
     dataIndex: 'player_id',
   },
   {
-    title: 'player_name',
+    title: '玩家名称',
     dataIndex: 'player_name',
   },
   {
-    title: 'player_note',
+    title: '玩家备注',
     dataIndex: 'player_note',
   },
   {
-    title: 'player_type',
+    title: '玩家类型',
     dataIndex: 'player_type',
   },
   {
-    title: 'player_user',
+    title: '玩家帐号',
     dataIndex: 'player_user',
   },
   {
-    title: 'store_code',
-    dataIndex: 'store_code',
-  },
-  {
-    title: 'updated_time',
+    title: '更新时间',
     dataIndex: 'updated_time',
   },
   {
-    title: 'created_time',
+    title: '创建时间',
     dataIndex: 'created_time',
   },
 ];
 export default function BaseDetail({ clickItem }) {
   const FormItem = Form.Item;
   const formRef = useRef<FormInstance>();
-  // const [selectedRowKeys, setSelectedRowKeys] = useState();
+  const [selectedRowKeys, setSelectedRowKeys] = useState<(string | number)[]>();
   const [storeDetailInfo, setstoreDetailInfo] = useState(null);
+  const [nowSeleceOrders, setnowSeleceOrders] = useState([]);
   const [loading, setloading] = useState(false);
+  const [showmodal, setshowmodal] = useState(false);
   useEffect(() => {
     getStoreDetail();
   }, []);
@@ -78,6 +79,49 @@ export default function BaseDetail({ clickItem }) {
 
   return (
     <div>
+      <Modal
+        onCancel={() => {
+          setshowmodal(false);
+        }}
+        footer={null}
+        visible={showmodal}
+      >
+        <Form
+          onSubmit={async (e) => {
+            console.log(e);
+            let param = {
+              ...e,
+              game_code: storeDetailInfo.game_code,
+              store_code: storeDetailInfo.store_code,
+              order_arr: nowSeleceOrders,
+            };
+            console.log('param,', param);
+            let { data } = await reqOrderdeduct(param);
+            console.log('data: ', data);
+          }}
+        >
+          <FormItem field="member_account" label="付款账户">
+            <Select style={{ width: 150 }}>
+              {nowSeleceOrders.map(({ player_user }) => {
+                return (
+                  <Select.Option value={player_user} key={player_user}>
+                    {player_user}
+                  </Select.Option>
+                );
+              })}
+            </Select>
+          </FormItem>
+          <FormItem>
+            <Button
+              style={{ display: 'flex', justifyContent: 'center', marginLeft: 100 }}
+              type="primary"
+              htmlType="submit"
+            >
+              提交
+            </Button>
+          </FormItem>
+        </Form>
+      </Modal>
       <Spin loading={loading}>
         <h3>游戏详情</h3>
         <Form layout="vertical" ref={formRef} className={styles['form-group']}>
@@ -196,16 +240,36 @@ export default function BaseDetail({ clickItem }) {
             </Button>
           </FormItem>
         </Grid.Row> */}
-          <h3>玩家订单</h3>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+            }}
+          >
+            <h3>玩家订单</h3>
+            <Button
+              onClick={() => {
+                setshowmodal(true);
+                console.log('s123', nowSeleceOrders);
+              }}
+              type="primary"
+            >
+              批量支付
+            </Button>
+          </div>
+
           <Table
             rowKey="player_user"
             columns={columns}
             rowSelection={{
               type: 'checkbox',
-              // selectedRowKeys: selectedRowKeys,
-              // onChange: (selectedRowKeys, selectedRows) => {
-              //   // setSelectedRowKeys(selectedRowKeys);
-              // },
+              selectedRowKeys: selectedRowKeys,
+              onChange: (selectedRowKeys, selectedRows) => {
+                console.log('selectedRows: ', selectedRows);
+                console.log('selectedRows: ', selectedRowKeys);
+                setnowSeleceOrders(selectedRows);
+                setSelectedRowKeys(selectedRowKeys);
+              },
             }}
             data={storeDetailInfo?.game_players || []}
           />

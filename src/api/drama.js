@@ -369,3 +369,11 @@ export function addRoleUser(data) {
     method: 'post',
   });
 }
+
+export function reqOrderdeduct(data) {
+  return Service({
+    url: '/v1/game/deduct',
+    data,
+    method: 'post',
+  });
+}
