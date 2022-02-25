@@ -26,6 +26,7 @@ import styles from './style/index.module.less';
 function SearchTable({}) {
   const locale = useLocale();
   const [storeListOption, setstoreListOption] = useState<any[]>([]);
+  const [tableloading, settableloading] = useState<any>(false);
   const [UserList, setUserList] = useState<any[]>([]);
   const [visitModal, setvisitModal] = useState<boolean>();
   const [notice_title, setnotice_title] = useState<string>('');
@@ -89,7 +90,7 @@ function SearchTable({}) {
 
   const searchTableState = useSelector((state: ReducerState) => state.searchTable);
 
-  const { pagination, loading, data, formParams } = searchTableState;
+  const { pagination, data, formParams } = searchTableState;
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -101,6 +102,9 @@ function SearchTable({}) {
   };
   useEffect(() => {
     fetchData();
+    return () => {
+      dispatch({ type: UPDATE_LIST, payload: { data: [] } });
+    };
   }, [store_code]);
   useEffect(() => {
     getUserListApi();
@@ -119,7 +123,9 @@ function SearchTable({}) {
       notice_title,
       store_code,
     });
+    settableloading(true);
     data.then((res) => {
+      settableloading(false);
       const { data, paginator } = res;
       dispatch({ type: UPDATE_LIST, payload: { data } });
       dispatch({
@@ -133,6 +139,7 @@ function SearchTable({}) {
           },
         },
       });
+
       dispatch({ type: UPDATE_LOADING, payload: { loading: false } });
       dispatch({ type: UPDATE_FORM_PARAMS, payload: { params } });
     });
@@ -248,8 +255,8 @@ function SearchTable({}) {
       </div>
       <Card bordered={false}>
         <Table
+          loading={tableloading}
           rowKey="notice_title"
-          loading={loading}
           data={data}
           onChange={onChangeTable}
           pagination={pagination}

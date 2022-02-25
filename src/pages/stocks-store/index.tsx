@@ -90,6 +90,9 @@ function SearchTable({}) {
   const dispatch = useDispatch();
   useEffect(() => {
     fetchData();
+    return () => {
+      dispatch({ type: UPDATE_LIST, payload: { data: [] } });
+    };
   }, []);
 
   function fetchData(current = 1, pageSize = 10, params = {}) {

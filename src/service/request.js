@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Message } from '@arco-design/web-react';
 
-const ConfigBaseURL = 'https://gbs.toptian.com/'; // 默认路径，这里也可以使用env来判断环境
+const ConfigBaseURL = 'http://dev-service.mengmohmg.com/'; // 默认路径，这里也可以使用env来判断环境
 
 // 使用create方法创建axios实例
 export const Service = axios.create({

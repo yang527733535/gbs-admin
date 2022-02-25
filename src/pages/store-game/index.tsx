@@ -40,7 +40,7 @@ function SearchTable({}) {
   const [gb_code, setgb_code] = useState(null);
   const [game_people, setgame_people] = useState(null);
   const [storeOptions, setstoreOptions] = useState([]);
-
+  const [loading, setloading] = useState(false);
   useEffect(() => {
     setstoreOptions(JSON.parse(localStorage.getItem('Allshop'))['store_code']);
   }, []);
@@ -177,10 +177,13 @@ function SearchTable({}) {
   // shopList
 
   const searchTableState = useSelector((state: ReducerState) => state.searchTable);
-  const { data, pagination, loading, formParams } = searchTableState;
+  const { data, pagination, formParams } = searchTableState;
   const dispatch = useDispatch();
   useEffect(() => {
     fetchData();
+    return () => {
+      dispatch({ type: UPDATE_LIST, payload: { data: [] } });
+    };
   }, [store_code]);
 
   function fetchData(current = 1, pageSize = 10, params = {}) {
@@ -191,7 +194,9 @@ function SearchTable({}) {
       gb_code,
       game_people,
     });
+    setloading(true);
     data.then((res) => {
+      setloading(false);
       const { data, paginator } = res;
       dispatch({ type: UPDATE_LIST, payload: { data } });
       dispatch({
@@ -339,7 +344,6 @@ function SearchTable({}) {
       </div>
       <Card bordered={false}>
         <Table
-          // rowKey="gb_title"
           loading={loading}
           onChange={onChangeTable}
           pagination={pagination}

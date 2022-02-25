@@ -85,6 +85,9 @@ function SearchTable() {
   const dispatch = useDispatch();
   useEffect(() => {
     fetchData();
+    return () => {
+      dispatch({ type: UPDATE_LIST, payload: { data: [] } });
+    };
   }, []);
 
   useEffect(() => {}, []);

@@ -17,7 +17,6 @@ import { dramaList, labelsApi, getDmList } from '../../api/drama.js';
 import {
   UPDATE_FORM_PARAMS,
   UPDATE_LIST,
-  UPDATE_LOADING,
   UPDATE_PAGINATION,
   CHANGE_DRAWER_STATUS,
 } from './redux/actionTypes';
@@ -32,6 +31,7 @@ function SearchTable() {
   const locale = useLocale();
   const [dmlist, setdmlist] = useState([]);
   const [modalType, setmodalType] = useState('');
+  const [loading, setloading] = useState(false);
   const [addDmModal, setaddDmModal] = useState(false);
   const [visitModal, setvisitModal] = useState(false);
   const [DramaRoleModal, setDramaRoleModal] = useState(false);
@@ -156,6 +156,9 @@ function SearchTable() {
   const dispatch = useDispatch();
   useEffect(() => {
     fetchData();
+    return () => {
+      dispatch({ type: UPDATE_LIST, payload: { data: [] } });
+    };
   }, []);
 
   const searchTableState = useSelector((state: ReducerState) => {
@@ -165,7 +168,7 @@ function SearchTable() {
     return state.myState;
   });
   const { show, clickItem } = dramaInfoStore;
-  const { data, pagination, loading, formParams } = searchTableState;
+  const { data, pagination, formParams } = searchTableState;
   useEffect(() => {
     getlabelsApi();
     getDmListApi();
@@ -230,7 +233,9 @@ function SearchTable() {
       gb_text_tag,
       gb_level,
     });
+    setloading(true);
     data.then((res) => {
+      setloading(false);
       const { data, paginator } = res;
       dispatch({ type: UPDATE_LIST, payload: { data } });
       dispatch({
@@ -244,7 +249,7 @@ function SearchTable() {
           },
         },
       });
-      dispatch({ type: UPDATE_LOADING, payload: { loading: false } });
+      // dispatch({ type: UPDATE_LOADING, payload: { loading: false } });
       dispatch({ type: CHANGE_DRAWER_STATUS, payload: { dramaDetailDrawer: false } });
       dispatch({ type: UPDATE_FORM_PARAMS, payload: { params } });
     });

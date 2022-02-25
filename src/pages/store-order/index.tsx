@@ -12,18 +12,14 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import { getUserList } from '../../api/user.js';
 import { OrderList, shopList } from '../../api/drama.js';
-import {
-  UPDATE_FORM_PARAMS,
-  UPDATE_LIST,
-  UPDATE_LOADING,
-  UPDATE_PAGINATION,
-} from './redux/actionTypes';
+import { UPDATE_FORM_PARAMS, UPDATE_LIST, UPDATE_PAGINATION } from './redux/actionTypes';
 import AddForm from './form/index.jsx';
 import { ReducerState } from '../../redux';
 import styles from './style/index.module.less';
 
 function SearchTable({}) {
   const [storeListOption, setstoreListOption] = useState<any[]>([]);
+  const [loading, setloading] = useState(false);
   const [UserList, setUserList] = useState<any[]>([]);
   const [visitModal, setvisitModal] = useState<boolean>();
   const [notice_title, setnotice_title] = useState<string>('');
@@ -133,7 +129,7 @@ function SearchTable({}) {
 
   const searchTableState = useSelector((state: ReducerState) => state.searchTable);
 
-  const { pagination, loading, data, formParams } = searchTableState;
+  const { pagination, data, formParams } = searchTableState;
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -145,6 +141,9 @@ function SearchTable({}) {
   };
   useEffect(() => {
     fetchData();
+    return () => {
+      dispatch({ type: UPDATE_LIST, payload: { data: [] } });
+    };
   }, []);
   useEffect(() => {
     getUserListApi();
@@ -163,7 +162,9 @@ function SearchTable({}) {
       notice_title,
       store_code,
     });
+    setloading(true);
     data.then((res) => {
+      setloading(false);
       const { data, paginator } = res;
       dispatch({ type: UPDATE_LIST, payload: { data } });
       dispatch({
@@ -177,7 +178,6 @@ function SearchTable({}) {
           },
         },
       });
-      dispatch({ type: UPDATE_LOADING, payload: { loading: false } });
       dispatch({ type: UPDATE_FORM_PARAMS, payload: { params } });
     });
   }

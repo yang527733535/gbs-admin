@@ -92,6 +92,7 @@ export default function StoreDrama({ store_code, getStoreDetail, storeDetailInfo
   }, [getStoreDetail]);
   useEffect(() => {
     fetchData();
+    
   }, []);
 
   const columns = [
