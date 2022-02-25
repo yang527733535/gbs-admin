@@ -76,7 +76,7 @@ function Navbar() {
       <div className={styles.left}>
         <Space size={8}>
           <Image
-            src="https://gbs.toptian.com/image/show?file=drama_I00111-1642061758.png"
+            src="https://oss.mengmohmg.com/logo/mengmo.png"
             width={50}
           ></Image>
           <Typography.Title style={{ margin: 0, fontSize: 18 }} heading={5}>

@@ -7,7 +7,7 @@ export default function LoginBannber() {
   const data = [
     {
       slogan: '专业的剧本杀管理运营后台',
-      image: 'https://gbs.toptian.com/image/show?file=drama_I00111-1642061758.png',
+      image: 'https://oss.mengmohmg.com/logo/mengmo.png',
     },
   ];
   return (
@@ -16,7 +16,12 @@ export default function LoginBannber() {
         <div key={`${index}`}>
           <div className={styles['carousel-item']}>
             <div className={styles['carousel-title']}>{item.slogan}</div>
-            <img className={styles['carousel-image']} src={item.image} />
+            <img
+              referrer-policy="no-referrer"
+              className={styles['carousel-image']}
+              src={item.image}
+              // src='https://myasd.oss-cn-beijing.aliyuncs.com/upload/avatar/03fd474c-9186-4af9-9623-af1e4d31b7a3.JPG'
+            />
           </div>
         </div>
       ))}

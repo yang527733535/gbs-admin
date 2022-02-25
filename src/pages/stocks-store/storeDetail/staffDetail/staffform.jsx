@@ -111,53 +111,6 @@ export default function RoomForm({ store_code, closeModal }) {
           }}
         </Form.List>
 
-        {/* <Form.Item label="房间照片" field="room_image" triggerPropName="fileList">
-          <Upload
-            limit={1}
-            renderUploadList={() => null}
-            name="role_cover"
-            customRequest={(option) => {
-              const { onProgress, onError, onSuccess, file } = option;
-              const xhr = new XMLHttpRequest();
-              if (xhr.upload) {
-                xhr.upload.onprogress = function(event) {
-                  let percent;
-                  if (event.total > 0) {
-                    percent = (event.loaded / event.total) * 100;
-                  }
-                  onProgress(parseInt(percent, 10), event);
-                };
-              }
-              xhr.onerror = function error(e) {
-                onError(e);
-              };
-              xhr.onload = function onload() {
-                if (xhr.status < 200 || xhr.status >= 300) {
-                }
-                let data = JSON.parse(xhr.responseText);
-                setroomUrl(data.data.file_url);
-                onSuccess(data);
-              };
-              const formData = new FormData();
-              formData.append('up_file', file);
-              formData.append('module', 'drama');
-              xhr.open('post', 'https://gbs.toptian.com/system/upload/image', true);
-              xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
-              xhr.send(formData);
-            }}
-            onPreview={(file) => {
-              Modal.info({
-                title: 'Preview',
-                content: (
-                  <img
-                    src={file.url || URL.createObjectURL(file.originFile)}
-                    style={{ maxWidth: '100%' }}
-                  />
-                ),
-              });
-            }}
-          />
-        </Form.Item> */}
         <FormItem {...noLabelLayout}>
           <Button
             onClick={async () => {

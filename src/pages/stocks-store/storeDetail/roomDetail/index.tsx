@@ -40,14 +40,14 @@ export default function RoomDetail({ store_code, getStoreDetail, storeDetailInfo
         ></RoomFrom>
       </Modal>
 
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
         <Card
           style={{
-            width: 300,
+            width: 275,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            height: 328,
+            height: 330,
             marginLeft: 20,
             marginBottom: 20,
           }}
@@ -143,7 +143,7 @@ export default function RoomDetail({ store_code, getStoreDetail, storeDetailInfo
                           const resdata = await reqCreateQRcode(param);
                           if (resdata.code === 200) {
                             getStoreDetail();
-                            Message.info({ content: '删除成功' });
+                            Message.info({ content: '生成成功' });
                           }
                         }}
                       >

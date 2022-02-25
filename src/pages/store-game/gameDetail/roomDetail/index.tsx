@@ -4,6 +4,7 @@ import { DeleteRoom, reqCreateQRcode } from '../../../../api/drama.js';
 import { Button, Card, Image, Message, Modal, Popconfirm, Space } from '@arco-design/web-react';
 const { Meta } = Card;
 export default function RoomDetail({ store_code, getStoreDetail, storeDetailInfo }) {
+  console.log('store_code: ', store_code);
   useEffect(() => {
     console.log('storeDetailInfo', storeDetailInfo);
     let param = {

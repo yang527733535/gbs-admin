@@ -12,6 +12,7 @@ import {
   Space,
 } from '@arco-design/web-react';
 import { reqBindrole } from '../../../../../api/drama.js';
+import { imguploadurl } from '../../../../../../.config/config.js';
 
 import { FormInstance } from '@arco-design/web-react/es/Form';
 const FormItem = Form.Item;
@@ -132,7 +133,7 @@ function DramaRoleForm({
                     const formData = new FormData();
                     formData.append('up_file', file);
                     formData.append('module', 'drama');
-                    xhr.open('post', 'https://gbs.toptian.com/system/upload/image', true);
+                    xhr.open('post', `${imguploadurl}/system/upload/image`, true);
                     xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
                     xhr.send(formData);
                   }}

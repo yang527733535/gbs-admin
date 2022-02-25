@@ -18,6 +18,7 @@ import { useSelector } from 'react-redux';
 import { addDrama, dramaDetail, editDrama } from '../../../api/drama.js';
 import { ReducerState } from '../../../redux';
 import { FormInstance } from '@arco-design/web-react/es/Form';
+import { imguploadurl } from '../../../../.config/config.js';
 const FormItem = Form.Item;
 const Row = Grid.Row;
 const Col = Grid.Col;
@@ -374,7 +375,7 @@ function DramaForm({ modalType = 'add', closeModalAndRequest }) {
                     const formData = new FormData();
                     formData.append('up_file', file);
                     formData.append('module', 'drama');
-                    xhr.open('post', 'https://gbs.toptian.com/system/upload/image', true);
+                    xhr.open('post', `${imguploadurl}/system/upload/image`, true);
                     xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
                     xhr.send(formData);
                   }}

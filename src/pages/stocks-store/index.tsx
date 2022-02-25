@@ -254,7 +254,7 @@ function SearchTable({}) {
       </div>
       <Card bordered={false}>
         <Table
-          rowKey="user_account"
+          rowKey="store_id"
           loading={loading}
           onChange={onChangeTable}
           pagination={pagination}

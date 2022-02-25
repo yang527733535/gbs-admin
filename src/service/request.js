@@ -24,8 +24,12 @@ Service.interceptors.response.use(
   (response) => {
     const { data, message } = response.data;
     if (response.data.code !== 200) {
-      // Message.error(message);
-      // window.localStorage.clear();
+      Message.error(message);
+      Message.info('即将重新登录');
+      window.localStorage.clear();
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
       // window.location.reload();
     }
     // Message

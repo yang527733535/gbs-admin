@@ -2,6 +2,8 @@ import React, { useRef, useEffect, useState } from 'react';
 
 import { Form, Select, Input, Button, Message, Upload, Modal } from '@arco-design/web-react';
 import { reqBindRoom, reqEditRoom } from '../../../../api/drama.js';
+import { imguploadurl } from '../../../../../.config/config.js';
+
 const FormItem = Form.Item;
 const formItemLayout = {
   labelCol: {
@@ -19,17 +21,13 @@ const noLabelLayout = {
 };
 
 export default function RoomForm({ saveClickItem, store_code, modalType, closeModal }) {
-  console.log('saveClickItem: ', saveClickItem);
   const formRef = useRef();
   const [roomUrl, setroomUrl] = useState('');
   const [app_room_styleList, setapp_room_styleList] = useState([]);
-
   useEffect(() => {
-    let data = JSON.parse(localStorage.getItem('dicts'));
-    console.log('data: ', data);
+    const data = JSON.parse(localStorage.getItem('dicts'));
     data.forEach((element) => {
       if (element.dict_code === 'app_room_style') {
-        console.log('element.dict_label', element.dict_label);
         setapp_room_styleList(element.dict_label);
       }
     });
@@ -105,7 +103,7 @@ export default function RoomForm({ saveClickItem, store_code, modalType, closeMo
               const formData = new FormData();
               formData.append('up_file', file);
               formData.append('module', 'drama');
-              xhr.open('post', 'https://gbs.toptian.com/system/upload/image', true);
+              xhr.open('post', `${imguploadurl}/system/upload/image`, true);
               xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
               xhr.send(formData);
             }}

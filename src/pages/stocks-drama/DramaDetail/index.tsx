@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-
+import { imguploadurl } from '../../../../.config/config.js';
 import {
   Form,
   Divider,
@@ -173,7 +173,7 @@ export default function DramaDetail({ modalType, closeModalAndReq }) {
                           const formData = new FormData();
                           formData.append('up_file', file);
                           formData.append('module', 'drama');
-                          xhr.open('post', 'https://gbs.toptian.com/system/upload/image', true);
+                          xhr.open('post', `${imguploadurl}/system/upload/image`, true);
                           xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
                           xhr.send(formData);
                         }}

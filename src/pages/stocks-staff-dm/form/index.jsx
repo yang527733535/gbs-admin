@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import {
   Form,
   Input,
@@ -12,6 +12,8 @@ import {
 } from '@arco-design/web-react';
 import { bindDm } from '../../../api/drama.js';
 import PropTypes from 'prop-types';
+import { imguploadurl } from '../../../../.config/config.js';
+
 const FormItem = Form.Item;
 function Index({ UserList, closeModalAndReqNewTableData }) {
   const [form] = Form.useForm();
@@ -96,7 +98,7 @@ function Index({ UserList, closeModalAndReqNewTableData }) {
               const formData = new FormData();
               formData.append('up_file', file);
               formData.append('module', 'drama');
-              xhr.open('post', 'https://gbs.toptian.com/system/upload/image', true);
+              xhr.open('post', `${imguploadurl}/system/upload/image`, true);
               xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
               xhr.send(formData);
             }}
