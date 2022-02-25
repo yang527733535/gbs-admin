@@ -20,37 +20,13 @@ const noLabelLayout = {
 
 function FormDom({ closeModalAndReqTable, userListData, clickItem }) {
   const formRef = useRef();
-  const [size, setSize] = useState('default');
-  const [cascaderOptionsArr, setcascaderOptionsArr] = useState([]);
-  console.log(clickItem);
+  const size = 'default';
   useEffect(() => {
     formRef.current.setFieldsValue(clickItem);
   }, []);
-  console.log(userListData);
   const onValuesChange = (changeValue, values) => {
     console.log('onValuesChange: ', changeValue, values);
   };
-  useEffect(() => {
-    const regionsData = regionsList();
-    regionsData.then((res) => {
-      console.log('res: ', res);
-      const { data } = res;
-      const mapTree = (org) => {
-        const haveChildren = Array.isArray(org.region_children) && org.region_children.length > 0;
-        return {
-          key: String(org.region_id),
-          value: String(org.region_id),
-          label: org.region_name,
-          children: haveChildren ? org.region_children.map((i) => mapTree(i)) : [],
-        };
-      };
-      let arr = [];
-      arr = data.map((org) => mapTree(org));
-      console.log(arr);
-      setcascaderOptionsArr(arr);
-    });
-  }, []);
-  // regionsList
 
   return (
     <div style={{ maxWidth: 650 }}>
@@ -90,12 +66,15 @@ function FormDom({ closeModalAndReqTable, userListData, clickItem }) {
                 try {
                   await formRef.current.validate();
                   // Message.info('校验通过，提交成功！');
+
                   if (clickItem === null) {
                     console.log(formRef.current.getFields());
+                    return;
                     var data = await addGame(formRef.current.getFields());
                   } else {
                     const param = formRef.current.getFields();
                     console.log('param: ', param);
+                    return;
                     param.store_code = clickItem.store_code;
                     var data = await updateShop(param);
                   }

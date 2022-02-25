@@ -24,9 +24,9 @@ Service.interceptors.response.use(
   (response) => {
     const { data, message } = response.data;
     if (response.data.code !== 200) {
-      Message.error(message);
-      window.localStorage.clear();
-      window.location.reload();
+      // Message.error(message);
+      // window.localStorage.clear();
+      // window.location.reload();
     }
     // Message
     if (response.data.code == 4002 || response.data.code == 4003) {
