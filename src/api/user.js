@@ -104,3 +104,47 @@ export function deleteRoleUser(data) {
     method: 'POST',
   });
 }
+
+export function reqAllMune(data) {
+  return Service({
+    url: '/system/menu/all',
+    data,
+    method: 'POST',
+  });
+}
+
+export function reqroleMune(data) {
+  return Service({
+    url: '/system/role/menu',
+    data,
+    method: 'POST',
+  });
+}
+// /system/role/menu
+
+// reqAllMune
+export function reqgetallmune(data) {
+  return Service({
+    url: '/system/menu/all',
+    data,
+    method: 'POST',
+  });
+}
+
+export function reqGetroleMuen(data) {
+  return Service({
+    url: '/system/role/menu',
+    data,
+    method: 'POST',
+  });
+}
+
+export function reqmenusave(data) {
+  return Service({
+    url: '/system/role/menu',
+    data,
+    method: 'POST',
+  });
+}
+
+// reqmenusave
