@@ -1,12 +1,12 @@
 {
-  "name": "arco-design-pro",
+  "name": "梦墨绘梦馆",
   "version": "1.0.0",
   "description": "梦墨绘梦馆",
   "scripts": {
     "prepublishOnly": "npm run build",
     "dev": "arco-scripts dev:site --port 8005",
     "build": "arco-scripts build:site",
-    "addfeat":"git add .&& git commit -m '💥 feat(模块):新增功能' && git push origin",
+    "addfeat": "git add .&& git commit -m '💥 feat(模块):新增功能' && git push origin",
     "eslint": "eslint src/ --fix --cache --quiet --ext .js,.jsx,.ts,.tsx",
     "stylelint": "stylelint 'components/**/*.less' --fix --cache"
   },

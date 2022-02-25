@@ -84,7 +84,7 @@ function RoleTree({}) {
   const [selectdict_code] = useState('');
   const [treeData, settreeData] = useState([]);
   const [userListData, setuserListData] = useState([]);
-  const [nowrole_code, setnowrole_code] = useState('');
+  const [nowrole_code, setnowrole_code] = useState('shop_dm');
   const [tabledata, settabledata] = useState([]);
   useEffect(() => {
     getRoleUserList();
@@ -163,7 +163,9 @@ function RoleTree({}) {
               onSelect={async (e) => {
                 setnowrole_code(e[0]);
               }}
-              // defaultSelectedKeys={['0-0-1']}
+              // defaultSelectedKeys={['shop_dm', 'shop_dm']}
+              // expandedKeys={['shop_dm', 'shop_dm']}
+              autoExpandParent={true}
               treeData={treeData}
             />
           </Card>
@@ -179,19 +181,6 @@ function RoleTree({}) {
             >
               角色添加用户
             </Button>
-            <div>
-              {selectdict_code !== '' && (
-                <Button
-                  onClick={() => {
-                    setvisitModal(true);
-                  }}
-                  style={{ marginBottom: 20 }}
-                  type="primary"
-                >
-                  添加字典
-                </Button>
-              )}
-            </div>
             <Table
               showHeader
               // stripe={true}

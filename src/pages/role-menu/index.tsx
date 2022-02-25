@@ -18,7 +18,7 @@ function RoleTree({}) {
   const [selectdict_code] = useState('');
   const [treeData, settreeData] = useState([]);
   const [userListData, setuserListData] = useState([]);
-  const [nowrole_code, setnowrole_code] = useState('');
+  const [nowrole_code, setnowrole_code] = useState('shop_dm');
   const [checkedKeys, setCheckedKeys] = useState([]);
   useEffect(() => {
     getallmune();
