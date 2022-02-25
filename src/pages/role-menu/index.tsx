@@ -10,11 +10,14 @@ import {
 } from '../../api/user.js';
 import AddForm from './form/index.jsx';
 
+const allExpandedKeys = ['shop_leading'];
 function RoleTree({}) {
+  const [expandedKeys, setExpandedKeys] = useState(allExpandedKeys);
   const [mTreeData, setmTreeData] = useState([]);
   const [cardloading, setcardloading] = useState(false);
   const [visitModal, setvisitModal] = useState(false);
   const [clickItem] = useState(null);
+
   const [selectdict_code] = useState('');
   const [treeData, settreeData] = useState([]);
   const [userListData, setuserListData] = useState([]);
@@ -37,11 +40,7 @@ function RoleTree({}) {
     };
     setcardloading(true);
     const { data } = await reqGetroleMuen(param);
-    if (data.code === 200) {
-      Message.success('操作成功');
-      setcardloading(false);
-      setCheckedKeys(data);
-    }
+    setCheckedKeys(data);
     setcardloading(false);
   };
 
@@ -106,14 +105,20 @@ function RoleTree({}) {
       <div style={{ display: 'flex', width: '100%' }}>
         <div style={{ width: 200, marginRight: 20 }}>
           <Card>
-            <Tree
-              onSelect={async (e) => {
-                setnowrole_code(e[0]);
-              }}
-              autoExpandParent={true}
-              // defaultSelectedKeys={['0-0-1']}
-              treeData={treeData}
-            />
+            {treeData && (
+              <Tree
+                onSelect={async (e) => {
+                  setnowrole_code(e[0]);
+                }}
+                expandedKeys={expandedKeys}
+                onExpand={(keys, extra) => {
+                  console.log(keys, extra);
+                  setExpandedKeys(keys);
+                }}
+                // expandedKeys={['shop_person', 'shop_dm']}
+                treeData={treeData}
+              />
+            )}
           </Card>
         </div>
         <div style={{ flex: 1 }}>
@@ -125,6 +130,7 @@ function RoleTree({}) {
             <Tree
               autoExpandParent={true}
               // checkStrictly={checkStrictly}
+
               checkable
               checkedKeys={checkedKeys}
               onCheck={(value) => {
@@ -143,6 +149,7 @@ function RoleTree({}) {
                   let resdata = await reqmenusave(param);
                   if (resdata.code === 200) {
                     getRoleMuenList();
+                    Message.success('保存成功');
                   }
                 }}
                 style={{ marginTop: 10 }}

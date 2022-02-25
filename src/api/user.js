@@ -141,7 +141,7 @@ export function reqGetroleMuen(data) {
 
 export function reqmenusave(data) {
   return Service({
-    url: '/system/role/menu',
+    url: '/system/role/menu-save',
     data,
     method: 'POST',
   });
