@@ -354,3 +354,11 @@ export function reqcompletegame(data) {
     method: 'post',
   });
 }
+
+export function reqGameDetail(data) {
+  return Service({
+    url: '/v1/game/view',
+    data,
+    method: 'post',
+  });
+}

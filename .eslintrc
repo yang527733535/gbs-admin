@@ -7,7 +7,11 @@
     "jest": true
   },
   "parser": "@typescript-eslint/parser",
-  "extends": ["plugin:@typescript-eslint/recommended", "airbnb", "plugin:prettier/recommended"],
+  "extends": [
+    "plugin:@typescript-eslint/recommended",
+    "airbnb",
+    "plugin:prettier/recommended"
+  ],
   "parserOptions": {
     "ecmaFeatures": {
       "experimentalObjectRestSpread": true,
@@ -15,7 +19,10 @@
     },
     "sourceType": "module"
   },
-  "plugins": ["react", "babel"],
+  "plugins": [
+    "react",
+    "babel"
+  ],
   "globals": {
     "ActiveXObject": false,
     "describe": false,
@@ -28,17 +35,54 @@
     "__PREVIEW__": false,
   },
   "rules": {
-    "prettier/prettier": ["error", { "trailingComma": "es5", "printWidth": 100 }],
-    "linebreak-style": ["error", "unix"],
-    "no-console": ["error", { "allow": ["warn", "error"] }],
+    "camelcase": "off",
+    "@typescript-eslist/camelcase": 0,
+    "prettier/prettier": [
+      "error",
+      {
+        "trailingComma": "es5",
+        "printWidth": 100
+      }
+    ],
+    "linebreak-style": [
+      "error",
+      "unix"
+    ],
+    "no-console": [
+      "error",
+      {
+        "allow": [
+          "warn",
+          "error"
+        ]
+      }
+    ],
     "no-case-declarations": 0,
     "no-param-reassign": 0,
     "no-underscore-dangle": 0,
     "no-useless-constructor": 0,
-    "no-use-before-define": ["error", { "functions": false, "classes": false }],
-    "no-unused-vars": [2, { "vars": "all", "args": "none" }],
+    "no-use-before-define": [
+      "error",
+      {
+        "functions": false,
+        "classes": false
+      }
+    ],
+    "no-unused-vars": [
+      2,
+      {
+        "vars": "all",
+        "args": "none"
+      }
+    ],
     "no-restricted-syntax": 0,
-    "no-unused-expressions": ["error", { "allowShortCircuit": true, "allowTernary": true }],
+    "no-unused-expressions": [
+      "error",
+      {
+        "allowShortCircuit": true,
+        "allowTernary": true
+      }
+    ],
     "no-plusplus": 0,
     "no-return-assign": 0,
     "no-script-url": 0,
@@ -69,7 +113,17 @@
     "react/no-danger": 0,
     "react/forbid-prop-types": 0,
     "react/prop-types": 0,
-    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx", "ts", "tsx"] }],
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [
+          ".js",
+          ".jsx",
+          "ts",
+          "tsx"
+        ]
+      }
+    ],
     "react/sort-comp": 0,
     "react/no-did-update-set-state": 0,
     "react/prefer-stateless-function": 0,

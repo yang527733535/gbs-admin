@@ -12,9 +12,11 @@ import {
   InputNumber,
   Popconfirm,
   Message,
+  Drawer,
 } from '@arco-design/web-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { CarList, shopList, reqcompletegame } from '../../api/drama.js';
+import GameDetail from './gameDetail';
 import {
   UPDATE_FORM_PARAMS,
   UPDATE_LIST,
@@ -30,6 +32,7 @@ import StartGameForm from './stargameform/index.jsx';
 
 function SearchTable({}) {
   const locale = useLocale();
+  const [showGameDetail, setshowGameDetail] = useState(false);
   const [visitModal, setvisitModal] = useState(false);
   const [gamevisitModal, setgamevisitModal] = useState(false);
   const [clickItem, setclickItem] = useState(null);
@@ -97,9 +100,10 @@ function SearchTable({}) {
     {
       title: locale['searchTable.columns.operations'],
       fixed: 'right' as 'right',
+      width: 230,
       render: (_, data) => (
         <Space>
-          <Button
+          {/* <Button
             onClick={() => {
               setclickItem(data);
               setvisitModal(true);
@@ -108,7 +112,7 @@ function SearchTable({}) {
             type="primary"
           >
             修改
-          </Button>
+          </Button> */}
           {data.game_status === '1' && (
             <Button
               onClick={() => {
@@ -147,6 +151,15 @@ function SearchTable({}) {
               </Button>
             </Popconfirm>
           )}
+          <Button
+            size="mini"
+            onClick={async () => {
+              setclickItem(data);
+              setshowGameDetail(true);
+            }}
+          >
+            游戏详情
+          </Button>
         </Space>
       ),
     },
@@ -206,6 +219,19 @@ function SearchTable({}) {
   }, []);
   return (
     <div className={styles.container}>
+      　
+      <Drawer
+        onCancel={() => {
+          setshowGameDetail(false);
+        }}
+        footer={null}
+        visible={showGameDetail}
+        title="游戏详情"
+        unmountOnExit={true}
+        width="90vw"
+      >
+        <GameDetail clickItem={clickItem}></GameDetail>
+      </Drawer>
       <Modal
         title={clickItem === null ? '添加组局' : '修改组局'}
         footer={null}
@@ -224,7 +250,6 @@ function SearchTable({}) {
           }}
         />
       </Modal>
-
       <Modal
         // title={clickItem === null ? '添加组局' : '修改组局'}
         title="开始游戏"
@@ -314,7 +339,7 @@ function SearchTable({}) {
       </div>
       <Card bordered={false}>
         <Table
-          rowKey="user_account"
+          // rowKey="gb_title"
           loading={loading}
           onChange={onChangeTable}
           pagination={pagination}

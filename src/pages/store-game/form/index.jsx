@@ -11,6 +11,7 @@ import {
   InputNumber,
 } from '@arco-design/web-react';
 import { IconDelete } from '@arco-design/web-react/icon';
+import debounce from 'lodash/debounce';
 import {
   shopList,
   addGame,
@@ -19,9 +20,9 @@ import {
   dramaList,
   StoreDetailApi,
   getdramaprice,
+  reqGameDetail,
 } from '../../../api/drama.js';
 import { dmList, memberList } from '../../../api/user.js';
-import debounce from 'lodash/debounce';
 
 const FormItem = Form.Item;
 
@@ -66,10 +67,6 @@ function Shop({ closeModalAndReqTable, clickItem }) {
   const [vipfetching, setvipfetching] = useState(false);
 
   const refFetchId = useRef(null);
-  useEffect(() => {
-    console.log('clickItem', clickItem);
-    // formRef.current.setFieldsValue(clickItem);
-  }, []);
 
   const onValuesChange = (changeValue, values) => {
     console.log('onValuesChange: ', changeValue, values);
@@ -260,7 +257,7 @@ function Shop({ closeModalAndReqTable, clickItem }) {
                 gb_code: e,
                 store_code: nowstore_code,
               };
-              let { data } = await getdramaprice(param);
+              const { data } = await getdramaprice(param);
               const { gb_price, gb_price2 } = data;
               setprice1(gb_price);
               setprice2(gb_price2);
@@ -312,7 +309,7 @@ function Shop({ closeModalAndReqTable, clickItem }) {
           field="game_people"
           rules={[{ required: true, message: '请填写玩家人数' }]}
         >
-          <InputNumber min={2} placeholder="请填写玩家人数..." />
+          <InputNumber min={1} placeholder="请填写玩家人数..." />
         </FormItem>
         <FormItem
           label="主持人"
