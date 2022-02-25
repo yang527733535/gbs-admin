@@ -362,3 +362,10 @@ export function reqGameDetail(data) {
     method: 'post',
   });
 }
+export function addRoleUser(data) {
+  return Service({
+    url: '/system/role/add-user',
+    data,
+    method: 'post',
+  });
+}

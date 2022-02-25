@@ -89,3 +89,18 @@ export function reqGameDetail(data) {
     method: 'POST',
   });
 }
+
+export function reqGetroleUser(data) {
+  return Service({
+    url: `/system/role/get-user?role_code=${data.role_code}`,
+    method: 'GET',
+  });
+}
+
+export function deleteRoleUser(data) {
+  return Service({
+    url: '/system/role/del-user',
+    data,
+    method: 'POST',
+  });
+}

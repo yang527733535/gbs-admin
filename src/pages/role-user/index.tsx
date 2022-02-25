@@ -1,30 +1,79 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Tree, Button, Breadcrumb, Card, Modal, Space } from '@arco-design/web-react';
+import {
+  Table,
+  Message,
+  Popconfirm,
+  Tree,
+  Button,
+  Breadcrumb,
+  Card,
+  Modal,
+  Space,
+} from '@arco-design/web-react';
 import styles from './style/index.module.less';
-import { RoleTreeApi, userList } from '../../api/user.js';
+import { RoleTreeApi, deleteRoleUser, userList, reqGetroleUser } from '../../api/user.js';
 import AddForm from './form/index.jsx';
 
 function RoleTree({}) {
   const columns = [
     {
-      title: '名称',
-      dataIndex: 'label_zh',
+      title: '帐号',
+      dataIndex: 'user_account',
     },
     {
-      title: '字典编码',
-      dataIndex: 'dict_code',
+      title: '用户id',
+      dataIndex: 'user_id',
+    },
+    {
+      title: '用户名',
+      dataIndex: 'user_name',
+    },
+    {
+      title: '英语名称',
+      dataIndex: 'user_name_en',
+    },
+    {
+      title: '昵称',
+      dataIndex: 'user_nick',
     },
     {
       title: '操作',
-      render: () => {
+      render: (_, data) => {
         return (
           <Space>
-            <Button size="small" type="primary">
-              修改
-            </Button>
-            <Button status="danger" size="small" type="primary">
-              删除
-            </Button>
+            <Popconfirm
+              title="确定删除该用户?"
+              onOk={async () => {
+                const { user_id, user_account } = data;
+                let param = {
+                  role_code: nowrole_code,
+                  user_id,
+                  user_account,
+                };
+                console.log('param', param);
+                let resdata = await deleteRoleUser(param);
+                console.log('data: ', data);
+                if (resdata.code === 200) {
+                  Message.info({ content: '删除成功' });
+                  getRoleUserList();
+                }
+              }}
+              onCancel={() => {
+                Message.error({ content: 'cancel' });
+                console.log(data);
+              }}
+            >
+              <Button
+                onChange={() => {
+                  console.log(data);
+                }}
+                status="danger"
+                size="mini"
+                type="primary"
+              >
+                删除用户
+              </Button>
+            </Popconfirm>
           </Space>
         );
       },
@@ -32,10 +81,23 @@ function RoleTree({}) {
   ];
   const [visitModal, setvisitModal] = useState(false);
   const [clickItem] = useState(null);
-  const [tabledata] = useState([]);
   const [selectdict_code] = useState('');
   const [treeData, settreeData] = useState([]);
   const [userListData, setuserListData] = useState([]);
+  const [nowrole_code, setnowrole_code] = useState('');
+  const [tabledata, settabledata] = useState([]);
+  useEffect(() => {
+    getRoleUserList();
+  }, [nowrole_code]);
+  const getRoleUserList = async () => {
+    let param = {
+      role_code: nowrole_code,
+    };
+    const { data } = await reqGetroleUser(param);
+    settabledata(data);
+    console.log('data: ', data);
+  };
+
   useEffect(() => {
     reqRoleTree();
   }, []);
@@ -48,7 +110,6 @@ function RoleTree({}) {
       page_size: 100,
     };
     const { data } = await userList(parma);
-
     setuserListData(data);
   };
 
@@ -80,12 +141,13 @@ function RoleTree({}) {
         visible={visitModal}
       >
         <AddForm
+          nowrole_code={nowrole_code}
           userListData={userListData}
           selectdict_code={selectdict_code}
           clickItem={clickItem}
           closeModalAndReqTable={() => {
             setvisitModal(false);
-            // fetchData();
+            getRoleUserList();
           }}
         />
       </Modal>
@@ -98,6 +160,9 @@ function RoleTree({}) {
         <div style={{ width: 200, marginRight: 20 }}>
           <Card>
             <Tree
+              onSelect={async (e) => {
+                setnowrole_code(e[0]);
+              }}
               // defaultSelectedKeys={['0-0-1']}
               treeData={treeData}
             />

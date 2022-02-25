@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Form, Select, Button, Message } from '@arco-design/web-react';
-import { addGame, updateShop, regionsList } from '../../../api/drama.js';
+import { addGame, updateShop, addRoleUser } from '../../../api/drama.js';
 
 const FormItem = Form.Item;
 const formItemLayout = {
@@ -18,7 +18,8 @@ const noLabelLayout = {
   },
 };
 
-function FormDom({ closeModalAndReqTable, userListData, clickItem }) {
+function FormDom({ nowrole_code, closeModalAndReqTable, userListData, clickItem }) {
+  console.log('nowrole_code');
   const formRef = useRef();
   const size = 'default';
   useEffect(() => {
@@ -67,6 +68,20 @@ function FormDom({ closeModalAndReqTable, userListData, clickItem }) {
                   await formRef.current.validate();
                   // Message.info('校验通过，提交成功！');
 
+                  let param = formRef.current.getFields();
+                  param.role_code = nowrole_code;
+                  param.user_list = param.user_list.map((item) => {
+                    return {
+                      user_id: '',
+                      user_account: item,
+                    };
+                  });
+                  var resdata = await addRoleUser(param);
+                  if (resdata.code === 200) {
+                    Message.success('添加成功');
+                    closeModalAndReqTable();
+                  }
+                  return;
                   if (clickItem === null) {
                     console.log(formRef.current.getFields());
                     return;
