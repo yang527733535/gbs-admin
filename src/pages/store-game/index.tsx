@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   Table,
+  Form,
   Button,
   Badge,
   Input,
@@ -33,6 +34,7 @@ import StartGameForm from './stargameform/index.jsx';
 function SearchTable({}) {
   const locale = useLocale();
   const [showGameDetail, setshowGameDetail] = useState(false);
+  const [EndGameModal, setEndGameModal] = useState(false);
   const [visitModal, setvisitModal] = useState(false);
   const [gamevisitModal, setgamevisitModal] = useState(false);
   const [clickItem, setclickItem] = useState(null);
@@ -129,24 +131,20 @@ function SearchTable({}) {
           {data.game_status === '2' && (
             <Popconfirm
               title="确定结束游戏?"
-              onOk={async () => {
-                const { game_code, store_code } = data;
-                const param = {
-                  game_code,
-                  store_code,
-                };
-                console.log('param', param);
-                let resdata = await reqcompletegame(param);
-                if (resdata.code === 200) {
-                  Message.info({ content: 'ok' });
-                  fetchData();
-                }
-              }}
+              onOk={async () => {}}
               onCancel={() => {
                 Message.error({ content: '取消' });
               }}
             >
-              <Button size="mini" type="primary" status="warning">
+              <Button
+                onClick={() => {
+                  setclickItem(data);
+                  setEndGameModal(true);
+                }}
+                size="mini"
+                type="primary"
+                status="warning"
+              >
                 结束游戏
               </Button>
             </Popconfirm>
@@ -224,7 +222,43 @@ function SearchTable({}) {
   }, []);
   return (
     <div className={styles.container}>
-      　
+      <Modal
+        onCancel={() => {
+          setEndGameModal(false);
+        }}
+        footer={null}
+        visible={EndGameModal}
+      >
+        <Form
+          onSubmit={async (e) => {
+            const { game_code, store_code } = clickItem;
+            const param = {
+              game_code,
+              store_code,
+              extra_amount: e.extra_amount,
+            };
+            console.log(param);
+            let resdata = await reqcompletegame(param);
+            if (resdata.code === 200) {
+              Message.info({ content: 'ok' });
+              setEndGameModal(false);
+              fetchData();
+            }
+          }}
+          initialValues={{
+            extra_amount: 0,
+          }}
+        >
+          <Form.Item field="extra_amount" label="附加费">
+            <Input style={{ width: 200 }}></Input>
+          </Form.Item>
+          <Form.Item style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+            <Button style={{ marginLeft: 120 }} type="primary" htmlType="submit">
+              结束游戏
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
       <Drawer
         onCancel={() => {
           setshowGameDetail(false);

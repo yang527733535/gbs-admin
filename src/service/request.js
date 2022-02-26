@@ -33,10 +33,8 @@ Service.interceptors.response.use(
         type: 'error',
         duration: 3 * 1000,
       });
-      setTimeout(() => {
-        window.localStorage.clear();
-        window.location.reload();
-      }, 1000);
+      window.localStorage.clear();
+      window.location.reload();
     }
     return response.data;
   },
