@@ -1,2 +1,2 @@
 // 测试服地址
-export const imguploadurl = 'http://dev-service.mengmohmg.com';
+export const imguploadurl = 'https://dev-service.mengmohmg.com';
