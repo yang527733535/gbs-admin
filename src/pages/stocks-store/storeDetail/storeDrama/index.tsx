@@ -24,6 +24,8 @@ export default function StoreDrama({ store_code, getStoreDetail, storeDetailInfo
 
   const [inputNum, setinputNum] = useState(null);
   const [inputNum2, setinputNum2] = useState(null);
+  const [is_new, setis_new] = useState(0);
+  const [is_hot, setis_hot] = useState(0);
   const [saveClick, setsaveClick] = useState(null);
   const [Parma, setParma] = useState(null);
   const [inputNumvisible, setinputNumvisible] = useState(false);
@@ -92,7 +94,6 @@ export default function StoreDrama({ store_code, getStoreDetail, storeDetailInfo
   }, [getStoreDetail]);
   useEffect(() => {
     fetchData();
-    
   }, []);
 
   const columns = [
@@ -197,6 +198,8 @@ export default function StoreDrama({ store_code, getStoreDetail, storeDetailInfo
                   gb_code: item.gb_code,
                   gb_price: inputNum || item.gb_price,
                   gb_price2: inputNum2 || item.gb_price2,
+                  is_hot: item?.is_hot,
+                  is_new: item?.is_new,
                 },
               ];
               setinputNum(item.gb_price);
@@ -228,6 +231,30 @@ export default function StoreDrama({ store_code, getStoreDetail, storeDetailInfo
     {
       title: '周末价格',
       dataIndex: 'gb_price2',
+    },
+    {
+      title: '是否新本',
+      dataIndex: 'is_new',
+      render: (item) => {
+        if (parseInt(item) === 1) {
+          return '是';
+        }
+        if (parseInt(item) === 0) {
+          return '否';
+        }
+      },
+    },
+    {
+      title: '是否热门',
+      dataIndex: 'is_hot',
+      render: (item) => {
+        if (parseInt(item) === 1) {
+          return '是';
+        }
+        if (parseInt(item) === 0) {
+          return '否';
+        }
+      },
     },
     // {
     //   title: '剧本封面',
@@ -322,6 +349,8 @@ export default function StoreDrama({ store_code, getStoreDetail, storeDetailInfo
         onOk={async () => {
           Parma['drama_array'][0]['gb_price'] = inputNum;
           Parma['drama_array'][0]['gb_price2'] = inputNum2;
+          Parma['drama_array'][0]['is_new'] = is_new;
+          Parma['drama_array'][0]['is_hot'] = is_hot;
           let res = await reqStoreBindDrama(Parma);
           console.log('res: ', res);
           if (res.code === 200) {
@@ -354,6 +383,33 @@ export default function StoreDrama({ store_code, getStoreDetail, storeDetailInfo
                 setinputNum2(e);
               }}
             ></InputNumber>
+          </Form.Item>
+          <Form.Item label="是否热门">
+            <Select
+              style={{ marginTop: 10 }}
+              value={is_hot}
+              placeholder="请选择是否热门"
+              onChange={(e) => {
+                setis_hot(e);
+              }}
+            >
+              <Select.Option value={0}>否</Select.Option>
+              <Select.Option value={1}>是</Select.Option>
+            </Select>
+          </Form.Item>
+          <Form.Item label="是否新本">
+            <Select
+              style={{ marginTop: 10 }}
+              value={is_new}
+              placeholder="请选择是否新本"
+              onChange={(e) => {
+                console.log(e);
+                setis_new(e);
+              }}
+            >
+              <Select.Option value={0}>否</Select.Option>
+              <Select.Option value={1}>是</Select.Option>
+            </Select>
           </Form.Item>
         </Form>
       </Modal>

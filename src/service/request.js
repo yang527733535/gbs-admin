@@ -28,11 +28,11 @@ Service.interceptors.response.use(
     }
     // Message
     if (code === 4002 || code === 4003) {
-      Message({
-        message: '长时间未操作,已强制退出,请重新登录',
-        type: 'error',
-        duration: 3 * 1000,
-      });
+      // Message({
+      //   message: '长时间未操作,已强制退出,请重新登录',
+      //   type: 'error',
+      //   duration: 3 * 1000,
+      // });
       window.localStorage.clear();
       window.location.reload();
     }
