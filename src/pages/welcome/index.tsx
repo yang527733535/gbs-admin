@@ -61,7 +61,7 @@ export default function Welcome() {
         </Form>
       </Modal>
       <div className={styles.content}>
-        <Alert type="success" content="欢迎使用 梦墨Admin v1.1.3!" />
+        <Alert type="success" content="欢迎使用 梦墨Admin v1.2.0!" />
       </div>
     </div>
   );
