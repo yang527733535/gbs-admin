@@ -1,10 +1,10 @@
 import React from 'react';
-import { Form, Input, Button } from '@arco-design/web-react';
+import { Form, Input, Button, Message } from '@arco-design/web-react';
 import PropTypes from 'prop-types';
 import { registerApi } from '../../../api/user';
 
 const FormItem = Form.Item;
-function Index() {
+function Index({ closeModalAndFetch }) {
   const [form] = Form.useForm();
   return (
     <div>
@@ -12,6 +12,11 @@ function Index() {
         onSubmit={async (v) => {
           // Message.success('success');
           const data = await registerApi(v);
+          if (data.code === 200) {
+            // MessageChannel
+            Message.success('添加成功');
+            closeModalAndFetch();
+          }
           console.log('data: ', data);
         }}
         form={form}
@@ -30,7 +35,11 @@ function Index() {
         >
           <Input placeholder="请输入你的手机号码..." />
         </FormItem>
-        <FormItem field="user_email" label="邮箱">
+        <FormItem
+          rules={[{ required: true, message: '请填写邮箱' }]}
+          field="user_email"
+          label="邮箱"
+        >
           <Input placeholder="请输入你的邮箱..." />
         </FormItem>
         <FormItem field="user_password" label="初始密码">

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Form,
+  Image,
   Input,
   Upload,
   DatePicker,
@@ -11,17 +12,31 @@ import {
   Message,
 } from '@arco-design/web-react';
 import { bindDm } from '../../../api/drama.js';
-import PropTypes from 'prop-types';
 import { imguploadurl } from '../../../../.config/config.js';
 
+const noLabelLayout = {
+  wrapperCol: {
+    span: 17,
+    offset: 5,
+  },
+};
 const FormItem = Form.Item;
-function Index({ UserList, closeModalAndReqNewTableData }) {
+function Index({ UserList, ClickItem = null, closeModalAndReqNewTableData }) {
   const [form] = Form.useForm();
+  const [dmUrl, setdmUrl] = useState();
+  useEffect(() => {
+    // effect
+    if (ClickItem) {
+      setdmUrl(ClickItem.user_photo);
+      form.setFieldsValue({
+        ...ClickItem,
+      });
+    }
+  }, []);
   return (
     <div>
       <Form
         onSubmit={(v) => {
-          console.log(v);
           Message.success('success');
         }}
         form={form}
@@ -58,14 +73,107 @@ function Index({ UserList, closeModalAndReqNewTableData }) {
         >
           <Input.TextArea placeholder="请输入DM简介"></Input.TextArea>
         </FormItem>
+
         <FormItem
-          rules={[{ required: true, message: '请输入擅长剧本' }]}
-          field="skilled_drama"
-          label="擅长剧本"
+          rules={[{ required: true, message: '请选择性别' }]}
+          field="user_gender"
+          label="性别"
         >
-          <Input allowCreate mode="multiple" placeholder="擅长剧本" allowClear></Input>
+          <Select>
+            <Select.Option value="0">未知</Select.Option>
+            <Select.Option value="1">男</Select.Option>
+            <Select.Option value="2">女</Select.Option>
+          </Select>
+        </FormItem>
+        <FormItem
+          rules={[{ required: true, message: '请输入获赞次数' }]}
+          field="praise_qty"
+          label="获赞次数"
+        >
+          <InputNumber></InputNumber>
+        </FormItem>
+        <FormItem
+          rules={[{ required: true, message: '请输入带场次数' }]}
+          field="exp_value"
+          label="带场次数"
+        >
+          <InputNumber></InputNumber>
+        </FormItem>
+        <FormItem
+          label="加入时间"
+          field="join_date"
+          rules={[
+            {
+              required: true,
+              message: 'join_date is required',
+            },
+          ]}
+        >
+          <DatePicker showTime />
         </FormItem>
         <Form.Item
+          rules={[
+            {
+              required: false,
+              message: '请上传dm照片',
+            },
+          ]}
+          label="dm照片"
+          field="room_image"
+          triggerPropName="fileList"
+        >
+          <Upload
+            limit={1}
+            renderUploadList={() => null}
+            name="role_cover"
+            customRequest={(option) => {
+              const { onProgress, onError, onSuccess, file } = option;
+              const xhr = new XMLHttpRequest();
+              if (xhr.upload) {
+                xhr.upload.onprogress = function(event) {
+                  let percent;
+                  if (event.total > 0) {
+                    percent = (event.loaded / event.total) * 100;
+                  }
+                  onProgress(parseInt(percent, 10), event);
+                };
+              }
+              xhr.onerror = function error(e) {
+                onError(e);
+              };
+              xhr.onload = function onload() {
+                if (xhr.status < 200 || xhr.status >= 300) {
+                }
+                const data = JSON.parse(xhr.responseText);
+                setdmUrl(data.data.file_url);
+                onSuccess(data);
+              };
+              const formData = new FormData();
+              formData.append('up_file', file);
+              formData.append('module', 'drama');
+              xhr.open('post', `${imguploadurl}/system/upload/image`, true);
+              xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
+              xhr.send(formData);
+            }}
+            onPreview={(file) => {
+              Modal.info({
+                title: 'Preview',
+                content: (
+                  <Image
+                    src={file.url || URL.createObjectURL(file.originFile)}
+                    style={{ maxWidth: '100%' }}
+                  />
+                ),
+              });
+            }}
+          />
+        </Form.Item>
+        {dmUrl === '' ? null : (
+          <Form.Item {...noLabelLayout}>
+            <Image width={212} height={300} src={dmUrl} alt="" />
+          </Form.Item>
+        )}
+        {/* <Form.Item
           rules={[{ required: true, message: '请上传DM相片' }]}
           label="DM相片"
           field="user_photo"
@@ -104,7 +212,7 @@ function Index({ UserList, closeModalAndReqNewTableData }) {
             }}
             onPreview={(file) => {
               Modal.info({
-                title: 'Preview',
+                title: '预览',
                 content: (
                   <img
                     src={file.url || URL.createObjectURL(file.originFile)}
@@ -114,44 +222,7 @@ function Index({ UserList, closeModalAndReqNewTableData }) {
               });
             }}
           />
-        </Form.Item>
-        <FormItem
-          rules={[{ required: true, message: '请选择性别' }]}
-          field="user_gender"
-          label="性别"
-        >
-          <Select>
-            <Select.Option value="0">未知</Select.Option>
-            <Select.Option value="1">男</Select.Option>
-            <Select.Option value="2">女</Select.Option>
-          </Select>
-        </FormItem>
-        <FormItem
-          rules={[{ required: true, message: '请输入获赞次数' }]}
-          field="praise_qty"
-          label="获赞次数"
-        >
-          <InputNumber></InputNumber>
-        </FormItem>
-        <FormItem
-          rules={[{ required: true, message: '请输入带场次数' }]}
-          field="exp_value"
-          label="带场次数"
-        >
-          <InputNumber></InputNumber>
-        </FormItem>
-        <FormItem
-          label="加入时间"
-          field="join_date"
-          rules={[
-            {
-              required: true,
-              message: 'join_date is required',
-            },
-          ]}
-        >
-          <DatePicker showTime />
-        </FormItem>
+        </Form.Item> */}
         <FormItem
           wrapperCol={{
             offset: 5,
@@ -160,12 +231,8 @@ function Index({ UserList, closeModalAndReqNewTableData }) {
           <Button
             onClick={async () => {
               const param = form.getFields();
-              param.user_photo =
-                param.user_photo[0].url || param.user_photo[0].response.data.file_url;
-              console.log(param);
-
+              param.user_photo = dmUrl;
               const data = await bindDm(param);
-              console.log('data: ', data);
               if (data.code === 200) {
                 closeModalAndReqNewTableData();
               }
@@ -180,7 +247,4 @@ function Index({ UserList, closeModalAndReqNewTableData }) {
   );
 }
 
-Index.propTypes = {
-  name: PropTypes.string.isRequired,
-};
 export default Index;

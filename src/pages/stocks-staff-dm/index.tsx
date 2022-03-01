@@ -24,6 +24,7 @@ import styles from './style/index.module.less';
 
 function SearchTable({}) {
   const locale = useLocale();
+  const [ClickItem, setClickItem] = useState(null);
   const [UserList, setUserList] = useState<any[]>([]);
   const [visitModal, setvisitModal] = useState<boolean>();
   const [user_account, setuser_account] = useState<string>('');
@@ -63,6 +64,8 @@ function SearchTable({}) {
           size="mini"
           onClick={() => {
             console.log(item);
+            setClickItem(item);
+            setvisitModal(true);
           }}
         >
           修改
@@ -131,10 +134,15 @@ function SearchTable({}) {
         onCancel={() => {
           setvisitModal(false);
         }}
+        afterClose={() => {
+          setClickItem(null);
+        }}
+        unmountOnExit
         style={{ width: 600 }}
         visible={visitModal}
       >
         <AddForm
+          ClickItem={ClickItem}
           fetchData={fetchData}
           closeModalAndReqNewTableData={() => {
             setvisitModal(false);
@@ -145,7 +153,7 @@ function SearchTable({}) {
       </Modal>
       <Breadcrumb style={{ marginBottom: 20 }}>
         <Breadcrumb.Item>运营管理</Breadcrumb.Item>
-        <Breadcrumb.Item>人员管理</Breadcrumb.Item>
+        <Breadcrumb.Item>DM管理</Breadcrumb.Item>
       </Breadcrumb>
       <div>
         <Card style={{ marginBottom: 20 }}>

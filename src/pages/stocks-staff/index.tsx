@@ -154,7 +154,13 @@ function SearchTable() {
         style={{ width: 600 }}
         visible={visitModal}
       >
-        <AddForm name="XIXI" />
+        <AddForm
+          closeModalAndFetch={() => {
+            setvisitModal(false);
+            fetchData();
+          }}
+          name="XIXI"
+        />
       </Modal>
       <Breadcrumb style={{ marginBottom: 20 }}>
         <Breadcrumb.Item>运营管理</Breadcrumb.Item>

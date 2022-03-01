@@ -1,0 +1,14 @@
+[request_definition]
+r = sub, obj, act //请求
+
+[policy_definition]
+p = sub, obj, act // 策略
+
+[role_definition]
+g = _, _
+
+[policy_effect]
+e = some(where (p.eft == allow))
+
+[matchers] //匹配原则
+m = g(r.sub, p.sub) && r.obj == p.obj && r.act == p.act

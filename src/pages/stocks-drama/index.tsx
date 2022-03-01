@@ -47,6 +47,7 @@ function SearchTable() {
   const [gb_text_tag, setgb_text_tag] = useState<any>();
   const [gb_level, setgb_level] = useState<any>();
   const [gb_status, setgb_status] = useState<any>();
+  // const [gb_status, setgb_status] = useState<any>();
   const columns = [
     {
       title: '剧本标题',
@@ -372,6 +373,22 @@ function SearchTable() {
             </Button>
             <div>
               <Space style={{ flex: 1 }} wrap>
+                <Select
+                  onChange={(e) => {
+                    setgb_type(e);
+                  }}
+                  value={gb_type}
+                  placeholder="店铺"
+                  style={{ width: 200 }}
+                >
+                  {gb_type_labels.map((item) => {
+                    return (
+                      <Option key={item.label_value} value={item.label_value}>
+                        {item.label_zh}
+                      </Option>
+                    );
+                  })}
+                </Select>
                 <Input
                   value={gb_title}
                   onChange={(e) => {
