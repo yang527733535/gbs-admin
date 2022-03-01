@@ -14,14 +14,20 @@ import {
   InputNumber,
   Form,
 } from '@arco-design/web-react';
-import { dramaList, reqStoreBindDrama, reqDeleteStoreDrama } from '../../../../api/drama.js';
+import {
+  dramaList,
+  reqEditStoreDrama,
+  reqStoreBindDrama,
+  reqDeleteStoreDrama,
+} from '../../../../api/drama.js';
 import { getDictsByName } from '../../../../utils/getdicts.js';
 // let useEffect
 let AllMaP = JSON.parse(localStorage.getItem('AllMaP'));
 let Option = Select.Option;
 export default function StoreDrama({ store_code, getStoreDetail, storeDetailInfo }) {
   const { store_drama } = storeDetailInfo;
-
+  const [clickItem, setclickItem] = useState(null);
+  const [editModal, seteditModal] = useState(false);
   const [inputNum, setinputNum] = useState(null);
   const [inputNum2, setinputNum2] = useState(null);
   const [is_new, setis_new] = useState(0);
@@ -288,25 +294,38 @@ export default function StoreDrama({ store_code, getStoreDetail, storeDetailInfo
       title: '操作',
       render: (_, item) => {
         return (
-          <Popconfirm
-            title="确定删除该剧本"
-            onOk={async () => {
-              console.log(item);
-              let param = {
-                store_code: store_code.store_code,
-                gb_code: item.gb_code,
-              };
-              let res = await reqDeleteStoreDrama(param);
-              if (res.code === 200) {
-                getStoreDetail();
-                Message.success('删除成功');
-              }
-            }}
-          >
-            <Button size="mini" status="danger">
-              删除
+          <Space>
+            <Button
+              onClick={() => {
+                seteditModal(true);
+                setclickItem(item);
+                console.log(item);
+              }}
+              size="mini"
+              type="primary"
+            >
+              修改
             </Button>
-          </Popconfirm>
+            <Popconfirm
+              title="确定删除该剧本"
+              onOk={async () => {
+                console.log(item);
+                let param = {
+                  store_code: store_code.store_code,
+                  gb_code: item.gb_code,
+                };
+                let res = await reqDeleteStoreDrama(param);
+                if (res.code === 200) {
+                  getStoreDetail();
+                  Message.success('删除成功');
+                }
+              }}
+            >
+              <Button size="mini" status="danger">
+                删除
+              </Button>
+            </Popconfirm>
+          </Space>
         );
       },
     },
@@ -343,6 +362,7 @@ export default function StoreDrama({ store_code, getStoreDetail, storeDetailInfo
   }
   return (
     <div>
+      {/* 添加店铺剧本 */}
       <Modal
         title={saveClick?.gb_title}
         visible={inputNumvisible}
@@ -410,6 +430,63 @@ export default function StoreDrama({ store_code, getStoreDetail, storeDetailInfo
               <Select.Option value={0}>否</Select.Option>
               <Select.Option value={1}>是</Select.Option>
             </Select>
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      {/* 修改店铺剧本 */}
+      <Modal
+        title={saveClick?.gb_title}
+        visible={editModal}
+        //  seteditModal(true)
+        unmountOnExit
+        onCancel={() => seteditModal(false)}
+        autoFocus={false}
+        focusLock={true}
+        footer={null}
+      >
+        <Form
+          onSubmit={async (e) => {
+            let param = {
+              ...e,
+              gb_code: clickItem.gb_code,
+              store_code: store_code.store_code,
+            };
+            let resdata = await reqEditStoreDrama(param);
+            if (resdata.code === 200) {
+              seteditModal(false);
+              fetchData();
+              getStoreDetail();
+            }
+            console.log('param', param);
+          }}
+          initialValues={clickItem}
+        >
+          <Form.Item field="gb_price" label="工作日价格">
+            <InputNumber placeholder="工作日价格"></InputNumber>
+          </Form.Item>
+          <Form.Item field="gb_price2" label="周末价格">
+            <InputNumber style={{ marginTop: 10 }} placeholder="周末价格"></InputNumber>
+          </Form.Item>
+          <Form.Item field="is_hot" label="是否热门">
+            <Select style={{ marginTop: 10 }} placeholder="请选择是否热门">
+              <Select.Option value={0}>否</Select.Option>
+              <Select.Option value={1}>是</Select.Option>
+            </Select>
+          </Form.Item>
+          <Form.Item field="is_new" label="是否新本">
+            <Select style={{ marginTop: 10 }} placeholder="请选择是否新本">
+              <Select.Option value={0}>否</Select.Option>
+              <Select.Option value={1}>是</Select.Option>
+            </Select>
+          </Form.Item>
+          <Form.Item>
+            <Space>
+              <Button style={{ marginLeft: 100 }} type="primary" htmlType="submit">
+                修改
+              </Button>
+              {/* <Button size="mini">q</Button> */}
+            </Space>
           </Form.Item>
         </Form>
       </Modal>

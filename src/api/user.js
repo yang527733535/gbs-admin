@@ -147,4 +147,10 @@ export function reqmenusave(data) {
   });
 }
 
-// reqmenusave
+export function AdjustScroll(data) {
+  return Service({
+    url: '/v1/member/adjust-score',
+    data,
+    method: 'POST',
+  });
+}

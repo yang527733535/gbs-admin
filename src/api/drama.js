@@ -377,3 +377,11 @@ export function reqOrderdeduct(data) {
     method: 'post',
   });
 }
+
+export function reqEditStoreDrama(data) {
+  return Service({
+    url: '/v1/store/edit-drama',
+    data,
+    method: 'post',
+  });
+}

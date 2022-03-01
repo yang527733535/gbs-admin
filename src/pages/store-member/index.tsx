@@ -3,6 +3,7 @@ import {
   Table,
   Button,
   Input,
+  Form,
   Breadcrumb,
   Card,
   Space,
@@ -10,9 +11,11 @@ import {
   Tabs,
   Typography,
   Image,
+  InputNumber,
+  Select,
 } from '@arco-design/web-react';
 import { useSelector, useDispatch } from 'react-redux';
-import { memberList } from '../../api/user.js';
+import { memberList, AdjustScroll } from '../../api/user.js';
 import {
   UPDATE_FORM_PARAMS,
   UPDATE_LIST,
@@ -26,7 +29,9 @@ import styles from './style/index.module.less';
 const TabPane = Tabs.TabPane;
 
 function SearchTable() {
+  const [changePointModal, setchangePointModal] = useState(false);
   const [tabkey, settabkey] = useState('user');
+  const [saveClickItem, setsaveClickItem] = useState(null);
   const [visitModal, setvisitModal] = useState(false);
   const [user_account, setuser_account] = useState('');
   const [user_mobile, setuser_mobile] = useState('');
@@ -44,6 +49,9 @@ function SearchTable() {
     {
       title: '会员类型',
       dataIndex: 'member_type',
+      render: (item) => {
+        return JSON.parse(localStorage.getItem('AllMaP'))['sys_member_type'][item];
+      },
     },
     {
       title: '会员头像',
@@ -75,7 +83,7 @@ function SearchTable() {
     },
     {
       title: '会员积分',
-      dataIndex: 'member_scroe',
+      dataIndex: 'member_score',
     },
     {
       title: '可用余额',
@@ -89,23 +97,26 @@ function SearchTable() {
       title: '折扣',
       dataIndex: 'discount_rate',
     },
-    // {
-    //   title: locale['searchTable.columns.operations'],
-    //   dataIndex: 'operations',
-    //   render: () => (
-    //     <div className={styles.operations}>
-    //       <Button type="text" size="small">
-    //         {locale['searchTable.columns.operations.view']}
-    //       </Button>
-    //       <Button type="text" size="small">
-    //         {locale['searchTable.columns.operations.update']}
-    //       </Button>
-    //       <Button type="text" status="danger" size="small">
-    //         {locale['searchTable.columns.operations.delete']}
-    //       </Button>
-    //     </div>
-    //   ),
-    // },
+    {
+      // title: locale['searchTable.columns.operations'],
+      title: '操作',
+      // dataIndex: 'operations',
+      render: (_, item) => (
+        <Button
+          onClick={() => {
+            setchangePointModal(true);
+            console.log(item);
+            setsaveClickItem(item);
+            // setcli
+          }}
+          size="mini"
+          type="primary"
+        >
+          {/* {locale['searchTable.columns.operations.view']} */}
+          修改积分
+        </Button>
+      ),
+    },
   ];
 
   const searchTableState = useSelector((state: ReducerState) => state.searchTable);
@@ -156,6 +167,63 @@ function SearchTable() {
 
   return (
     <div className={styles.container}>
+      <Modal
+        onCancel={() => {
+          setchangePointModal(false);
+        }}
+        unmountOnExit
+        visible={changePointModal}
+        title="积分管理"
+        footer={null}
+      >
+        <Form
+          onSubmit={async (e) => {
+            console.log(e);
+            console.log(saveClickItem);
+            const { member_account } = saveClickItem;
+            let param = {
+              ...e,
+              member_account,
+            };
+            let resdata = await AdjustScroll(param);
+            if (resdata.code === 200) {
+              fetchData();
+              setchangePointModal(false);
+            }
+            console.log('resdata: ', resdata);
+          }}
+        >
+          <Form.Item field="adjust_type" label="操作">
+            <Select>
+              <Select.Option key="add" value="add">
+                新增
+              </Select.Option>
+              <Select.Option key="reduce" value="reduce">
+                减少
+              </Select.Option>
+            </Select>
+          </Form.Item>
+          <Form.Item field="adjust_value" label="数量">
+            <InputNumber></InputNumber>
+          </Form.Item>
+          <Form.Item
+            style={{
+              width: '100%',
+              display: 'flex',
+              justifyContent: 'center',
+            }}
+          >
+            <Button
+              // style={{ display: 'flex', justifyContent: 'center' }}
+              style={{ marginLeft: 50 }}
+              type="primary"
+              htmlType="submit"
+            >
+              提交
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
       <Modal
         title="添加会员"
         footer={null}
@@ -247,7 +315,7 @@ function SearchTable() {
           <TabPane key="user" title="普通会员">
             <Typography.Paragraph>
               <Table
-                rowKey="user_account"
+                rowKey="member_account"
                 loading={loading}
                 onChange={onChangeTable}
                 pagination={pagination}
