@@ -123,7 +123,7 @@ function Index({ UserList, ClickItem = null, closeModalAndReqNewTableData }) {
           triggerPropName="fileList"
         >
           <Upload
-            limit={1}
+            limit={2}
             renderUploadList={() => null}
             name="role_cover"
             customRequest={(option) => {
@@ -142,6 +142,11 @@ function Index({ UserList, ClickItem = null, closeModalAndReqNewTableData }) {
                 onError(e);
               };
               xhr.onload = function onload() {
+                let resdata = JSON.parse(xhr.responseText);
+                if (resdata.code !== 200) {
+                  Message.error(resdata.message);
+                }
+                console.log('resdata: ', resdata);
                 if (xhr.status < 200 || xhr.status >= 300) {
                 }
                 const data = JSON.parse(xhr.responseText);
